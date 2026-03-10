@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haushalts-Assistent mit Export</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .step { display: none; }
+        .step.active { display: block; }
+        textarea { resize: none; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4 font-sans">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-2xl w-full border border-slate-200">
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-slate-800">Haushalts-Prüfungsassistent</h1>
+            <div class="w-full bg-slate-100 h-2 mt-4 rounded-full overflow-hidden">
+                <div id="progress" class="bg-blue-500 h-full transition-all duration-500" style="width: 10%;"></div>
+            </div>
+        </div>
+
+        <div id="wizard">
+            
+            <div class="step active" id="step1">
+                <h2 class="text-lg font-semibold mb-2">1. Haushaltsvermerke (HV)</h2>
+                <p class="mb-4 text-slate-600 italic">Haben beide Titel einen HV, die gegenseitig aufeinander verweisen?</p>
+                <textarea id="note1" class="w-full border rounded-lg p-3 mb-6 text-sm" placeholder="Anmerkung zu den HV (optional)..."></textarea>
+                <div class="flex gap-3">
+                    <button onclick="saveNote(1); showResult('success', 'Zulässig durch Haushaltsvermerk.')" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 flex-1 font-medium">Ja</button>
+                    <button onclick="saveNote(1); nextStep(2, 40)" class="bg-slate-200 px-6 py-2 rounded-lg hover:bg-slate-300 flex-1 font-medium">Nein</button>
+                </div>
+            </div>
+
+            <div class="step" id="step2">
+                <h2 class="text-lg font-semibold mb-2">2. Deckungsfähigkeit nach § 3 HG</h2>
+                <p class="text-slate-600 mb-4 italic">Gleiche Produktgruppe (6 Stellen) & Verschiebung gem. §3 Abs. 1?</p>
+                <textarea id="note2" class="w-full border rounded-lg p-3 mb-6 text-sm" placeholder="Anmerkung zur Produktgruppe/Verschiebungsart..."></textarea>
+                <div class="flex gap-3">
+                    <button onclick="saveNote(2); showResult('success', 'Zulässig nach § 3 HG.')" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 flex-1 font-medium">Ja</button>
+                    <button onclick="saveNote(2); nextStep(3, 70)" class="bg-slate-200 px-6 py-2 rounded-lg hover:bg-slate-300 flex-1 font-medium">Nein</button>
+                </div>
+            </div>
+
+            <div class="step" id="step3">
+                <h2 class="text-lg font-semibold mb-4">3. Details zur Nachbewilligung (§ 4)</h2>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Betrag (€)</label>
+                            <input type="number" id="input_betrag" class="w-full border p-2 rounded-lg" placeholder="z.B. 50000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Zuständigkeit</label>
+                            <select id="zustand" class="w-full border p-2 rounded-lg bg-white">
+                                <option value="6">Gruppe (6 Stellen)</option>
+                                <option value="4">Bereich (4 Stellen)</option>
+                                <option value="2">Plan (2 Stellen)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Titel (Von)</label>
+                            <input type="text" id="titel_von" class="w-full border p-2 rounded-lg" placeholder="z.B. 44100">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Titel (Zu)</label>
+                            <input type="text" id="titel_zu" class="w-full border p-2 rounded-lg" placeholder="z.B. 42201">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Abschließende Begründung</label>
+                        <textarea id="note3" class="w-full border rounded-lg p-3 text-sm" placeholder="Warum ist diese Nachbewilligung notwendig?"></textarea>
+                    </div>
+                    <button onclick="saveNote(3); checkFinalLogik()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">Prüfung abschließen</button>
+                </div>
+            </div>
+
+            <div id="result" class="hidden rounded-2xl p-6 border">
+                <div class="text-center mb-6">
+                    <h2 id="resultTitle" class="text-2xl font-bold mb-2"></h2>
+                    <p id="resultDesc" class="text-slate-700"></p>
+                </div>
+                
+                <div class="bg-white border rounded-lg p-4 mb-6">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase mb-2">Gesammelte Notizen:</h3>
+                    <div id="summaryNotes" class="text-sm text-slate-600 whitespace-pre-wrap"></div>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <button onclick="exportData()" class="w-full bg-slate-800 text-white py-2 rounded-lg font-medium hover:bg-slate-900">📄 Als .txt exportieren</button>
+                    <button onclick="location.reload()" class="text-slate-400 text-sm hover:underline">Neue Prüfung starten</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let collectedNotes = [];
+
+        function saveNote(step) {
+            const note = document.getElementById('note' + step).value;
+            if(note) collectedNotes.push(`Schritt ${step}: ${note}`);
+        }
+
+        function nextStep(stepNum, progress) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + stepNum).classList.add('active');
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function showResult(type, message) {
+            document.getElementById('wizard').classList.add('hidden');
+            const resDiv = document.getElementById('result');
+            const resTitle = document.getElementById('resultTitle');
+            const summaryDiv = document.getElementById('summaryNotes');
+            
+            resDiv.classList.remove('hidden');
+            summaryDiv.innerText = collectedNotes.length > 0 ? collectedNotes.join('\n\n') : "Keine Anmerkungen hinterlegt.";
+            
+            if(type === 'success') {
+                resDiv.classList.add('bg-green-50', 'border-green-200');
+                resTitle.innerText = "✅ Zulässig";
+                resTitle.classList.add('text-green-800');
+            } else {
+                resDiv.classList.add('bg-orange-50', 'border-orange-200');
+                resTitle.innerText = "⚖️ Vorlage notwendig";
+                resTitle.classList.add('text-orange-800');
+            }
+            document.getElementById('resultDesc').innerText = message;
+            document.getElementById('progress').style.width = '100%';
+        }
+
+        function checkFinalLogik() {
+            const betrag = parseFloat(document.getElementById('input_betrag').value) || 0;
+            const von = document.getElementById('titel_von').value;
+            const zu = document.getElementById('titel_zu').value;
+
+            let errorMsg = "";
+            if (von.startsWith('441')) errorMsg = "Nicht zulässig: Abgang von Titel 441.";
+            if ((von[0] === '7' || von[0] === '8') && "456".includes(zu[0])) errorMsg = "Nicht zulässig: Investiv zu Konsumtiv.";
+            if (zu.startsWith('42') && !von.startsWith('42')) errorMsg = "Eingeschränkt: Personalkosten-Deckung nur aus Personalkosten (§4 Abs. 6).";
+
+            if (errorMsg) {
+                showResult('error', errorMsg);
+            } else if (betrag < 100000) {
+                showResult('success', 'Nachbewilligung nach § 4 HG zulässig.');
+            } else {
+                showResult('error', 'Summe >= 100.000 €: Vorlage beim Senator für Finanzen/HFA notwendig.');
+            }
+        }
+
+        function exportData() {
+            const title = document.getElementById('resultTitle').innerText;
+            const desc = document.getElementById('resultDesc').innerText;
+            const notes = collectedNotes.join('\n');
+            const timestamp = new Date().toLocaleString();
+
+            const content = `HAUSHALTS-PRÜFUNGSPROTOKOLL\nDatum: ${timestamp}\n----------------------------\nERGEBNIS: ${title}\nDETAILS: ${desc}\n\nANMERKUNGEN:\n${notes || 'Keine'}`;
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `Haushaltsprüfung_${new Date().toISOString().slice(0,10)}.txt`;
+            a.click();
+        }
+    </script>
+</body>
+</html>
