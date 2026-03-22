@@ -22,36 +22,34 @@
         </div>
 
         <div id="wizard">
-            
+
             <div class="step active" id="step1">
-                <h2 class="text-lg font-semibold mb-4 text-blue-800">Schritt 1: Basisdaten der Umverteilung</h2>
+                <h2 class="text-lg font-semibold mb-4 text-blue-800">Interaktives Haushalts-Prüfschema</h2>
                 <div class="space-y-4 mb-6">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase">Betrag (€)</label>
                             <input type="number" id="input_betrag" class="w-full border p-2 rounded-lg" placeholder="z.B. 50000">
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase">Gleiche Stellen PG</label>
-                            <select id="pg_stellen" class="w-full border p-2 rounded-lg bg-white">
-                                <option value="6">6 Stellen (Gruppe)</option>
-                                <option value="4">4 Stellen (Bereich)</option>
-                                <option value="2">2 Stellen (Plan)</option>
-                            </select>
+                     <div>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase">Titel (Von)</label>
+                            <label class="block text-xs font-bold text-slate-500 uppercase">Zu lasten von Titel </label>
                             <input type="text" id="titel_von" class="w-full border p-2 rounded-lg" placeholder="z.B. 44100">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase">Titel (Zu)</label>
+                            <label class="block text-xs font-bold text-slate-500 uppercase">Zu gunsten von Titel</label>
                             <input type="text" id="titel_zu" class="w-full border p-2 rounded-lg" placeholder="z.B. 42201">
+                        </div>
+                        <div>    
+                            <textarea id="note1" class="w-full border rounded-lg p-3 mb-6 text-sm" placeholder="Trage hier deine Oberfrage ein..."></textarea>
+                            <div class="flex gap-3">
                         </div>
                     </div>
                 </div>
-                <button onclick="nextStep(2, 25)" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700">Weiter zur Prüfung</button>
+                <button onclick="saveNote(2); nextStep(2, 25)" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700">Weiter zur Prüfung</button>
             </div>
 
             <div class="step" id="step2">
