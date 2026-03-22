@@ -8,205 +8,102 @@
     <style>
         .step { display: none; }
         .step.active { display: block; }
-        textarea { resize: none; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
 
     <div class="bg-white p-8 rounded-2xl shadow-xl max-w-2xl w-full border border-slate-200">
-        <div class="mb-8">
-            <h1 class="text-2xl font-bold text-slate-800 text-center">Haushalts-Prüfungsassistent</h1>
+        <div class="mb-8 text-center">
+            <h1 class="text-2xl font-bold text-slate-800">Haushalts-Prüfungsassistent</h1>
             <div class="w-full bg-slate-100 h-2 mt-4 rounded-full overflow-hidden">
                 <div id="progress" class="bg-blue-500 h-full transition-all duration-500" style="width: 5%;"></div>
             </div>
         </div>
 
         <div id="wizard">
-            
             <div class="step active" id="step1">
-                <h2 class="text-lg font-semibold mb-4 text-blue-800">Schritt 1: Basisdaten der Umverteilung</h2>
-                <div class="space-y-4 mb-6">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase">Betrag (€)</label>
-                            <input type="number" id="input_betrag" class="w-full border p-2 rounded-lg" placeholder="z.B. 50000">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase">Gleiche Stellen PG</label>
-                            <select id="pg_stellen" class="w-full border p-2 rounded-lg bg-white">
-                                <option value="6">6 Stellen (Gruppe)</option>
-                                <option value="4">4 Stellen (Bereich)</option>
-                                <option value="2">2 Stellen (Plan)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase">Titel (Von)</label>
-                            <input type="text" id="titel_von" class="w-full border p-2 rounded-lg" placeholder="z.B. 44100">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase">Titel (Zu)</label>
-                            <input type="text" id="titel_zu" class="w-full border p-2 rounded-lg" placeholder="z.B. 42201">
-                        </div>
-                    </div>
+                <h2 class="text-lg font-semibold mb-4 text-blue-800">1. Basisdaten</h2>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <input type="number" id="input_betrag" class="border p-2 rounded-lg" placeholder="Betrag (€)">
+                    <select id="pg_stellen" class="border p-2 rounded-lg">
+                        <option value="6">6 Stellen gleich (Gruppe)</option>
+                        <option value="4">4 Stellen gleich (Bereich)</option>
+                        <option value="2">2 Stellen gleich (Plan)</option>
+                    </select>
+                    <input type="text" id="titel_von" class="border p-2 rounded-lg" placeholder="Von Titel (z.B. 44100)">
+                    <input type="text" id="titel_zu" class="border p-2 rounded-lg" placeholder="Zu Titel (z.B. 42201)">
                 </div>
-                <button onclick="nextStep(2, 25)" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700">Weiter zur Prüfung</button>
+                <button onclick="goToNext(2, 25)" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Prüfung starten</button>
             </div>
 
             <div class="step" id="step2">
                 <h2 class="text-lg font-semibold mb-2">2. Haushaltsvermerke (HV)</h2>
-                <p class="mb-4 text-slate-600 italic text-sm">Gibt es gegenseitige HV, die die Deckung erlauben?</p>
-                <textarea id="note1" class="w-full border rounded-lg p-3 mb-6 text-sm" placeholder="Anmerkung zu den HV..."></textarea>
+                [span_4](start_span)<p class="mb-4 text-slate-600 italic">Verweisen die HV gegenseitig auf die Titel?[span_4](end_span)</p>
+                <textarea id="note1" class="w-full border rounded-lg p-2 mb-4" placeholder="Anmerkung..."></textarea>
                 <div class="flex gap-3">
-                    <button onclick="saveNote(1); finish('Zulässig durch Haushaltsvermerk.')" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 flex-1 font-medium">Ja (Erfolg)</button>
-                    <button onclick="saveNote(1); nextStep(3, 50)" class="bg-slate-200 px-6 py-2 rounded-lg hover:bg-slate-300 flex-1 font-medium">Nein (Weiter)</button>
+                    [span_5](start_span)<button onclick="saveNote(1); finish('Zulässig durch HV[span_5](end_span).')" class="bg-green-600 text-white px-4 py-2 rounded-lg flex-1">Ja (Erfolg)</button>
+                    <button onclick="saveNote(1); goToNext(3, 50)" class="bg-slate-200 px-4 py-2 rounded-lg flex-1">Nein (Weiter)</button>
                 </div>
             </div>
 
             <div class="step" id="step3">
-                <h2 class="text-lg font-semibold mb-2">3. Deckungsfähigkeit nach § 3 HG</h2>
-                <p class="text-slate-600 mb-4 italic text-sm">Gleiche PG (6 Stellen) & Verschiebung gem. §3 Abs. 1 Nr. 1-5 & keine anderen HV?</p>
-                <textarea id="note2" class="w-full border rounded-lg p-3 mb-6 text-sm" placeholder="Anmerkung zu § 3..."></textarea>
+                <h2 class="text-lg font-semibold mb-2">3. Deckungsfähigkeit nach §3 HG</h2>
+                [span_6](start_span)<p class="mb-4 text-slate-600 italic">Gleiche PG & Verschiebung gem. §3 Abs. 1 Nr. 1-5?[span_6](end_span)</p>
+                <textarea id="note2" class="w-full border rounded-lg p-2 mb-4" placeholder="Anmerkung..."></textarea>
                 <div class="flex gap-3">
-                    <button onclick="saveNote(2); finish('Zulässig nach § 3 HG.')" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 flex-1 font-medium">Ja (Erfolg)</button>
-                    <button onclick="saveNote(2); nextStep(4, 75)" class="bg-slate-200 px-6 py-2 rounded-lg hover:bg-slate-300 flex-1 font-medium">Nein (Weiter)</button>
+                    [span_7](start_span)<button onclick="saveNote(2); finish('Zulässig nach §3 HG[span_7](end_span).')" class="bg-green-600 text-white px-4 py-2 rounded-lg flex-1">Ja (Erfolg)</button>
+                    <button onclick="saveNote(2); goToNext(4, 75)" class="bg-slate-200 px-4 py-2 rounded-lg flex-1">Nein (Weiter)</button>
                 </div>
             </div>
 
             <div class="step" id="step4">
-                <h2 class="text-lg font-semibold mb-2">4. Mehreinnahmen (§ 4 Abs. 5)</h2>
-                <p class="text-slate-600 mb-4 italic text-sm">Werden die Ausgaben durch bereits erzielte Mehreinnahmen gedeckt?</p>
-                <textarea id="note3" class="w-full border rounded-lg p-3 mb-6 text-sm" placeholder="Details zu Mehreinnahmen..."></textarea>
-                <div class="flex gap-3">
-                    <button onclick="saveNote(3); checkFinalLogik('nach § 4 Abs. 5 HG')" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex-1 font-medium">Ja</button>
-                    <button onclick="saveNote(3); checkFinalLogik('nach § 4 Abs. 1-3 HG')" class="bg-slate-200 px-6 py-2 rounded-lg hover:bg-slate-300 flex-1 font-medium">Nein</button>
-                </div>
+                <h2 class="text-lg font-semibold mb-2">4. Nachbewilligung (§4 HG)</h2>
+                [span_8](start_span)<p class="mb-4 text-slate-600 italic">Prüfung der Betragsgrenze und Ausnahmen[span_8](end_span).</p>
+                <textarea id="note3" class="w-full border rounded-lg p-2 mb-4" placeholder="Abschlussnotiz..."></textarea>
+                <button onclick="saveNote(3); executeFinalCheck()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Endergebnis berechnen</button>
             </div>
 
-            <div id="result" class="hidden rounded-2xl p-6 border bg-white">
-                <div class="text-center mb-6">
-                    <h2 id="resultTitle" class="text-2xl font-bold mb-2"></h2>
-                    <p id="resultDesc" class="text-slate-700 font-medium"></p>
-                </div>
-                
-                <div class="bg-slate-50 border rounded-lg p-4 mb-6">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Prüfungsprotokoll-Daten:</h3>
-                    <div id="summaryNotes" class="text-sm text-slate-600 space-y-2 whitespace-pre-wrap"></div>
-                </div>
-
-                <div class="flex flex-col gap-3">
-                    <button onclick="exportData()" class="w-full bg-slate-800 text-white py-3 rounded-xl font-bold hover:bg-slate-900 shadow-lg">📄 Protokoll als .txt herunterladen</button>
-                    <button onclick="location.reload()" class="text-slate-400 text-sm hover:underline">Neue Prüfung starten</button>
-                </div>
+            <div id="result" class="hidden text-center p-6 border rounded-2xl bg-white">
+                <h2 id="resTitle" class="text-2xl font-bold mb-4"></h2>
+                <p id="resDesc" class="mb-6"></p>
+                <div id="notesView" class="text-left text-sm text-slate-500 bg-slate-50 p-4 rounded mb-6 whitespace-pre-wrap"></div>
+                <button onclick="location.reload()" class="text-blue-500 underline text-sm">Neue Prüfung</button>
             </div>
-
         </div>
     </div>
 
     <script>
-        let collectedNotes = [];
-        let finalStatus = "";
-        let finalMessage = "";
-
-        function saveNote(step) {
-            const note = document.getElementById('note' + step).value;
-            if(note) collectedNotes.push(`Schritt ${step} Notiz: ${note}`);
-        }
-
-        function nextStep(stepNum, progress) {
+        let notes = [];
+        function goToNext(id, prog) {
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            document.getElementById('step' + stepNum).classList.add('active');
-            document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('step' + id).classList.add('active');
+            document.getElementById('progress').style.width = prog + '%';
         }
-
-        // Erfolg direkt aus den Vorprüfungen
+        function saveNote(i) {
+            const val = document.getElementById('note' + i).value;
+            if(val) notes.push("Notiz " + i + ": " + val);
+        }
         function finish(msg) {
-            finalStatus = "ERFOLG";
-            finalMessage = msg;
-            showResultView();
+            showFinal("✅ Zulässig", msg);
         }
-
-        function checkFinalLogik(basis) {
+        function executeFinalCheck() {
             const betrag = parseFloat(document.getElementById('input_betrag').value) || 0;
             const von = document.getElementById('titel_von').value;
             const zu = document.getElementById('titel_zu').value;
-            const stellen = document.getElementById('pg_stellen').value;
-
-            let error = "";
-            // Ausnahmen prüfen
-            if (von.startsWith('441')) error = "Nicht zulässig: Abgang von Titel 441 untersagt.";
-            else if ((von[0] === '7' || von[0] === '8') && "456".includes(zu[0])) error = "Nicht zulässig: Umwandlung investiv zu konsumtiv untersagt.";
-            else if (zu.startsWith('42') && !von.startsWith('42')) error = "Nicht zulässig: Personalkosten-Deckung nur aus Personalkosten (§ 4 Abs. 6).";
             
-            if (error) {
-                finalStatus = "VORLAGE";
-                finalMessage = error;
-            } else if (betrag < 100000) {
-                finalStatus = "ERFOLG";
-                finalMessage = `Zulässig ${basis} (Summe < 100k und keine Ausnahmen).`;
-            } else {
-                finalStatus = "VORLAGE";
-                finalMessage = "Summe >= 100.000 €: Vorlage beim Senator für Finanzen/HFA notwendig.";
-            }
-            showResultView();
+            [span_9](start_span)if (von.startsWith('441')) return showFinal("⚖️ Vorlage", "Nicht zulässig: Abgang von 441[span_9](end_span).");
+            [span_10](start_span)if (betrag < 100000) showFinal("✅ Zulässig", "Nachbewilligung nach §4 HG zulässig[span_10](end_span).");
+            [span_11](start_span)else showFinal("⚖️ Vorlage", "Summe >= 100.000 €: Vorlage beim Senator für Finanzen notwendig[span_11](end_span).");
         }
-
-        function showResultView() {
+        function showFinal(t, d) {
             document.getElementById('wizard').classList.add('hidden');
-            const resDiv = document.getElementById('result');
-            const resTitle = document.getElementById('resultTitle');
-            const summaryDiv = document.getElementById('summaryNotes');
-            
-            resDiv.classList.remove('hidden');
-            
-            // Zusammenfassung bauen
-            let summaryText = `Betrag: ${document.getElementById('input_betrag').value} €\n`;
-            summaryText += `Von Titel: ${document.getElementById('titel_von').value}\n`;
-            summaryText += `Zu Titel: ${document.getElementById('titel_zu').value}\n`;
-            summaryText += `Gleiche Stellen: ${document.getElementById('pg_stellen').value}\n\n`;
-            summaryText += `NOTIZEN:\n` + (collectedNotes.length > 0 ? collectedNotes.join('\n') : "Keine");
-            
-            summaryDiv.innerText = summaryText;
-            
-            if(finalStatus === 'ERFOLG') {
-                resDiv.classList.add('border-green-200');
-                resTitle.innerText = "✅ Prüfung erfolgreich";
-                resTitle.className = "text-2xl font-bold mb-2 text-green-700";
-            } else {
-                resDiv.classList.add('border-orange-200');
-                resTitle.innerText = "⚖️ Vorlage erforderlich";
-                resTitle.className = "text-2xl font-bold mb-2 text-orange-700";
-            }
-            document.getElementById('resultDesc').innerText = finalMessage;
+            document.getElementById('result').classList.remove('hidden');
+            document.getElementById('resTitle').innerText = t;
+            document.getElementById('resDesc').innerText = d;
+            document.getElementById('notesView').innerText = "ZUSAMMENFASSUNG:\n" + notes.join('\n');
             document.getElementById('progress').style.width = '100%';
-        }
-
-        function exportData() {
-            const betrag = document.getElementById('input_betrag').value;
-            const von = document.getElementById('titel_von').value;
-            const zu = document.getElementById('titel_zu').value;
-            const notes = collectedNotes.join('\n');
-            const timestamp = new Date().toLocaleString();
-
-            const content = `HAUSHALTS-PRÜFUNGSPROTOKOLL\n` +
-                            `Datum: ${timestamp}\n` +
-                            `-------------------------------------------\n` +
-                            `STATUS: ${finalStatus}\n` +
-                            `BEGRÜNDUNG: ${finalMessage}\n\n` +
-                            `DATEN:\n` +
-                            `- Betrag: ${betrag} EUR\n` +
-                            `- Von Titel: ${von}\n` +
-                            `- Zu Titel: ${zu}\n\n` +
-                            `ANMERKUNGEN:\n${notes || 'Keine Notizen vorhanden.'}\n` +
-                            `-------------------------------------------`;
-            
-            const blob = new Blob([content], { type: 'text/plain' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `Protokoll_${von}_nach_${zu}.txt`;
-            a.click();
         }
     </script>
 </body>
 </html>
+
