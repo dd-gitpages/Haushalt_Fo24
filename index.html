@@ -140,22 +140,12 @@
     const wizard = document.getElementById('wizard');
     const resBox = document.getElementById('result');
 
-    if (!wizard || !resBox) {
-        console.error("Elemente nicht gefunden!");
-        return;
-    }
-
     wizard.classList.add('hidden');
     resBox.classList.remove('hidden');
 
     const title = document.getElementById('resTitle');
     const desc = document.getElementById('resDesc');
     const summary = document.getElementById('resSummary');
-
-    if (!title || !desc || !summary) {
-        console.error("Result-Elemente fehlen!");
-        return;
-    }
 
     title.innerText = finalStatus === "ZULÄSSIG"
         ? "✅ Prüfung erfolgreich"
@@ -173,8 +163,7 @@
         `ANMERKUNGEN:\n` + (collectedNotes.join('\n') || "Keine Eingaben.");
 
     document.getElementById('progress').style.width = '100%';
-    }
-    
+}    
     function exportTxt() {
         const content = `HAUSHALTS-PROTOKOLL\nDatum: ${new Date().toLocaleString()}\n------------------\n` +
                         `ERGEBNIS: ${finalStatus}\nDETAILS: ${finalDetail}\n\n` +
