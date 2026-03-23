@@ -138,21 +138,39 @@
     }
 
     function showResult() {
-        document.getElementById('wizard').classList.add('hidden');
-        const resBox = document.getElementById('result');
-        resBox.classList.remove('hidden');
-        
-        const title = document.getElementById('resTitle');
-        title.innerText = finalStatus === "ZULÄSSIG" ? "✅ Prüfung erfolgreich" : "⚖️ Vorlage erforderlich";
-        title.className = finalStatus === "ZULÄSSIG" ? "text-2xl font-bold mb-4 text-green-700" : "text-2xl font-bold mb-4 text-orange-700";
-        
-        document.getElementById('resDesc').innerText = finalDetail;
-        document.getElementById('resSummary').innerText = 
-            `Titel: ${document.getElementById('titel_von').value} -> ${document.getElementById('titel_zu').value}\n` +
-            `Betrag: ${document.getElementById('input_betrag').value} €\n\n` +
-            `ANMERKUNGEN:\n` + (collectedNotes.join('\n') || "Keine Notizen.");
-        
-        document.getElementById('progress').style.width = '100%';
+        const wizard = document.getelementbyid('wizard');
+        const resBox = document.getelementbyid('result');
+
+        if (!wizard || !resBox) {
+            console.error("Elemente nicht gefunden!");
+            return;
+        }
+
+        wizard.classlist.add('hidden');
+
+        resBox.classlist.remove('hidden');
+
+        const title = document.getelementbyid('resTitle');
+        const desc = document.getelementbyid('resDesc');
+        const summary = document.getelementbyid('resSummary');
+
+        if (!title || !desc || !summary) {
+            console.error("Result-Elemente fehlen!");
+            return;
+        }
+        title.innertext = finalStatus === "ZULÄSSIG"
+        ? "Prüfung erfolgreich"
+        : "Vorlage";
+        title.classname = finalStatus === "ZULÄSSIG"
+        ?  "text-2xl font-bold mb-4 text-green-700"
+        :  "text-2xl font-bold mb-4 text-orange-700";
+
+        desc.innerText = finalDetail;
+
+        summary.innerText = 'Titel: $ {document.getelementbyid('titel_von').value} -> $ document.getelementbyid('titel_zu').value}\n`+
+            Betrag: $ document.getelementbyid('input_betrag').value}€\n\n`+ (CollectedNotes.join('\n') || "Keine Eingaben.");
+
+            document.getelementbyid('progess').style.width ='100%';
     }
 
     function exportTxt() {
