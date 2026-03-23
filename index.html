@@ -26,54 +26,56 @@
                     <input type="number" id="input_betrag" class="w-full border p-2 rounded-lg" placeholder="z.B. 50000">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Gleiche Stellen</label>
-                    <select id="pg_stellen" class="w-full border p-2 rounded-lg">
-                        <option value="6">6 Stellen (Gruppe)</option>
-                        <option value="4">4 Stellen (Bereich)</option>
-                        <option value="2">2 Stellen (Plan)</option>
-                    </select>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Zu lasten von Titel</label>
+                    <input type="text" id="titel_von" class="w-full border p-2 rounded-lg" placeholder="z.B. 511 01 - 1">
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Von Titel</label>
-                    <input type="text" id="titel_von" class="w-full border p-2 rounded-lg" placeholder="z.B. 44100">
+                 <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Produktgruppe</label>
+                    <input type="text" id="Produktgruppe_von" class="w-full border p-2 rounded-lg" placeholder="z.B. 50.01.01">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Zu Titel</label>
-                    <input type="text" id="titel_zu" class="w-full border p-2 rounded-lg" placeholder="z.B. 42201">
+                    <input type="text" id="titel_zu" class="w-full border p-2 rounded-lg" placeholder="z.B. 511 01 - 1">
+                </div>
+                 <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Produktgruppe</label>
+                    <input type="text" id="Produktgruppe_zu" class="w-full border p-2 rounded-lg" placeholder="z.B. 50.01.01">
                 </div>
             </div>
+            <p class="mb-4 text-slate-600 italic text-sm">Wie lautet dein Obersatz??</p>
+            <textarea id="note1" class="w-full border rounded-lg p-2 mb-4 text-sm" placeholder="Obersatz..."></textarea>
             <button type="button"
-                onclick="nextStep(2, 20)" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700">Prüfung starten
+                onclick="saveNote(1);nextStep(2, 20)" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700">Prüfung starten
             </button>
         </div>
 
         <div class="step" id="step2">
             <h2 class="text-lg font-semibold mb-2 text-blue-800">2. Haushaltsvermerke (HV)</h2>
             <p class="mb-4 text-slate-600 italic text-sm">Haben beide Titel einen HV, die gegenseitig aufeinander verweisen?</p>
-            <textarea id="note1" class="w-full border rounded-lg p-2 mb-4 text-sm" placeholder="Anmerkung zu HV..."></textarea>
+            <textarea id="note2" class="w-full border rounded-lg p-2 mb-4 text-sm" placeholder="Anmerkung zu HV..."></textarea>
             <div class="flex gap-3">
-                <button onclick="saveNote(1); finish('Erfolg: Deckung durch HV zulässig.')" class="bg-green-600 text-white px-4 py-2 rounded-lg flex-1 font-bold">Ja</button>
-                <button onclick="saveNote(1); nextStep(3, 40)" class="bg-slate-200 px-4 py-2 rounded-lg flex-1">Nein</button>
+                <button onclick="saveNote(2); finish('Erfolg: Deckung durch HV zulässig.')" class="bg-green-600 text-white px-4 py-2 rounded-lg flex-1 font-bold">Ja</button>
+                <button onclick="saveNote(2); nextStep(3, 40)" class="bg-slate-200 px-4 py-2 rounded-lg flex-1">Nein</button>
             </div>
         </div>
 
         <div class="step" id="step3">
             <h2 class="text-lg font-semibold mb-2 text-blue-800">3. Deckung nach §3 HG</h2>
             <p class="mb-4 text-slate-600 italic text-sm">Gleiche PG & Verschiebung gem. §3 Abs. 1 Nr. 1-5?</p>
-            <textarea id="note2" class="w-full border rounded-lg p-2 mb-4 text-sm" placeholder="Anmerkung zu §3..."></textarea>
+            <textarea id="note3" class="w-full border rounded-lg p-2 mb-4 text-sm" placeholder="Anmerkung zu §3..."></textarea>
             <div class="flex gap-3">
-                <button onclick="saveNote(2); finish('Erfolg: Deckung nach §3 HG zulässig.')" class="bg-green-600 text-white px-4 py-2 rounded-lg flex-1 font-bold">Ja</button>
-                <button onclick="saveNote(2); nextStep(4, 60)" class="bg-slate-200 px-4 py-2 rounded-lg flex-1">Nein</button>
+                <button onclick="saveNote(3); finish('Erfolg: Deckung nach §3 HG zulässig.')" class="bg-green-600 text-white px-4 py-2 rounded-lg flex-1 font-bold">Ja</button>
+                <button onclick="saveNote(3); nextStep(4, 60)" class="bg-slate-200 px-4 py-2 rounded-lg flex-1">Nein</button>
             </div>
         </div>
 
         <div class="step" id="step4">
             <h2 class="text-lg font-semibold mb-2 text-blue-800">4. Mehreinnahmen (§4 Abs. 5)</h2>
             <p class="mb-4 text-slate-600 italic text-sm">Erfolgt die Deckung aus bereits erzielten Mehreinnahmen?</p>
-            <textarea id="note3" class="w-full border rounded-lg p-2 mb-4 text-sm" placeholder="Details zu Mehreinnahmen..."></textarea>
+            <textarea id="note4" class="w-full border rounded-lg p-2 mb-4 text-sm" placeholder="Details zu Mehreinnahmen..."></textarea>
             <div class="flex gap-3">
-                <button onclick="saveNote(3); finalCheck(true)" class="bg-blue-600 text-white px-4 py-2 rounded-lg flex-1 font-bold">Ja</button>
-                <button onclick="saveNote(3); finalCheck(false)" class="bg-slate-200 px-4 py-2 rounded-lg flex-1">Nein</button>
+                <button onclick="saveNote(4); finalCheck(true)" class="bg-blue-600 text-white px-4 py-2 rounded-lg flex-1 font-bold">Ja</button>
+                <button onclick="saveNote(4); finalCheck(false)" class="bg-slate-200 px-4 py-2 rounded-lg flex-1">Nein</button>
             </div>
         </div>
 
