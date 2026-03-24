@@ -19,9 +19,9 @@
 
     <div id="wizard">
         <div class="step active" id="step1">
-            <h2 class="text-lg font-semibold mb-4 text-blue-800">Falldaten und Obersatz/h2>
+            <h2 class="text-lg font-semibold mb-4 text-blue-800">Falldaten und Obersatz</h2>
             <div class="grid grid-cols-2 gap-4 mb-6">
-                <div>
+                <div class="col-span-2">
                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Betrag (€)</label>
                     <input type="number" id="input_betrag" class="w-full border p-2 rounded-lg" placeholder="z.B. 50000">
                 </div>
@@ -41,6 +41,12 @@
                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Produktgruppe</label>
                     <input type="text" id="Produktgruppe_zu" class="w-full border p-2 rounded-lg" placeholder="z.B. 50.01.01">
                 </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Verantwortliche Person</label>
+                    <select id="Verantwortliche" class="w-full border p-2 rounded-lg">
+                        <option value="Produktgruppenverantwortliche Person">Produktgruppe</option>
+                        <option value="Produktbereichsverantwortliche Person">Produktbereich</option>
+                        <option value="Produktplanverantwortliche Person">Produktplan</option>
             </div>
             <p class="mb-4 text-slate-600 italic text-sm">Wie lautet dein Obersatz??</p>
             <textarea id="note1" class="w-full border rounded-lg p-2 mb-4 text-sm" placeholder="Obersatz..."></textarea>
