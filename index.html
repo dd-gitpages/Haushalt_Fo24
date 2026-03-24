@@ -102,118 +102,98 @@
 </div>
 
 <script>
-    let collectedNotes = [];
-    let finalStatus = "";
-    let finalDetail = "";
-    let answers={};
-    let visitedSteps = new Set();
+    1 of 6,079
+haushalt
+Inbox
 
-    const musterNotes ={
-        1: {
-            start: "Fraglich ist, ob zusätzliche Ausgaben in Höhe von " + ${document.getElementById('input_betrag').value} € +  " bei Titel + ${document.getElementById('titel_zu').value} + " zu Lasten von Titel + ${document.getElementById('titel_von').value} + " geleistet werden dürfen." 
-    
-    function nextStep(id, prog) {
-        visitedSteps.add(id);
-        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        document.getElementById('step' + id).classList.add('active');
-        document.getElementById('progress').style.width = prog + '%';
-    }
+Dominic Dierking
+11:29 PM (3 minutes ago)
+<!DOCTYPE html><html lang="de"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Haushalts-Prüfungsas
 
-    function prevStep(id,prog) {
-        visitedSteps.add(id);
-        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        document.getElementById('step' + id).classList.add('active');
-        document.getElementById('progress').style.width = prog + '%';
-    }
-        
-    function saveNote(i) {
-        const val = document.getElementById('note' + i).value;
-        if(!val) return;
-        collectedNotes = collectedNotes.filter(n => !n.startsWith(i + '.:')
-        collectedNotes.push(i +'.:' + val);
-    }
+The Tramp
+11:33 PM (0 minutes ago)
+to me
 
-    function finish(msg) {
-        console.log("Finish ausgelöst");
-        finalStatus = "ZULÄSSIG";
-        finalDetail = msg;
-        showResult();
-    }
+let collectedNotes = [];
+let finalStatus = "";
+let finalDetail = "";
+let answers = {};
+let visitedSteps = new Set();
 
-    function finalCheck(isMehreinnahme) {
-        const betrag = parseFloat(document.getElementById('input_betrag').value) || 0;
-        const von = document.getElementById('titel_von').value;
-        const zu = document.getElementById('titel_zu').value;
+function getMusterText(step) {
+    const betrag = document.getElementById('input_betrag').value || "0";
+    const zu = document.getElementById('titel_zu').value || "unbekannt";
+    const von = document.getElementById('titel_von').value || "unbekannt";
 
-        if (von.startsWith('441')) {
-            finalStatus = "VORLAGE";
-            finalDetail = "Nicht zulässig: Abgang von Titel 441 untersagt.";
-        } else if (zu.startsWith('42') && !von.startsWith('42')) {
-            finalStatus = "VORLAGE";
-            finalDetail = "Eingeschränkt: Personalkosten-Deckung nur aus Personalkosten (§4 Abs. 6).";
-        } else if (betrag < 100000) {
-            finalStatus = "ZULÄSSIG";
-            finalDetail = isMehreinnahme ? "Zulässig nach §4 Abs. 5 HG (Mehreinnahmen)." : "Zulässig nach §4 Abs. 1-3 HG (Summe < 100k).";
-        } else {
-            finalStatus = "VORLAGE";
-            finalDetail = "Summe >= 100.000 €: Vorlage beim HFA notwendig (§9 HG).";
-        }
-        showResult();
-    }
-    function showResult() {
-    const wizard = document.getElementById('wizard');
-    const resBox = document.getElementById('result');
+    const muster = {
+        1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${betrag} € bei Titel ${zu} zu Lasten von Titel ${von} geleistet werden dürfen.`,
+        2: "Prüfung der gegenseitigen Deckungsfähigkeit nach Haushaltsvermerk (HV).",
+        3: "Prüfung der Deckungsfähigkeit nach §3 HG (Flexibilisierung).",
+        4: "Prüfung der Deckung durch Mehreinnahmen gemäß §4 Abs. 5 HG."
+    };
+    return muster[step] || "";
+}
 
-    wizard.classList.add('hidden');
-    resBox.classList.remove('hidden');
+function nextStep(id, prog) {
+    visitedSteps.add(id);
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step' + id).classList.add('active');
+    document.getElementById('progress').style.width = prog + '%';
+}
 
-    const title = document.getElementById('resTitle');
-    const desc = document.getElementById('resDesc');
-    const summary = document.getElementById('resSummary');
+function prevStep(id, prog) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step' + id).classList.add('active');
+    document.getElementById('progress').style.width = prog + '%';
+}
 
-    title.innerText = finalStatus === "ZULÄSSIG"
-        ? "✅ Prüfung erfolgreich"
-        : "⚖️ Vorlage erforderlich";
+function saveNote(i) {
+    const val = document.getElementById('note' + i).value;
+    if (!val) return;
+    // Korrektur: Klammer bei filter() ergänzt
+    collectedNotes = collectedNotes.filter(n => !n.startsWith(i + '.:'));
+    collectedNotes.push(i + '.: ' + val);
+}
 
-    title.className = finalStatus === "ZULÄSSIG"
-        ? "text-2xl font-bold mb-4 text-green-700"
-        : "text-2xl font-bold mb-4 text-orange-700";
+function finish(msg) {
+    document.getElementById('resTitle').innerText = finalStatus === "ZULÄSSIG" ? "✅ Prüfung erfolgreich" : "⚖️ Vorlage erforderlich";
+    document.getElementById('resTitle').className = finalStatus === "ZULÄSSIG" ? "text-2xl font-bold mb-4 text-green-700" : "text-2xl font-bold mb-4 text-orange-700";
+    document.getElementById('resDesc').innerText = finalDetail;
 
-    desc.innerText = finalDetail;
-
-    summary.innerText =
+    document.getElementById('resSummary').innerText =
         `Titel: ${document.getElementById('titel_von').value} -> ${document.getElementById('titel_zu').value}\n` +
         `Betrag: ${document.getElementById('input_betrag').value} €\n\n` +
         `ANMERKUNGEN:\n` + (collectedNotes.join('\n') || "Keine Eingaben.") +
         `\n\n--- Musterlösung ---\n` + getMusterNotes();
 
     document.getElementById('progress').style.width = '100%';
-    }    
-    function exportTxt() {
-        const content = `HAUSHALTS-PROTOKOLL\nDatum: ${new Date().toLocaleString()}\n------------------\n` +
-                        `ERGEBNIS: ${finalStatus}\nDETAILS: ${finalDetail}\n\n` +
-                        `DATEN:\n- Von: ${document.getElementById('titel_von').value}\n- Zu: ${document.getElementById('titel_zu').value}\n` +
-                        `- Betrag: ${document.getElementById('input_betrag').value} €\n\n` +
-                        `NOTIZEN:\n${collectedNotes.join('\n') || 'Keine'}`;
-        const blob = new Blob([content], {type: 'text/plain'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `Protokoll_${new Date().toISOString().slice(0,10)}.txt`;
-        a.click();
-    }
-    function setAnswer(step, value) {
-        answers[step] = value;
-    }
-    function getMusterNotes() {
-        let output =[];
-        visitedSteps.forEach(step => {
-            if (musterNotes[step] {
-                output.push(step+'.: ' + musterNotes[step]);
-            }
-        });
+}
 
-        return output.join('\n') || "Keine Lösung vorhanden.";
-    }
+function exportTxt() {
+    const content = `HAUSHALTS-PROTOKOLL\nDatum: ${new Date().toLocaleString()}\n------------------\n` +
+        `ERGEBNIS: ${finalStatus}\nDETAILS: ${finalDetail}\n\n` +
+        `DATEN:\n- Von: ${document.getElementById('titel_von').value}\n- Zu: ${document.getElementById('titel_zu').value}\n` +
+        `- Betrag: ${document.getElementById('input_betrag').value} €\n\n` +
+        `NOTIZEN:\n${collectedNotes.join('\n') || 'Keine'}`;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `Protokoll_${new Date().toISOString().slice(0, 10)}.txt`;
+    a.click();
+}
+
+function setAnswer(step, value) {
+    answers[step] = value;
+}
+
+function getMusterNotes() {
+    let output = [];
+    visitedSteps.forEach(step => {
+        let text = getMusterText(step);
+        if (text) output.push(step + '.: ' + text);
+    });
+    return output.join('\n') || "Keine Lösung vorhanden.";
+}
 </script>
 
 </body>
