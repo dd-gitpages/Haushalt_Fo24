@@ -19,7 +19,7 @@
 
     <div id="wizard">
         <div class="step active" id="step1">
-            <h2 class="text-lg font-semibold mb-4 text-blue-800">1. Basisdaten</h2>
+            <h2 class="text-lg font-semibold mb-4 text-blue-800">Falldaten und Obersatz/h2>
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Betrag (€)</label>
@@ -45,7 +45,7 @@
             <p class="mb-4 text-slate-600 italic text-sm">Wie lautet dein Obersatz??</p>
             <textarea id="note1" class="w-full border rounded-lg p-2 mb-4 text-sm" placeholder="Obersatz..."></textarea>
             <button type="button"
-                onclick="saveNote(1);nextStep(2, 20)" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700">Prüfung starten
+                onclick="saveNote(1);setAnswer(1,'start');nextStep(2, 20)" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700">Prüfung starten
             </button>
         </div>
 
@@ -56,6 +56,7 @@
             <div class="flex gap-3">
                 <button onclick="saveNote(2); finish('Erfolg: Deckung durch HV zulässig.')" class="bg-green-600 text-white px-4 py-2 rounded-lg flex-1 font-bold">Ja</button>
                 <button onclick="saveNote(2); nextStep(3, 40)" class="bg-slate-200 px-4 py-2 rounded-lg flex-1">Nein</button>
+                <button onclick="prevStep(1,10)" class="bg-slate-300 px-4 py-2 rounded-lg flex-1">Zurück</button>
             </div>
         </div>
 
@@ -96,16 +97,32 @@
     let collectedNotes = [];
     let finalStatus = "";
     let finalDetail = "";
+    let answers={};
+    let visitedSteps = new Set();
 
+    const musterNotes ={
+        1: {
+            start: "Fraglich ist, ob zusätzliche Ausgaben in Höhe von " + ${document.getElementById('input_betrag').value} € +  " bei Titel + ${document.getElementById('titel_zu').value} + " zu Lasten von Titel + ${document.getElementById('titel_von').value} + " geleistet werden dürfen." 
+    
     function nextStep(id, prog) {
+        visitedSteps.add(id);
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
         document.getElementById('step' + id).classList.add('active');
         document.getElementById('progress').style.width = prog + '%';
     }
 
+    function prevStep(id,prog) {
+        visitedSteps.add(id);
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + id).classList.add('active');
+        document.getElementById('progress').style.width = prog + '%';
+    }
+        
     function saveNote(i) {
         const val = document.getElementById('note' + i).value;
-        if(val) collectedNotes.push("Notiz Schritt " + i + ": " + val);
+        if(!val) return;
+        collectedNotes = collectedNotes.filter(n => !n.startsWith(i + '.:')
+        collectedNotes.push(i +'.:' + val);
     }
 
     function finish(msg) {
@@ -159,10 +176,11 @@
     summary.innerText =
         `Titel: ${document.getElementById('titel_von').value} -> ${document.getElementById('titel_zu').value}\n` +
         `Betrag: ${document.getElementById('input_betrag').value} €\n\n` +
-        `ANMERKUNGEN:\n` + (collectedNotes.join('\n') || "Keine Eingaben.");
+        `ANMERKUNGEN:\n` + (collectedNotes.join('\n') || "Keine Eingaben.") +
+        `\n\n--- Musterlösung ---\n` + getMusterNotes();
 
     document.getElementById('progress').style.width = '100%';
-}    
+    }    
     function exportTxt() {
         const content = `HAUSHALTS-PROTOKOLL\nDatum: ${new Date().toLocaleString()}\n------------------\n` +
                         `ERGEBNIS: ${finalStatus}\nDETAILS: ${finalDetail}\n\n` +
@@ -174,6 +192,19 @@
         a.href = URL.createObjectURL(blob);
         a.download = `Protokoll_${new Date().toISOString().slice(0,10)}.txt`;
         a.click();
+    }
+    function setAnswer(step, value) {
+        answers[step] = value;
+    }
+    function getMusterNotes() {
+        let output =[];
+        visitedSteps.forEach(step => {
+            if (musterNotes[step] {
+                output.push(step+'.: ' + musterNotes[step]);
+            }
+        });
+
+        return output.join('\n') || "Keine Lösung vorhanden.";
     }
 </script>
 
