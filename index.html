@@ -24,16 +24,39 @@
 
         <!-- STEP 1 -->
         <div class="step active" id="step1">
-            <h2 class="text-lg font-semibold mb-4 text-blue-800">Falldaten</h2>
-
-            <input type="number" id="input_betrag" class="w-full border p-2 rounded-lg mb-3" placeholder="Betrag €">
-
-            <div class="grid grid-cols-2 gap-3 mb-4">
-                <input type="text" id="titel_von" class="border p-2 rounded-lg" placeholder="Titel von">
-                <input type="text" id="titel_zu" class="border p-2 rounded-lg" placeholder="Titel zu">
+            <h2 class="text-lg font-semibold mb-4 text-blue-800">Falldaten und Obersatz</h2> 
+                <div class="grid grid-cols-2 gap-4 mb-6"> <div class="col-span-2"> 
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Betrag (€)</label> 
+                    <input type="number" id="input_betrag" class="w-full border p-2 rounded-lg" placeholder="z.B. 50000"> 
+                </div> 
+                <div> 
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Zu Lasten von Titel</label> 
+                    <input type="text" id="titel_von" class="w-full border p-2 rounded-lg" placeholder="z.B. 511 01">
+                </div> 
+                <div> 
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Produktgruppe Von</label> 
+                    <input type="text" id="pg_von" class="w-full border p-2 rounded-lg" placeholder="z.B. 50.01.01"> 
+                </div>
+                <div> 
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Zu Gunsten von Titel</label> 
+                    <input type="text" id="titel_zu" class="w-full border p-2 rounded-lg" placeholder="z.B. 511 02"> 
+                </div> 
+                <div> 
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Produktgruppe Zu</label> 
+                    <input type="text" id="pg_zu" class="w-full border p-2 rounded-lg" placeholder="z.B. 50.01.01"> 
+                </div> 
             </div>
-
-            <textarea id="note1" class="w-full border p-2 rounded-lg mb-4" placeholder="Obersatz..."></textarea>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Verantwortliche Person</label>
+                <select id="Verantwortliche" class="w-full border p-2 rounded-lg">
+                    <option value="Produktgruppenverantwortliche Person">Produktgruppe</option>
+                    <option value="Produktbereichsverantwortliche Person">Produktbereich</option>
+                    <option value="Produktplanverantwortliche Person">Produktplan</option>
+                </select>
+            </div>
+            
+            <p class="mb-4 text-slate-600 italic text-sm">Formuliere deinen Obersatz:</p> 
+            <textarea id="note1" class="w-full border rounded-lg p-2 mb-4 text-sm" placeholder="Fraglich ist..."></textarea>
 
             <button onclick="saveNote(1); goToStep(2)" class="w-full bg-blue-600 text-white py-3 rounded-xl">
                 Start
