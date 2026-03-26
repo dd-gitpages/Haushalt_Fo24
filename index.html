@@ -119,14 +119,24 @@
     </div>
 
     <!-- RESULT -->
-    <div id="result" class="hidden mt-6">
-        <h2 id="resTitle" class="text-xl font-bold mb-2"></h2>
-        <p id="resDesc" class="mb-4"></p>
+    <div id="result" class="hidden rounded-2xl p-6 border bg-white shadow-inner mt-6">
+    <h2 id="resTitle" class="text-2xl font-bold mb-4"></h2>
+    <p id="resDesc" class="mb-6 text-slate-700"></p>
 
-        <button onclick="location.reload()" class="text-blue-600 underline">
+    <div class="bg-slate-50 p-4 rounded-lg mb-6 text-xs font-mono text-slate-500 overflow-auto max-h-40">
+        <p id="resSummary"></p>
+    </div>
+
+    <div class="flex flex-col gap-3">
+        <button onclick="exportTxt()" class="bg-slate-800 text-white py-3 rounded-xl font-bold hover:bg-black">
+            📄 Protokoll herunterladen
+        </button>
+
+        <button onclick="location.reload()" class="text-slate-400 text-sm hover:underline">
             Neue Prüfung
         </button>
     </div>
+</div>
 
 </div>
 
