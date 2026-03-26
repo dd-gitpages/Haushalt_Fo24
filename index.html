@@ -57,106 +57,86 @@ let notes = {};
 let finalStatus = "";
 let finalDetail = "";
 
-// ================= FLOW =================
+// ================= FLOW KORREKTUR =================
 const flow = {
-
     1: {
         type: "form",
         render: () => `
-            <input id="titel_zu" type="text" placeholder="Zu Gunsten von Titel (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
-            <input id="pgr_zu" type="text" placeholder="Produktgruppe z. B. 50.01.01" class="w-full border p-2 mb-2 rounded">
-            <input id="titel_von" type="text" placeholder="Zu Lasten von Titel (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
-            <input id="pgr_von" type="text" placeholder="Produktgruppe z. B. 50.01.01" class="w-full border p-2 mb-2 rounded">
+            <input id="titel_zu" type="text" placeholder="Zu Gunsten von (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
+            <input id="pgr_zu" type="text" placeholder="Produktgruppe Zu" class="w-full border p-2 mb-2 rounded">
+            <input id="titel_von" type="text" placeholder="Zu Lasten von (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
+            <input id="pgr_von" type="text" placeholder="Produktgruppe Von" class="w-full border p-2 mb-2 rounded">
             <input id="input_betrag" type="number" placeholder="Betrag €" class="w-full border p-2 mb-2 rounded">
-        ,
+        `,
         next: () => 2
     },
-
     2: {
         question: "Wer ist verantwortlich?",
         type: "select",
-        options: ["Produktgruppenverantwortliche Person", "Produktbereichsverantwortliche Person", "Produktplanverantwortliche Person"],
+        options: ["Produktgruppenverantwortliche Person", "Produktbereichsverantwortliche Person"],
         next: () => 3
     },
-
     3: {
-        question: "Haben beide Titel einen HV?",
+        question: "Haben beide Titel einen Haushaltsvermerk (HV)?",
         type: "select",
         options: ["ja", "nein"],
         next: {
-            ja: "END_SUCCESS",
-            nein: 3
+            "ja": "END_SUCCESS",
+            "nein": 4 // Geht weiter zur nächsten Prüfung
         },
         resultText: "Deckung durch HV zulässig."
     },
-
     4: {
-        question: "Deckung nach §3 HG möglich?",
+        question: "Deckung nach §3 HG (gegenseitige Deckungsfähigkeit) möglich?",
         type: "select",
         options: ["ja", "nein"],
         next: {
-            ja: "END_SUCCESS",
-            nein: 4
+            "ja": "END_SUCCESS",
+            "nein": 5 // Geht weiter zu den Mehreinnahmen
         },
         resultText: "Deckung nach §3 HG zulässig."
     },
-
     5: {
-        question: "Deckung durch Mehreinnahmen?",
+        question: "Deckung durch Mehreinnahmen möglich?",
         type: "select",
         options: ["ja", "nein"],
         next: {
-            ja: "END_CHECK",
-            nein: "END_CHECK"
+            "ja": "END_CHECK",
+            "nein": "END_CHECK"
         }
     }
 };
 
-// ================= ENGINE =================
+// ================= ENGINE UPDATE =================
 function next() {
     saveNote();
-
     const step = flow[currentStep];
 
-    let input = true;
-
-    if (step.type === "select") {
-        input = document.querySelector("select")?.value;
-        if (!input) return alert("Bitte auswählen");
-        answers[currentStep] = input;
+    // Spezielle Logik für Schritt 1: Werte sichern
+    if (currentStep === 1) {
+        answers.betrag = parseFloat(document.getElementById('input_betrag').value) || 0;
+        answers.von = document.getElementById('titel_von').value;
+        answers.zu = document.getElementById('titel_zu').value;
     }
 
-    let nextStep = typeof step.next === "function"
-        ? step.next()
-        : step.next[input];
+    let val = "";
+    if (step.type === "select") {
+        val = document.querySelector("select")?.value;
+        if (!val) return alert("Bitte auswählen");
+        answers[currentStep] = val;
+    }
+
+    let nextStep = typeof step.next === "function" ? step.next() : step.next[val];
 
     if (nextStep === "END_SUCCESS") {
         finalStatus = "ZULÄSSIG";
         finalDetail = step.resultText;
         return showResult();
     }
-
-    if (nextStep === "END_CHECK") {
-        return finalCheck();
-    }
+    if (nextStep === "END_CHECK") return finalCheck();
 
     goTo(nextStep);
 }
-
-function goTo(step) {
-    currentStep = step;
-    history.push(step);
-    render();
-}
-
-function back() {
-    if (history.length > 1) {
-        history.pop();
-        currentStep = history[history.length - 1];
-        render();
-    }
-}
-
 // ================= RENDER =================
 function render() {
     const step = flow[currentStep];
