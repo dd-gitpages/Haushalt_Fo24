@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Haushalts-Prüfungsassistent</title>
+<title>Fo24 Haushalts-Übungssassistent</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 .step { display: none; }
@@ -63,10 +63,15 @@ const flow = {
     1: {
         type: "form",
         render: () => `
+            
+            <input id="titel_zu" type="text" placeholder="Zu Gunsten von Titel (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
+            <input id="pgr_zu" type="text" placeholder="Produktgruppe z. B. 50.01.01" class="w-full border p-2 mb-2 rounded">
+            <input id="titel_von" type="text" placeholder="Zu Lasten von Titel (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
+            <input id="pgr_von" type="text" placeholder="Produktgruppe z. B. 50.01.01" class="w-full border p-2 mb-2 rounded">
             <input id="input_betrag" type="number" placeholder="Betrag €" class="w-full border p-2 mb-2 rounded">
-            <input id="titel_von" type="text" placeholder="Titel von" class="w-full border p-2 mb-2 rounded">
-            <input id="titel_zu" type="text" placeholder="Titel zu" class="w-full border p-2 mb-2 rounded">
-        `,
+        question: "Wer ist verantwortlich?",
+        type: "select",
+        options: ["Produktgruppenverantwortliche Person", "Produktbereichsverantwortliche Person", "Produktplanverantwortliche Person"],
         next: () => 2
     },
 
