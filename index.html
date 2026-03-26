@@ -66,8 +66,7 @@ const flow = {
             <input id="pgr_zu" type="text" placeholder="Produktgruppe Zu" class="w-full border p-2 mb-2 rounded">
             <input id="titel_von" type="text" placeholder="Zu Lasten von (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
             <input id="pgr_von" type="text" placeholder="Produktgruppe Von" class="w-full border p-2 mb-2 rounded">
-            <input id="input_betrag" type="number" placeholder="Betrag €" class="w-full border p-2 mb-2 rounded">
-        `,
+            <input id="input_betrag" type="number" placeholder="Betrag €" class="w-full border p-2 mb-2 rounded">`,
         next: () => 2
     },
     2: {
@@ -109,27 +108,32 @@ const flow = {
 
 // ================= ENGINE UPDATE =================
 function next() {
-    saveNote();
-    const step = flow[currentStep];
-
-    // Spezielle Logik für Schritt 1: Werte sichern
+    // 1. Daten aus Schritt 1 sichern, BEVOR das HTML überschrieben wird
     if (currentStep === 1) {
+        answers.titel_zu = document.getElementById('titel_zu').value;
+        answers.titel_von = document.getElementById('titel_von').value;
+        answers.pgr_zu = document.getElementById('pgr_zu').value;
+        answers.pgr_von = document.getElementById('pgr_von').value;
         answers.betrag = parseFloat(document.getElementById('input_betrag').value) || 0;
-        answers.von = document.getElementById('titel_von').value;
-        answers.zu = document.getElementById('titel_zu').value;
-        answers.pgrvon = document.getElementById('pgr_von').value;
-        answers.pgrzu =document.getElementById('pgr_zu').value;
     }
 
-    let val = "";
+    saveNote();
+
+    const step = flow[currentStep];
+    let inputVal = "";
+
     if (step.type === "select") {
-        val = document.querySelector("select")?.value;
-        if (!val) return alert("Bitte auswählen");
-        answers[currentStep] = val;
+        inputVal = document.querySelector("select")?.value;
+        if (!inputVal) return alert("Bitte auswählen");
+        answers[currentStep] = inputVal;
     }
 
-    let nextStep = typeof step.next === "function" ? step.next() : step.next[val];
+    // 2. Nächsten Schritt bestimmen
+    let nextStep = typeof step.next === "function"
+        ? step.next()
+        : step.next[inputVal];
 
+    // Logik für Endzustände
     if (nextStep === "END_SUCCESS") {
         finalStatus = "ZULÄSSIG";
         finalDetail = step.resultText;
@@ -139,44 +143,39 @@ function next() {
 
     goTo(nextStep);
 }
-// ================= RENDER =================
+
+// ================= RENDER UPDATE =================
 function render() {
     const step = flow[currentStep];
     const el = document.getElementById("wizard");
-
     let html = "";
 
-    if (step.question) {
-        html += `<h2 class="font-bold mb-3">${step.question}</h2>`;
-    }
-
-    if (step.type === "form") {
-        html += step.render();
-    }
-
+    if (step.question) html += `<h2 class="font-bold mb-3">${step.question}</h2>`;
+    if (step.type === "form") html += step.render();
     if (step.type === "select") {
         html += `
             <select class="w-full border p-2 mb-3 rounded">
                 <option value="">Bitte wählen</option>
                 ${step.options.map(o => `<option value="${o}">${o}</option>`).join("")}
-            </select>
-        `;
+            </select>`;
     }
 
-    html += `
-        <textarea id="note" placeholder="Notiz..." class="w-full border p-2 mb-3 rounded"></textarea>
+    // Notizfeld
+    html += `<textarea id="note" placeholder="Notiz..." class="w-full border p-2 mb-3 rounded"></textarea>`;
 
-        <div class="flex gap-2">
-            <button onclick="next()" class="bg-blue-600 text-white px-4 py-2 rounded flex-1">Weiter</button>
-            <button onclick="back()" class="bg-gray-300 px-4 py-2 rounded flex-1">Zurück</button>
-        </div>
-    `;
+    // BUTTONS: "Zurück" nur anzeigen, wenn nicht in Schritt 1
+    html += `<div class="flex gap-2">
+                <button onclick="next()" class="bg-blue-600 text-white px-4 py-2 rounded flex-1">Weiter</button>`;
+    
+    if (currentStep > 1) {
+        html += `<button onclick="back()" class="bg-gray-300 px-4 py-2 rounded flex-1">Zurück</button>`;
+    }
 
+    html += `</div>`;
     el.innerHTML = html;
-
     updateProgress();
 }
-
+    
 // ================= NOTES =================
 function saveNote() {
     const val = document.getElementById("note")?.value;
