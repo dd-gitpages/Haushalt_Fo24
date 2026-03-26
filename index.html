@@ -47,9 +47,9 @@
 
 </div>
 
-<script>
+// ... (Dein HTML & CSS bleibt gleich) ...
 
-// ================= STATE =================
+<script>
 let currentStep = 1;
 let history = [1];
 let answers = {};
@@ -57,7 +57,6 @@ let notes = {};
 let finalStatus = "";
 let finalDetail = "";
 
-// ================= FLOW KORREKTUR =================
 const flow = {
     1: {
         type: "form",
@@ -79,36 +78,26 @@ const flow = {
         question: "Haben beide Titel einen Haushaltsvermerk (HV)?",
         type: "select",
         options: ["ja", "nein"],
-        next: {
-            "ja": "END_SUCCESS",
-            "nein": 4 // Geht weiter zur nächsten Prüfung
-        },
+        next: { "ja": "END_SUCCESS", "nein": 4 },
         resultText: "Deckung durch HV zulässig."
     },
     4: {
         question: "Deckung nach §3 HG (gegenseitige Deckungsfähigkeit) möglich?",
         type: "select",
         options: ["ja", "nein"],
-        next: {
-            "ja": "END_SUCCESS",
-            "nein": 5 // Geht weiter zu den Mehreinnahmen
-        },
+        next: { "ja": "END_SUCCESS", "nein": 5 },
         resultText: "Deckung nach §3 HG zulässig."
     },
     5: {
         question: "Deckung durch Mehreinnahmen möglich?",
         type: "select",
         options: ["ja", "nein"],
-        next: {
-            "ja": "END_CHECK",
-            "nein": "END_CHECK"
-        }
+        next: { "ja": "END_CHECK", "nein": "END_CHECK" }
     }
 };
 
-// ================= ENGINE UPDATE =================
 function next() {
-    // 1. Daten aus Schritt 1 sichern, BEVOR das HTML überschrieben wird
+    // WICHTIG: Daten sichern solange sie noch im DOM sind
     if (currentStep === 1) {
         answers.titel_zu = document.getElementById('titel_zu').value;
         answers.titel_von = document.getElementById('titel_von').value;
@@ -118,7 +107,6 @@ function next() {
     }
 
     saveNote();
-
     const step = flow[currentStep];
     let inputVal = "";
 
@@ -128,12 +116,8 @@ function next() {
         answers[currentStep] = inputVal;
     }
 
-    // 2. Nächsten Schritt bestimmen
-    let nextStep = typeof step.next === "function"
-        ? step.next()
-        : step.next[inputVal];
+    let nextStep = typeof step.next === "function" ? step.next() : step.next[inputVal];
 
-    // Logik für Endzustände
     if (nextStep === "END_SUCCESS") {
         finalStatus = "ZULÄSSIG";
         finalDetail = step.resultText;
@@ -144,7 +128,20 @@ function next() {
     goTo(nextStep);
 }
 
-// ================= RENDER UPDATE =================
+function goTo(step) {
+    currentStep = step;
+    history.push(step);
+    render();
+}
+
+function back() {
+    if (history.length > 1) {
+        history.pop();
+        currentStep = history[history.length - 1];
+        render();
+    }
+}
+
 function render() {
     const step = flow[currentStep];
     const el = document.getElementById("wizard");
@@ -153,114 +150,79 @@ function render() {
     if (step.question) html += `<h2 class="font-bold mb-3">${step.question}</h2>`;
     if (step.type === "form") html += step.render();
     if (step.type === "select") {
-        html += `
-            <select class="w-full border p-2 mb-3 rounded">
-                <option value="">Bitte wählen</option>
-                ${step.options.map(o => `<option value="${o}">${o}</option>`).join("")}
-            </select>`;
+        html += `<select class="w-full border p-2 mb-3 rounded">
+                    <option value="">Bitte wählen</option>
+                    ${step.options.map(o => `<option value="${o}">${o}</option>`).join("")}
+                 </select>`;
     }
 
-    // Notizfeld
     html += `<textarea id="note" placeholder="Notiz..." class="w-full border p-2 mb-3 rounded"></textarea>`;
-
-    // BUTTONS: "Zurück" nur anzeigen, wenn nicht in Schritt 1
     html += `<div class="flex gap-2">
-                <button onclick="next()" class="bg-blue-600 text-white px-4 py-2 rounded flex-1">Weiter</button>`;
-    
-    if (currentStep > 1) {
-        html += `<button onclick="back()" class="bg-gray-300 px-4 py-2 rounded flex-1">Zurück</button>`;
-    }
-
-    html += `</div>`;
+                <button onclick="next()" class="bg-blue-600 text-white px-4 py-2 rounded flex-1">Weiter</button>
+                ${currentStep > 1 ? `<button onclick="back()" class="bg-gray-300 px-4 py-2 rounded flex-1">Zurück</button>` : ''}
+             </div>`;
     el.innerHTML = html;
     updateProgress();
 }
-    
-// ================= NOTES =================
+
 function saveNote() {
     const val = document.getElementById("note")?.value;
     if (val) notes[currentStep] = val;
 }
 
-// ================= MUSTER =================
-function getMusterText(step) {
-    const betrag = document.getElementById('input_betrag')?.value || "0";
-    const von = document.getElementById('titel_von')?.value || "";
-    const zu = document.getElementById('titel_zu')?.value || "";
+// MUSTER TEXT fix: Nutzt jetzt 'answers' statt 'document.getElementById'
+function getMusterText(stepNum) {
+    const betrag = answers.betrag || "0";
+    const von = answers.titel_von || "";
+    const zu = answers.titel_zu || "";
 
     const texte = {
         1: `Obersatz: Prüfung der Deckung ${betrag}€ von ${von} nach ${zu}`,
-        2: "Prüfung HV",
-        3: "Prüfung §3 HG",
-        4: "Prüfung Mehreinnahmen"
+        2: "Zuständigkeit geprüft.",
+        3: "Prüfung HV abgeschlossen.",
+        4: "Prüfung §3 HG abgeschlossen.",
+        5: "Prüfung Mehreinnahmen abgeschlossen."
     };
-
-    return texte[step] || "";
+    return texte[stepNum] || "";
 }
 
-// ================= FINAL CHECK =================
+// FINAL CHECK fix: Nutzt jetzt 'answers'
 function finalCheck() {
-    const betrag = parseFloat(document.getElementById('input_betrag')?.value) || 0;
-    const von = document.getElementById('titel_von')?.value || "";
-    const zu = document.getElementById('titel_zu')?.value || "";
+    const betrag = answers.betrag || 0;
+    const von = answers.titel_von || "";
+    const zu = answers.titel_zu || "";
 
     if (von.startsWith('441')) {
         finalStatus = "VORLAGE";
-        finalDetail = "Titel 441 gesperrt";
+        finalDetail = "Titel 441 ist gesperrt.";
     } else if (zu.startsWith('42') && !von.startsWith('42')) {
         finalStatus = "VORLAGE";
-        finalDetail = "Personalkostenregel";
+        finalDetail = "Personalausgaben dürfen nur durch Personalausgaben gedeckt werden.";
     } else if (betrag >= 100000) {
         finalStatus = "VORLAGE";
-        finalDetail = "Vorlagepflicht";
+        finalDetail = "Betrag über 100.000 € erfordert Vorlage.";
     } else {
         finalStatus = "ZULÄSSIG";
-        finalDetail = "Zulässig";
+        finalDetail = "Die Maßnahme ist haushaltsrechtlich zulässig.";
     }
-
     showResult();
 }
 
-// ================= RESULT =================
 function showResult() {
     document.getElementById("wizard").innerHTML = "";
     document.getElementById("result").classList.remove("hidden");
-
-    document.getElementById("resTitle").innerText =
-        finalStatus === "ZULÄSSIG" ? "✅ Zulässig" : "⚖️ Vorlage";
-
+    document.getElementById("resTitle").innerText = finalStatus === "ZULÄSSIG" ? "✅ Zulässig" : "⚖️ Vorlage";
     document.getElementById("resDesc").innerText = finalDetail;
 
-    const notesText = Object.entries(notes)
-        .map(([k,v]) => `${k}. ${v}`)
-        .join("\n");
-
+    const notesText = Object.entries(notes).map(([k,v]) => `Schritt ${k}: ${v}`).join("\n");
     let muster = history.map(s => getMusterText(s)).join("\n");
 
-    document.getElementById("resSummary").innerText =
+    document.getElementById("resSummary").innerText = 
+        `DATEN: ${answers.betrag}€ von ${answers.titel_von} an ${answers.titel_zu}\n\n` +
         `NOTIZEN:\n${notesText}\n\nMUSTER:\n${muster}`;
-
     document.getElementById("progress").style.width = "100%";
 }
 
-// ================= EXPORT =================
-function exportTxt() {
-    const text =
-`ERGEBNIS: ${finalStatus}
-DETAILS: ${finalDetail}
-
-NOTIZEN:
-${Object.entries(notes).map(([k,v]) => `${k}. ${v}`).join("\n")}
-`;
-
-    const blob = new Blob([text], {type:"text/plain"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "Protokoll.txt";
-    a.click();
-}
-
-// ================= INIT =================
 function updateProgress() {
     const total = Object.keys(flow).length;
     const p = (currentStep / total) * 100;
@@ -268,8 +230,6 @@ function updateProgress() {
 }
 
 render();
-
 </script>
-
 </body>
 </html>
