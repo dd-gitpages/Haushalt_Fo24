@@ -134,6 +134,8 @@
 let collectedNotes = {};
 let stepHistory = [1];
 let currentStep = 1;
+let finalStatus = "";
+let finalDetail = "";
 
 function goToStep(step) {
     currentStep = step;
@@ -166,8 +168,25 @@ function saveNote(step) {
     if (val) collectedNotes[step] = val;
 }
 
+// Musterlösung
+function getMusterText(step) {
+    const betrag = document.getElementById('input_betrag').value || "0";
+    const zu = document.getElementById('titel_zu').value || "Titel Zu";
+    const von = document.getElementById('titel_von').value || "Titel Von";
+
+    const texte = {
+        1: `Obersatz: Zu prüfen ist die Deckungsfähigkeit von ${betrag}€ bei ${zu} zu Lasten von ${von}.`,
+        2: "Prüfung: Liegt ein gegenseitiger Deckungsvermerk (HV) vor?",
+        3: "Prüfung: Deckung innerhalb derselben Produktgruppe gemäß §3 HG.",
+        4: "Prüfung: Deckung durch Mehreinnahmen (§4 Abs. 5 HG)."
+    };
+    return texte[step] || "";
+}
+
 function finish(msg) {
-    showResult("ZULÄSSIG", msg);
+    finalStatus = "ZULÄSSIG";
+    finalDetail = msg;
+    showResult();
 }
 
 function finalCheck(isMehreinnahme) {
@@ -176,39 +195,84 @@ function finalCheck(isMehreinnahme) {
     const zu = document.getElementById('titel_zu').value || "";
 
     if (von.startsWith('441')) {
-        return showResult("VORLAGE", "Abgang von Titel 441 unzulässig");
+        finalStatus = "VORLAGE";
+        finalDetail = "Nicht zulässig: Abgang von Titel 441 untersagt.";
+    } else if (zu.startsWith('42') && !von.startsWith('42')) {
+        finalStatus = "VORLAGE";
+        finalDetail = "Eingeschränkt: Personalkosten nur aus Personalkosten (§4 Abs. 6).";
+    } else if (betrag >= 100000) {
+        finalStatus = "VORLAGE";
+        finalDetail = "Summe >= 100.000 €: Vorlage beim HFA notwendig (§9 HG).";
+    } else if (isMehreinnahme) {
+        finalStatus = "ZULÄSSIG";
+        finalDetail = "Zulässig nach §4 Abs. 5 HG (Mehreinnahmen).";
+    } else {
+        finalStatus = "ZULÄSSIG";
+        finalDetail = "Zulässig nach §4 Abs. 1-3 HG (Summe < 100k).";
     }
 
-    if (zu.startsWith('42') && !von.startsWith('42')) {
-        return showResult("VORLAGE", "Personalkosten nur aus Personalkosten deckbar");
-    }
-
-    if (betrag >= 100000) {
-        return showResult("VORLAGE", "Vorlagepflicht (>=100k)");
-    }
-
-    if (isMehreinnahme) {
-        return showResult("ZULÄSSIG", "Deckung durch Mehreinnahmen");
-    }
-
-    return showResult("ZULÄSSIG", "Deckung unter 100k zulässig");
+    showResult();
 }
 
-function showResult(status, detail) {
+function showResult() {
     document.getElementById('wizard').classList.add('hidden');
-    document.getElementById('result').classList.remove('hidden');
+    const resBox = document.getElementById('result');
+    resBox.classList.remove('hidden');
 
-    document.getElementById('resTitle').innerText =
-        status === "ZULÄSSIG" ? "✅ Zulässig" : "⚖️ Vorlage erforderlich";
+    const title = document.getElementById('resTitle');
+    title.innerText = finalStatus === "ZULÄSSIG" ? "✅ Prüfung erfolgreich" : "⚖️ Vorlage erforderlich";
 
-    document.getElementById('resDesc').innerText = detail;
+    document.getElementById('resDesc').innerText = finalDetail;
 
-    document.getElementById('progress').style.width = "100%";
+    // Notes formatieren
+    const notesText = Object.entries(collectedNotes)
+        .map(([k,v]) => `${k}.: ${v}`)
+        .join('\n') || "Keine Notizen.";
+
+    // Musterlösung bauen
+    let muster = "";
+    stepHistory.forEach(s => muster += getMusterText(s) + "\n");
+
+    document.getElementById('resSummary').innerText =
+        `Betrag: ${document.getElementById('input_betrag').value} €\n` +
+        `Von: ${document.getElementById('titel_von').value} / Zu: ${document.getElementById('titel_zu').value}\n\n` +
+        `DEINE NOTIZEN:\n${notesText}\n\n` +
+        `--- MUSTERLÖSUNG ---\n${muster}`;
+
+    document.getElementById('progress').style.width = '100%';
+}
+
+// Export
+function exportTxt() {
+    const notesText = Object.entries(collectedNotes)
+        .map(([k,v]) => `${k}.: ${v}`)
+        .join('\n') || "Keine Notizen.";
+
+    const content =
+`HAUSHALTS-PROTOKOLL
+Datum: ${new Date().toLocaleString()}
+
+ERGEBNIS: ${finalStatus}
+DETAILS: ${finalDetail}
+
+FALLDATEN:
+Betrag: ${document.getElementById('input_betrag').value} €
+Von: ${document.getElementById('titel_von').value}
+Zu: ${document.getElementById('titel_zu').value}
+
+NOTIZEN:
+${notesText}
+`;
+
+    const blob = new Blob([content], {type: 'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `Protokoll.txt`;
+    a.click();
 }
 
 // init
 updateProgress();
 </script>
-
 </body>
 </html>
