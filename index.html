@@ -69,13 +69,16 @@ const flow = {
             <input id="titel_von" type="text" placeholder="Zu Lasten von Titel (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
             <input id="pgr_von" type="text" placeholder="Produktgruppe z. B. 50.01.01" class="w-full border p-2 mb-2 rounded">
             <input id="input_betrag" type="number" placeholder="Betrag €" class="w-full border p-2 mb-2 rounded">
+    },
+
+    2: {
         question: "Wer ist verantwortlich?",
         type: "select",
         options: ["Produktgruppenverantwortliche Person", "Produktbereichsverantwortliche Person", "Produktplanverantwortliche Person"],
         next: () => 2
     },
 
-    2: {
+    3: {
         question: "Haben beide Titel einen HV?",
         type: "select",
         options: ["ja", "nein"],
@@ -86,7 +89,7 @@ const flow = {
         resultText: "Deckung durch HV zulässig."
     },
 
-    3: {
+    4: {
         question: "Deckung nach §3 HG möglich?",
         type: "select",
         options: ["ja", "nein"],
@@ -97,7 +100,7 @@ const flow = {
         resultText: "Deckung nach §3 HG zulässig."
     },
 
-    4: {
+    5: {
         question: "Deckung durch Mehreinnahmen?",
         type: "select",
         options: ["ja", "nein"],
