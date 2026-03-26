@@ -47,8 +47,6 @@
 
 </div>
 
-// ... (Dein HTML & CSS bleibt gleich) ...
-
 <script>
 let currentStep = 1;
 let history = [1];
@@ -71,7 +69,7 @@ const flow = {
     2: {
         question: "Wer ist verantwortlich?",
         type: "select",
-        options: ["Produktgruppenverantwortliche Person", "Produktbereichsverantwortliche Person"],
+        options: ["Produktgruppenverantwortliche Person", "Produktbereichsverantwortliche Person", "Produktplanverantwortliche Person"],
         next: () => 3
     },
     3: {
