@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fo24 Haushalts-Übungssassistent</title>
+<title>Lernassistent Fo24 Haushalt</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 .step { display: none; }
@@ -83,7 +83,7 @@ const flow = {
         question: "Besteht eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 HG?",
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 5, "nein": 6 }, // Korrigiert: Anführungszeichen entfernt
+        next: { "ja": 5, "nein": 6 },
     },
     5: {
         getQuestion: () => {
@@ -105,7 +105,6 @@ const flow = {
 };
 
 function next() {
-    // WICHTIG: Daten sichern solange sie noch im DOM sind
     if (currentStep === 1) {
         answers.titel_zu = document.getElementById('titel_zu').value;
         answers.titel_von = document.getElementById('titel_von').value;
@@ -246,7 +245,50 @@ function updateProgress() {
     const p = (currentStep / total) * 100;
     document.getElementById("progress").style.width = p + "%";
 }
+function exportTxt() {
+    // Zeitstempel für das Protokoll
+    const datum = new Date().toLocaleString("de-DE");
+    
+    // Mustertexte für alle durchlaufenen Schritte sammeln
+    let prüfungsSchritte = history
+        .map(s => getMusterText(s))
+        .filter(text => text !== "")
+        .join("\n\n");
 
+    // Notizen sammeln
+    let notizenText = Object.entries(notes)
+        .map(([step, text]) => `Schritt ${step}: ${text}`)
+        .join("\n");
+
+    // Der eigentliche Textinhalt
+    const text = `PROTOKOLL DER HAUSHALTSPRÜFUNG
+Datum: ${datum}
+--------------------------------------------------
+FallDATEN:
+Zu:  ${answers.titel_zu} (PGR: ${answers.pgr_zu})
+Von:   ${answers.titel_von} (PGR: ${answers.pgr_von})
+Betrag:      ${answers.betrag} €
+--------------------------------------------------
+ERGEBNIS:    ${finalStatus}
+BEGRÜNDUNG:  ${finalDetail}
+--------------------------------------------------
+DEINE LÖSUNG:
+${notizenText || "Keine Lösung eingeben."}
+--------------------------------------------------
+MUSTERLÖSUNG:
+${prüfungsSchritte}
+--------------------------------------------------
+Erstellt mit dem Lernassistent Fo24 Haushalts`;
+
+    // Download-Logik
+    const blob = new Blob([text], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `Prüfprotokoll_${answers.titel_zu.replace(/\s/g, "_")}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
 render();
 </script>
 </body>
