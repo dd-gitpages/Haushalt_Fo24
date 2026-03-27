@@ -17,7 +17,7 @@
 
 <!-- HEADER -->
 <div class="mb-6 text-center">
-    <h1 class="text-xl font-bold">Haushalts-Prüfungsassistent</h1>
+    <h1 class="text-xl font-bold">Lernassistent Fo24 Haushalt</h1>
     <div class="w-full bg-slate-200 h-2 mt-3 rounded">
         <div id="progress" class="bg-blue-500 h-2 rounded transition-all"></div>
     </div>
@@ -180,7 +180,6 @@ function saveNote() {
     if (val) notes[currentStep] = val;
 }
 
-// MUSTER TEXT fix: Nutzt jetzt 'answers' statt 'document.getElementById'
 function getMusterText(stepNum) {
     const betrag = answers.betrag || "0";
     const von = answers.titel_von || "";
@@ -201,7 +200,6 @@ function getMusterText(stepNum) {
     return texte[stepNum] || "";
 }
 
-// FINAL CHECK fix: Nutzt jetzt 'answers'
 function finalCheck() {
     const betrag = answers.betrag || 0;
     const von = answers.titel_von || "";
@@ -228,7 +226,7 @@ function finalCheck() {
 function showResult() {
     document.getElementById("wizard").innerHTML = "";
     document.getElementById("result").classList.remove("hidden");
-    document.getElementById("resTitle").innerText = finalStatus === "ZULÄSSIG" ? "✅ Zulässig" : "⚖️ Vorlage";
+    document.getElementById("resTitle").innerText = finalStatus === "ZULÄSSIG" ? "✅ Zulässig" : "Nicht erlaubt";
     document.getElementById("resDesc").innerText = finalDetail;
 
     const notesText = Object.entries(notes).map(([k,v]) => `Schritt ${k}: ${v}`).join("\n");
@@ -236,7 +234,7 @@ function showResult() {
 
     document.getElementById("resSummary").innerText = 
         `DATEN: ${answers.betrag}€ von ${answers.titel_von} an ${answers.titel_zu}\n\n` +
-        `NOTIZEN:\n${notesText}\n\nMUSTER:\n${muster}`;
+        `DEINE LÖSUNG:\n${notesText}\n\nMUSTERLÖSUNG:\n${muster}`;
     document.getElementById("progress").style.width = "100%";
 }
 
@@ -246,25 +244,20 @@ function updateProgress() {
     document.getElementById("progress").style.width = p + "%";
 }
 function exportTxt() {
-    // Zeitstempel für das Protokoll
     const datum = new Date().toLocaleString("de-DE");
-    
-    // Mustertexte für alle durchlaufenen Schritte sammeln
     let prüfungsSchritte = history
         .map(s => getMusterText(s))
         .filter(text => text !== "")
         .join("\n\n");
 
-    // Notizen sammeln
     let notizenText = Object.entries(notes)
         .map(([step, text]) => `Schritt ${step}: ${text}`)
         .join("\n");
 
-    // Der eigentliche Textinhalt
-    const text = `PROTOKOLL DER HAUSHALTSPRÜFUNG
+    const text = `Zusammenfassung
 Datum: ${datum}
 --------------------------------------------------
-FallDATEN:
+FALLDATEN:
 Zu:  ${answers.titel_zu} (PGR: ${answers.pgr_zu})
 Von:   ${answers.titel_von} (PGR: ${answers.pgr_von})
 Betrag:      ${answers.betrag} €
