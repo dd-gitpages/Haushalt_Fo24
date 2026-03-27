@@ -229,7 +229,7 @@ function showResult() {
     document.getElementById("resTitle").innerText = finalStatus === "ZULÄSSIG" ? "✅ Zulässig" : "Nicht erlaubt";
     document.getElementById("resDesc").innerText = finalDetail;
 
-    const notesText = Object.entries(notes).map(([k,v]) => `Schritt ${k}: ${v}`).join("\n");
+    const notesText = Object.entries(notes).map(([k,v]) => `${v}`).join("\n");
     let muster = history.map(s => getMusterText(s)).join("\n");
 
     document.getElementById("resSummary").innerText = 
