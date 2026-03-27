@@ -168,8 +168,8 @@ function render() {
 
     html += `<textarea id="note" placeholder="Dein Prüftext" class="w-full border p-2 mb-3 rounded"></textarea>`;
     html += `<div class="flex gap-2">
-                <button onclick="next()" class="bg-blue-600 text-white px-4 py-2 rounded flex-1">Weiter</button>
                 ${currentStep > 1 ? `<button onclick="back()" class="bg-gray-300 px-4 py-2 rounded flex-1">Zurück</button>` : ''}
+                <button onclick="next()" class="bg-blue-600 text-white px-4 py-2 rounded flex-1">Weiter</button>
              </div>`;
     el.innerHTML = html;
     updateProgress();
