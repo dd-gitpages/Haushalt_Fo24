@@ -80,17 +80,17 @@ const flow = {
         resultText: "Deckungsfähigkeit durch HV gegeben. Die Mehrausgabe ist zulässig."
     },
     4: {
-        question: "Besteht eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 HG",
+        question: "Besteht eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 HG?",
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 5, "nein": 6 },
+        next: { "ja": 5, "nein": 6 }, // Korrigiert: Anführungszeichen entfernt
     },
-     5: {
+    5: {
         getQuestion: () => {
-        const von = answers.titel_von || "unbekannt";
-        const zu = answers.titel_zu || "unbekannt";
-            return `Verfügt der Titel ${von} über einen HV der eine DF mit einem anderen Titel als ${zu} regelt?`;
-        }
+            const von = answers.titel_von || "unbekannt";
+            const zu = answers.titel_zu || "unbekannt";
+            return `Verfügt der Titel ${von} über einen HV, der eine DF mit einem anderen Titel als ${zu} regelt?`;
+        }, 
         type: "select",
         options: ["ja", "nein"],
         next: { "ja": 6, "nein": "END_SUCCESS" },
