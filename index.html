@@ -89,7 +89,7 @@ const flow = {
         getQuestion: () => {
         const von = answers.titel_von || "unbekannt";
         const zu = answers.titel_zu || "unbekannt";
-            return `Verfügt der Titel **${von}** über einen HV der eine DF mit einem anderen Titel als **${zu}** regelt?`;
+            return `Verfügt der Titel ${von} über einen HV der eine DF mit einem anderen Titel als ${zu} regelt?`;
         }
         type: "select",
         options: ["ja", "nein"],
@@ -193,7 +193,7 @@ function getMusterText(stepNum) {
     const texte = {
         1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${betrag}€ bei Titel ${zu} zu Lasten von Titel ${von} geleistet werden dürfen.`,
         2: "Zunächst ist eine Deckungsfähigkeit(DF) über Haushaltsvermerke (HV) zu prüfen. Dafür müssten bei beiden Titeln HV vorliegen und diese die DF mit dem jeweils anderen Titel regeln.",
-        3: HV === "Ja" 
+        3: HV === "ja" 
             ? `Sowohl Titel ${zu} als auch Titel ${von} haben einen HV, welcher die gegenseitige Deckungsfähigkeit regelt. Damit können die zusätzlichen Ausgaben bei Titel ${zu} geleistet werden `
             : "Einer der beiden Titel hat keinen HV, damit ist eine gegenseitige DF durch HV ausgeschlossen."
         4: "Prüfung §3 HG abgeschlossen.",
