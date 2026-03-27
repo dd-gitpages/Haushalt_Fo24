@@ -60,33 +60,44 @@ const flow = {
         type: "form",
         render: () => `
             <input id="titel_zu" type="text" placeholder="Zu Gunsten von (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
-            <input id="pgr_zu" type="text" placeholder="Produktgruppe Zu" class="w-full border p-2 mb-2 rounded">
+            <input id="pgr_zu" type="text" placeholder="Produktgruppe (z. B. 50.01.01)" class="w-full border p-2 mb-2 rounded">
             <input id="titel_von" type="text" placeholder="Zu Lasten von (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
-            <input id="pgr_von" type="text" placeholder="Produktgruppe Von" class="w-full border p-2 mb-2 rounded">
+            <input id="pgr_von" type="text" placeholder="Produktgruppe (z. B. 50.01.01)" class="w-full border p-2 mb-2 rounded">
             <input id="input_betrag" type="number" placeholder="Betrag €" class="w-full border p-2 mb-2 rounded">`,
         next: () => 2
     },
     2: {
-        question: "Wer ist verantwortlich?",
-        type: "select",
-        options: ["Produktgruppenverantwortliche Person", "Produktbereichsverantwortliche Person", "Produktplanverantwortliche Person"],
-        next: () => 3
-    },
-    3: {
         question: "Haben beide Titel einen Haushaltsvermerk (HV)?",
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": "END_SUCCESS", "nein": 4 },
-        resultText: "Deckung durch HV zulässig."
+        next: { "ja": 3, "nein": 4 },
     },
-    4: {
-        question: "Deckung nach §3 HG (gegenseitige Deckungsfähigkeit) möglich?",
+    3: {
+        question: "Regeln beide Haushaltsvermerke die gegenseitige Deckungsfähigkeit (DF)? Ggf. auch über einen Deckungskreis.",
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": "END_SUCCESS", "nein": 5 },
-        resultText: "Deckung nach §3 HG zulässig."
+        next: { "ja": "END_SUCCESS", "nein": 4 },
+        resultText: "Deckungsfähigkeit durch HV gegeben. Die Mehrausgabe ist zulässig."
     },
-    5: {
+    4: {
+        question: "Besteht eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 HG",
+        type: "select",
+        options: ["ja", "nein"],
+        next: { "ja": "5, "nein": 6 },
+    },
+     5: {
+        getQuestion: () => {
+        const von = answers.titel_von || "unbekannt";
+        const zu = answers.titel_zu || "unbekannt";
+            return `Verfügt der Titel **${von}** über einen HV der eine DF mit einem anderen Titel als **${zu}** regelt?`;
+        }
+    },
+        type: "select",
+        options: ["ja", "nein"],
+        next: { "ja": 6, "nein": "END_SUCCESS" }
+        resultText: "Deckungsfähigkeit nach §3 Abs. 1 HG gegeben. Die Mehrausgabe ist zulässig."
+    }
+    6: {
         question: "Deckung durch Mehreinnahmen möglich?",
         type: "select",
         options: ["ja", "nein"],
@@ -144,7 +155,11 @@ function render() {
     const step = flow[currentStep];
     const el = document.getElementById("wizard");
     let html = "";
-
+    const questionText = step.getQuestion ? step.getQuestion() : step.question;
+    
+    if (questionText) {
+        html += `<h2 class="font-bold mb-3">${questionText}</h2>`;
+    }
     if (step.question) html += `<h2 class="font-bold mb-3">${step.question}</h2>`;
     if (step.type === "form") html += step.render();
     if (step.type === "select") {
@@ -154,7 +169,7 @@ function render() {
                  </select>`;
     }
 
-    html += `<textarea id="note" placeholder="Notiz..." class="w-full border p-2 mb-3 rounded"></textarea>`;
+    html += `<textarea id="note" placeholder="Dein Prüftext" class="w-full border p-2 mb-3 rounded"></textarea>`;
     html += `<div class="flex gap-2">
                 <button onclick="next()" class="bg-blue-600 text-white px-4 py-2 rounded flex-1">Weiter</button>
                 ${currentStep > 1 ? `<button onclick="back()" class="bg-gray-300 px-4 py-2 rounded flex-1">Zurück</button>` : ''}
@@ -173,11 +188,16 @@ function getMusterText(stepNum) {
     const betrag = answers.betrag || "0";
     const von = answers.titel_von || "";
     const zu = answers.titel_zu || "";
+    const pgr_von = answers.pgr_von || "";
+    const pgr_zu = answers.pgr_zu || "";
+    const HV = answers[2];
 
     const texte = {
-        1: `Obersatz: Prüfung der Deckung ${betrag}€ von ${von} nach ${zu}`,
-        2: "Zuständigkeit geprüft.",
-        3: "Prüfung HV abgeschlossen.",
+        1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${betrag}€ bei Titel ${zu} zu Lasten von Titel ${von} geleistet werden dürfen.`,
+        2: "Zunächst ist eine Deckungsfähigkeit(DF) über Haushaltsvermerke (HV) zu prüfen. Dafür müssten bei beiden Titeln HV vorliegen und diese die DF mit dem jeweils anderen Titel regeln.",
+        3: HV === "Ja" 
+            ? `Sowohl Titel ${zu} als auch Titel ${von} haben einen HV, welcher die gegenseitige Deckungsfähigkeit regelt. Damit können die zusätzlichen Ausgaben bei Titel ${zu} geleistet werden `
+            : "Einer der beiden Titel hat keinen HV, damit ist eine gegenseitige DF durch HV ausgeschlossen."
         4: "Prüfung §3 HG abgeschlossen.",
         5: "Prüfung Mehreinnahmen abgeschlossen."
     };
@@ -189,6 +209,8 @@ function finalCheck() {
     const betrag = answers.betrag || 0;
     const von = answers.titel_von || "";
     const zu = answers.titel_zu || "";
+    const pgr_von = answers.pgr_von || "";
+    const pgr_zu = answers.pgr_zu || "";
 
     if (von.startsWith('441')) {
         finalStatus = "VORLAGE";
