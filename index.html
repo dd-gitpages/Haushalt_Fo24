@@ -83,7 +83,7 @@ const flow = {
         question: "Besteht eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 HG",
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": "5, "nein": 6 },
+        next: { "ja": 5, "nein": 6 },
     },
      5: {
         getQuestion: () => {
@@ -91,12 +91,11 @@ const flow = {
         const zu = answers.titel_zu || "unbekannt";
             return `Verfügt der Titel **${von}** über einen HV der eine DF mit einem anderen Titel als **${zu}** regelt?`;
         }
-    },
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 6, "nein": "END_SUCCESS" }
+        next: { "ja": 6, "nein": "END_SUCCESS" },
         resultText: "Deckungsfähigkeit nach §3 Abs. 1 HG gegeben. Die Mehrausgabe ist zulässig."
-    }
+    },
     6: {
         question: "Deckung durch Mehreinnahmen möglich?",
         type: "select",
@@ -160,7 +159,6 @@ function render() {
     if (questionText) {
         html += `<h2 class="font-bold mb-3">${questionText}</h2>`;
     }
-    if (step.question) html += `<h2 class="font-bold mb-3">${step.question}</h2>`;
     if (step.type === "form") html += step.render();
     if (step.type === "select") {
         html += `<select class="w-full border p-2 mb-3 rounded">
