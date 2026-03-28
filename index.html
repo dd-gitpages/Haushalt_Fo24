@@ -80,12 +80,22 @@ const flow = {
         resultText: "Deckungsfähigkeit durch HV gegeben. Die Mehrausgabe ist zulässig."
     },
     4: {
-        question: "Besteht eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 HG?",
+        getQuestion: () => {
+            const von = answers.titel_von || "unbekannt";
+            const zu = answers.titel_zu || "unbekannt";
+            return `Sind Titel ${von} und Titel ${zu} in der gleichen Produktgruppe?`;
+        },         
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 5, "nein": 6 },
+        next: { "ja": 5, "nein": 7 },
     },
     5: {
+        question: "Trifft eine der Nummern 1-5 von §3 Abs. 1 HG zu?",
+        type: "select",
+        options: ["Nr. 1: 422 <-> 428", "Nr. 2: 4xx -> 4xx. Ausnahme 441","Nr. 3: 5xx -> 5xx","Nr. 4: 6xx -> 6xx","Nr. 5: 985 <-> 986","keine"],
+        next: { "Nr. 1: 422 <-> 428": 6, "Nr. 2: 4xx -> 4xx. Ausnahme 441": 6,"Nr. 3: 5xx -> 5xx": 6,"Nr. 4: 6xx -> 6xx": 6,"Nr. 5: 985 <-> 986": 6,"keine": 7}
+    },
+    6: {
         getQuestion: () => {
             const von = answers.titel_von || "unbekannt";
             const zu = answers.titel_zu || "unbekannt";
@@ -96,35 +106,123 @@ const flow = {
         next: { "ja": 6, "nein": "END_SUCCESS" },
         resultText: "Deckungsfähigkeit nach §3 Abs. 1 HG gegeben. Die Mehrausgabe ist zulässig."
     },
-    6: {
-        question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
-        type: "select",
-        options: ["§ 4 Abs. 1", "§ 4 Abs. 2","§ 4 Abs. 3"],
-        next: { "§ 4 Abs. 1": 7, "§ 4 Abs. 2": 9, "§ 4 Abs. 1": 10 }
-    }
     7: {
         question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
         type: "select",
-        options: ["§ 4 Abs. 1", "§ 4 Abs. 2","§ 4 Abs. 3"],
-        next: { "§ 4 Abs. 1": 7, "§ 4 Abs. 2": 9, "§ 4 Abs. 1": 10 }
-    }
+        options: ["§4 Abs. 1", "§4 Abs. 2","§4 Abs. 3"],
+        next: { "§4 Abs. 1": 8, "§4 Abs. 2": 12, "§4 Abs. 3": 15 }
+    },
     8: {
-        question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
+        getQuestion: () => {
+            const von = answers.titel_von || "unbekannt";
+            const zu = answers.titel_zu || "unbekannt";
+            return `Sind Titel ${von} und Titel ${zu} in der gleichen Produktgruppe?`;
+        },         
         type: "select",
-        options: ["§ 4 Abs. 1", "§ 4 Abs. 2","§ 4 Abs. 3"],
-        next: { "§ 4 Abs. 1": 7, "§ 4 Abs. 2": 9, "§ 4 Abs. 1": 10 }
-    }
+        options: ["ja", "nein"],
+        next: { "ja": 8, "nein": 9 },
+    },
     9: {
-        question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
+        getQuestion: () => {
+            const von = answers.titel_von || "unbekannt";
+            const zu = answers.titel_zu || "unbekannt";
+            return `Ist Titel ${von} in der Hauptgruppe 5 oder 6 und Titel ${zu} in der Hauptgruppe 7 oder 8`;
+        },         
         type: "select",
-        options: ["§ 4 Abs. 1", "§ 4 Abs. 2","§ 4 Abs. 3"],
-        next: { "§ 4 Abs. 1": 7, "§ 4 Abs. 2": 9, "§ 4 Abs. 1": 10 }
-    }
+        options: ["ja", "nein"],
+        next: { "ja": "END_SUCCESS", "nein": 10 },
+        resultText: "Nachbewilligung durch produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 1 HG möglich. Die Mehrausgabe ist zulässig." 
+    },
     10: {
-        question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
+        question: "Liegt die Summe unter 100000 €?",
         type: "select",
-        options: ["§ 4 Abs. 1", "§ 4 Abs. 2","§ 4 Abs. 3"],
-        next: { "§ 4 Abs. 1": 7, "§ 4 Abs. 2": 9, "§ 4 Abs. 1": 10 }
+        options: ["ja", "nein"],
+        next: { "ja": 11, "nein": 20 },
+    },
+    11: {
+        question: "Trifft eine der Ausnahmen a-c von §4 Abs. 1 Nr. 2 HG zu?",
+        type: "select",
+        options: ["a): x -> 422 oder 428", "b): 441 -> x","c): 7xx oder 8xx -> 4xx,5xx oder 6xx", "keine"],
+        next: {"a): x -> 422 oder 428":20, "b): 441 -> x":20,"c): 7xx oder 8xx -> 4xx,5xx oder 6xx":20, "keine":"END_SUCCESS"},
+        resultText: "Nachbewilligung durch produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 2 HG möglich. Die Mehrausgabe ist zulässig."
+    },
+    12: {
+        getQuestion: () => {
+            const von = answers.titel_von || "unbekannt";
+            const zu = answers.titel_zu || "unbekannt";
+            return `Sind Titel ${von} und Titel ${zu} in dem gleichen Produktbereich?`;
+        },         
+        type: "select",
+        options: ["ja", "nein"],
+        next: { "ja": 13, "nein": 20 },
+    },
+    13: {
+        question: "Liegt die Summe unter 100000 €?",
+        type: "select",
+        options: ["ja", "nein"],
+        next: { "ja": 14, "nein": 20 },
+    },
+    14: {
+        question: "Trifft eine der Ausnahmen 1-3 von §4 Abs. 2 HG zu?",
+        type: "select",
+        options: ["Nr. 1: x -> 422 oder 428", "Nr. 2: 441 -> x","Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", "keine"],
+        next: {"Nr. 1: x -> 422 oder 428":18, "Nr. 2: 441 -> x":20,"Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx":20, "keine":"END_SUCCESS"},
+        resultText: "Nachbewilligung durch produktbereichsverantwortliche Person nach §4 Abs. 2 HG möglich. Die Mehrausgabe ist zulässig."
+    },
+    15: {
+        getQuestion: () => {
+            const von = answers.titel_von || "unbekannt";
+            const zu = answers.titel_zu || "unbekannt";
+            return `Sind Titel ${von} und Titel ${zu} in dem gleichen Produktplan?`;
+        },         
+        type: "select",
+        options: ["ja", "nein"],
+        next: { "ja": 16, "nein": 20 },
+    },
+    16: {
+        question: "Liegt die Summe unter 100000 €?",
+        type: "select",
+        options: ["ja", "nein"],
+        next: { "ja": 17, "nein": 20 },
+    },
+    17: {
+        question: "Trifft eine der Ausnahmen 1-3 von §4 Abs. 3 HG zu?",
+        type: "select",
+        options: ["Nr. 1: x -> 422 oder 428", "Nr. 2: 441 -> x","Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", "keine"],
+        next: {"Nr. 1: x -> 422 oder 428":18, "Nr. 2: 441 -> x":20,"Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx":20, "keine":"END_SUCCESS"},
+        resultText: "Nachbewilligung durch produktplanverantwortliche Person nach §4 Abs. 3 HG möglich. Die Mehrausgabe ist zulässig."
+    },
+    18: {
+        question: "Handelt es sich um Nachbewilligung zwischen den Gruppen 422 und 428?",
+        type: "select",
+        options: ["ja", "nein"],
+        next: { "ja": "END_SUCCESS", "nein": 20 },
+        getResultText: () => {
+        const verantwortlich = answers[7];
+        if (verantwortlich  === "§4 Abs. 2") {
+            return `Nachbewilligung durch produktbereichsverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 2 HG möglich. Die Mehrausgabe ist zulässig.`;
+        } else {
+            return `Nachbewilligung durch produktplanverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 3 HG möglich. Die Mehrausgabe ist zulässig.`;
+        }
+        }
+    },
+    19: {
+        question: "Deckung durch Mehreinnahmen möglich?",
+        type: "select",
+        options: ["ja", "nein"],
+        next: { "ja": "END_CHECK", "nein": "END_CHECK" }
+    },
+    20: {
+        question: "Nachbewilligung durch Senator für Finanzen",
+        type: "select",
+        options: ["ja", "nein"],
+        next: { "ja": "END_CHECK", "nein": 21 }
+    },
+    21: {
+        question: "Nachbewilligung durch Haushalts und Finanzausschuss",
+        type: "select",
+        options: ["ja", "nein"],
+        next: { "ja": "END_CHECK", "nein": "END_CHECK" }
     }
 };
 
@@ -151,7 +249,9 @@ function next() {
 
     if (nextStep === "END_SUCCESS") {
         finalStatus = "ZULÄSSIG";
-        finalDetail = step.resultText;
+        finalDetail = typeof step.getResultText === "function" 
+        ? step.getResultText() 
+        : step.resultText;
         return showResult();
     }
     if (nextStep === "END_CHECK") return finalCheck();
@@ -211,14 +311,17 @@ function getMusterText(stepNum) {
     const pgr_von = answers.pgr_von || "";
     const pgr_zu = answers.pgr_zu || "";
     const HV = answers[2];
+    const pgr = answers[4];
 
     const texte = {
         1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${betrag}€ bei Titel ${zu} zu Lasten von Titel ${von} geleistet werden dürfen.`,
         2: "Zunächst ist eine Deckungsfähigkeit(DF) über Haushaltsvermerke (HV) zu prüfen. Dafür müssten bei beiden Titeln HV vorliegen und diese die DF mit dem jeweils anderen Titel regeln.",
         3: HV === "ja" 
-            ? `Sowohl Titel ${zu} als auch Titel ${von} haben einen HV, welcher die gegenseitige Deckungsfähigkeit regelt. Damit können die zusätzlichen Ausgaben bei Titel ${zu} geleistet werden `
+            ? `Sowohl Titel ${zu} als auch Titel ${von} haben einen HV, welcher die gegenseitige Deckungsfähigkeit regelt. Damit können die zusätzlichen Ausgaben bei Titel ${zu} geleistet werden. `
             : "Einer der beiden Titel hat keinen HV, damit ist eine gegenseitige DF durch HV ausgeschlossen.",
-        4: "Prüfung §3 HG abgeschlossen.",
+        4: pgr === "ja"
+            ? `Als nächstes ist festzustellen, ob eine Deckungsfähigkeit nach §3 Abs. 1 HG besteht. Dafür müssten beide Titel in der gleichen Produktgruppe sein und eine der Nummern 1-5 von §3 Abs. 1 HG zutreffen. Sowohl Titel ${zu} als auch Titel ${von} sind in der Produktgruppe ${pgr_von}.`
+            : `Als nächstes ist festzustellen, ob eine Deckungsfähigkeit nach §3 Abs. 1 HG besteht. Dafür müssten beide Titel in der gleichen Produktgruppe sein und eine der Nummern 1-5 von §3 Abs. 1 HG zutreffen. Titel ${zu} ist in Produktgruppe ${pgr_zu} und Titel ${von} ist in Produktgruppe ${pgr_von}. Eine Deckungsfähigkeit nach §3 Abs. 1 ist damit nicht gegeben.`,
         5: "Prüfung Mehreinnahmen abgeschlossen."
     };
     return texte[stepNum] || "";
