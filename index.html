@@ -311,14 +311,17 @@ function getMusterText(stepNum) {
     const pgr_von = answers.pgr_von || "";
     const pgr_zu = answers.pgr_zu || "";
     const HV = answers[2];
+    const DF = answers[3];
     const pgr = answers[4];
 
     const texte = {
         1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${betrag}€ bei Titel ${zu} zu Lasten von Titel ${von} geleistet werden dürfen.`,
-        2: "Zunächst ist eine Deckungsfähigkeit(DF) über Haushaltsvermerke (HV) zu prüfen. Dafür müssten bei beiden Titeln HV vorliegen und diese die DF mit dem jeweils anderen Titel regeln.",
-        3: HV === "ja" 
+        2: HV === "ja"
+            ? `Zunächst ist eine Deckungsfähigkeit(DF) über Haushaltsvermerke(HV) zu prüfen. Dafür müssten bei beiden Titeln HV vorliegen und diese die DF mit dem jeweils anderen Titel regeln.`
+            : "Mindestens einer der beiden Titel hat keinen HV, damit ist eine gegenseitige DF durch HV ausgeschlossen.",
+        3: DF === "ja" 
             ? `Sowohl Titel ${zu} als auch Titel ${von} haben einen HV, welcher die gegenseitige Deckungsfähigkeit regelt. Damit können die zusätzlichen Ausgaben bei Titel ${zu} geleistet werden. `
-            : "Einer der beiden Titel hat keinen HV, damit ist eine gegenseitige DF durch HV ausgeschlossen.",
+            : `zwar tragen sowohl Titel ${zu} als auch Titel ${von} einen HV, diese regeln jedoch keine gegenseitige Deckungsfähigkeit.`,
         4: pgr === "ja"
             ? `Als nächstes ist festzustellen, ob eine Deckungsfähigkeit nach §3 Abs. 1 HG besteht. Dafür müssten beide Titel in der gleichen Produktgruppe sein und eine der Nummern 1-5 von §3 Abs. 1 HG zutreffen. Sowohl Titel ${zu} als auch Titel ${von} sind in der Produktgruppe ${pgr_von}.`
             : `Als nächstes ist festzustellen, ob eine Deckungsfähigkeit nach §3 Abs. 1 HG besteht. Dafür müssten beide Titel in der gleichen Produktgruppe sein und eine der Nummern 1-5 von §3 Abs. 1 HG zutreffen. Titel ${zu} ist in Produktgruppe ${pgr_zu} und Titel ${von} ist in Produktgruppe ${pgr_von}. Eine Deckungsfähigkeit nach §3 Abs. 1 ist damit nicht gegeben.`,
