@@ -97,10 +97,34 @@ const flow = {
         resultText: "Deckungsfähigkeit nach §3 Abs. 1 HG gegeben. Die Mehrausgabe ist zulässig."
     },
     6: {
-        question: "Deckung durch Mehreinnahmen möglich?",
+        question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
         type: "select",
-        options: ["ja", "nein"],
-        next: { "ja": "END_CHECK", "nein": "END_CHECK" }
+        options: ["§ 4 Abs. 1", "§ 4 Abs. 2","§ 4 Abs. 3"],
+        next: { "§ 4 Abs. 1": 7, "§ 4 Abs. 2": 9, "§ 4 Abs. 1": 10 }
+    }
+    7: {
+        question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
+        type: "select",
+        options: ["§ 4 Abs. 1", "§ 4 Abs. 2","§ 4 Abs. 3"],
+        next: { "§ 4 Abs. 1": 7, "§ 4 Abs. 2": 9, "§ 4 Abs. 1": 10 }
+    }
+    8: {
+        question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
+        type: "select",
+        options: ["§ 4 Abs. 1", "§ 4 Abs. 2","§ 4 Abs. 3"],
+        next: { "§ 4 Abs. 1": 7, "§ 4 Abs. 2": 9, "§ 4 Abs. 1": 10 }
+    }
+    9: {
+        question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
+        type: "select",
+        options: ["§ 4 Abs. 1", "§ 4 Abs. 2","§ 4 Abs. 3"],
+        next: { "§ 4 Abs. 1": 7, "§ 4 Abs. 2": 9, "§ 4 Abs. 1": 10 }
+    }
+    10: {
+        question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
+        type: "select",
+        options: ["§ 4 Abs. 1", "§ 4 Abs. 2","§ 4 Abs. 3"],
+        next: { "§ 4 Abs. 1": 7, "§ 4 Abs. 2": 9, "§ 4 Abs. 1": 10 }
     }
 };
 
