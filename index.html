@@ -120,7 +120,7 @@ const flow = {
         },         
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 8, "nein": 9 },
+        next: { "ja": 9, "nein": 7 },
     },
     9: {
         getQuestion: () => {
@@ -192,7 +192,15 @@ const flow = {
     ],
     next: () => {
         const auswahl = document.querySelector("select")?.value;
-        if (auswahl === "Nr. 1: x -> 422 oder 428") return 18;
+        if (auswahl === "Nr. 1: x -> 422 oder 428") {
+            const zu = answers.titel_zu || "unbekannt";
+            if (zu.startsWith('422') || zu.startsWith('428')) {
+            return 18;
+            }
+            else {
+            return 20;
+            }
+        }
         if (auswahl === "Nr. 2: 441 -> x") return 20;
         if (auswahl === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") return 20;
         if (auswahl === "keine") {
@@ -234,7 +242,15 @@ const flow = {
     ],
     next: () => {
         const auswahl = document.querySelector("select")?.value;
-        if (auswahl === "Nr. 1: x -> 422 oder 428") return 18;
+        if (auswahl === "Nr. 1: x -> 422 oder 428") {
+            const zu = answers.titel_zu || "unbekannt";
+            if (zu.startsWith('422') || zu.startsWith('428')) {
+            return 18;
+            }
+            else {
+            return 20;
+            }
+        }
         if (auswahl === "Nr. 2: 441 -> x") return 20;
         if (auswahl === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") return 20;
         if (auswahl === "keine") {
@@ -379,7 +395,7 @@ function getMusterText(stepNum) {
     const gr_zu = (answers.titel_zu || "").slice(0,2);
 
     const texte = {
-    1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${betrag}€ bei Titel ${zu} zu Lasten von Titel ${von} geleistet werden dürfen.`,
+    1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${betrag} € bei Titel ${zu} zu Lasten von Titel ${von} geleistet werden dürfen.`,
     
     2: answers[2] === "ja"
         ? `Zunächst ist eine Deckungsfähigkeit (DF) über Haushaltsvermerke (HV) zu prüfen. Dafür müssten bei beiden Titeln HV vorliegen und diese die DF mit dem jeweils anderen Titel regeln.`
@@ -414,6 +430,7 @@ function getMusterText(stepNum) {
             return `Da eine gegenseitige Deckungsfähigkeit der Titel ${von} und ${zu} durch keine der Nummern 1-5 gedeckt ist, ist eine gegenseitige DF nach §3 Abs. 1 HG nicht gegeben.`;
         }
     })(),
+        
     6: (() => {
         const auswahl = answers[5];
         const auswahl2 = answers[6];
@@ -439,6 +456,7 @@ function getMusterText(stepNum) {
             return ""; 
         }
     })(),
+        
     7: (() => {
         const auswahl = answers[7];
         if (auswahl === "§4 Abs. 1") {
@@ -450,7 +468,99 @@ function getMusterText(stepNum) {
         if (auswahl === "§4 Abs. 3") {
             return `Da Titel ${von} und Titel ${zu} beide im Produktplan ${pgr_zu.substring(0,2)} sind, ist nun eine Nachbewilligung nach §4 Abs. 3 HG zu prüfen.`;
         }
-    })()
+    })(),
+        
+    8: answers[8] === "ja"
+        ? "Dies erlaubt produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen."
+        : `Dies erlaubt produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen. Titel ${zu} ist in PGr ${pgr_zu} und Titel ${von} in PGr ${pgr_von}. Eine Nachbewilligung kann daher nicht durch die produktgruppenverantwortliche Person möglich.`,
+        
+    9: answers[9] === "ja"
+        ? `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${von[0]} zu Gunsten von Hauptgruppe ${zu[0]} gefordert ist, ist eine Nachbewliigung durch die produktgruppenverantwortliche Person nach $4 Abs. 1 Nr. 1 HG möglich.`
+        : `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${von[0]} zu Gunsten von Hauptgruppe ${zu[0]} gefordert ist, ist eine Nachbewliigung nach $4 Abs. 1 Nr. 1 HG möglich. Daher steht als nächstes eine Nachbewilligung nach §4 Abs. 1 Nr. 2 HG zur Frage.`,
+
+    10: answers[10] === "ja"
+        ? `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen a-c von §4 Abs. 1 Nr. 2 HG dies nicht verbieten. Die geforderte Summe von ${betrag} € liegt unter 100000 €.`
+        : `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen a-c von §4 Abs. 1 Nr. 2 HG dies nicht verbieten. Die geforderte Summe von ${betrag} € liegt über 100000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100000 € möglich sind ist letzlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
+
+    11: (() => {
+        const auswahl = answers[11];
+        if (auswahl === "a): x -> 422 oder 428") {
+            return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${zu.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. a HG untersagt.`;
+        }
+        if (auswahl === "b): 441 -> x") {
+            return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${von.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. b HG untersagt.`;
+        }
+        if (auswahl === "c): 7xx oder 8xx -> 4xx,5xx oder 6xx") {
+            return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${zu[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${von[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. c HG untersagt.`;
+        }
+        if (auswahl === "keine") {
+            return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${von.substring(0,3)} fordert, trift keine der Ausnahmen a-c zu. Eine Nachbewliigung durch die produktgruppenverantwortliche Person nach $4 Abs. 1 Nr. 2 HG ist möglich.`; 
+        }
+    })(),
+    
+    12: answers[12] === "ja"
+        ? `Dort sind produktbereichsinterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 2 HG dies nicht verbieten.`
+        : `Dort sind produktbereichsinterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 2 HG dies nicht verbieten. Titel ${zu} ist in Produktbereich ${pgr_zu.substring(0,5)} und Titel ${von} in Produktbereich ${pgr_von.substring(0,5)}. Eine Nachbewilligung kann daher nicht durch die produktbereichsverantwortliche Person möglich.`,
+    
+    13: answers[13] === "ja"
+        ? `Die geforderte Summe von ${betrag} € liegt unter 100000 €.`
+        : `Die geforderte Summe von ${betrag} € liegt über 100000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100000 € möglich ist, ist letzlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG. zu prüfen`,
+
+    14: (() => {
+        const auswahl = answers[14];
+        if (auswahl === "Nr. 1: x -> 422 oder 428") {
+            return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${zu.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 1 HG untersagt.`;
+        }
+        if (auswahl === "Nr. 2: 441 -> x") {
+            return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${von.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 2 HG untersagt.`;
+        }
+        if (auswahl === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") {
+            return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${zu[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${von[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 3 HG untersagt.`;
+        }
+        if (auswahl === "keine") {
+            return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${von.substring(0,3)} fordert, trift keine der Ausnahmen 1-3 zu. Eine Nachbewliigung durch die produktbereichsverantwortliche Person nach $4 Abs. 2 HG ist möglich.`; 
+        }
+    })(),
+
+    15: answers[12] === "ja"
+        ? `Dort sind produktplaninterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 3 HG dies nicht verbieten.`
+        : `Dort sind produktplaninterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 3 HG dies nicht verbieten. Titel ${zu} ist in Produktplan ${pgr_zu.substring(0,5)} und Titel ${von} in Produktplan ${pgr_von.substring(0,5)}. Eine Nachbewilligung kann daher nicht durch die produktplanverantwortliche Person möglich.`,
+    
+    16: answers[13] === "ja"
+        ? `Die geforderte Summe von ${betrag} € liegt unter 100000 €.`
+        : `Die geforderte Summe von ${betrag} € liegt über 100000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100000 € möglich ist, ist letzlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG. zu prüfen`,
+
+    17: (() => {
+        const auswahl = answers[17];
+        if (auswahl === "Nr. 1: x -> 422 oder 428") {
+            return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${zu.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 1 HG untersagt.`;
+        }
+        if (auswahl === "Nr. 2: 441 -> x") {
+            return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${von.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 2 HG untersagt.`;
+        }
+        if (auswahl === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") {
+            return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${zu[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${von[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 3 HG untersagt.`;
+        }
+        if (auswahl === "keine") {
+            return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${von.substring(0,3)} fordert, trift keine der Ausnahmen 1-3 zu. Eine Nachbewliigung durch die produktplanverantwortliche Person nach $4 Abs. 3 HG ist möglich.`; 
+        }
+    })(),
+
+    18: (() => {
+        const auswahl = answers[18];
+        if (pgr_von.substring(0,5) === pgr_zu.substring(0,5) ) {
+            if (auswahl === "ja") {
+            return `Da es sich um eine Nachbewilligung zwischen Gruppe ${von.substring(0,3)} und Gruppe ${zu.substring(0,3)} handelt, ist dies durch die produktbereichsverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 2 HG möglich.`;
+            }
+        }
+        else {
+            if (auswahl === "ja") {
+            return `Da es sich um eine Nachbewilligung zwischen Gruppe ${von.substring(0,3)} und Gruppe ${zu.substring(0,3)} handelt, ist dies durch die produktbereichsverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 2 HG möglich.`;
+            }
+        }
+    })(),
+
+        
     };
     return texte[stepNum] || "";
 }
