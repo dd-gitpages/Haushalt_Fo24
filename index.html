@@ -142,8 +142,27 @@ const flow = {
     11: {
         question: "Trifft eine der Ausnahmen a-c von §4 Abs. 1 Nr. 2 HG zu?",
         type: "select",
-        options: ["a): x -> 422 oder 428", "b): 441 -> x","c): 7xx oder 8xx -> 4xx,5xx oder 6xx", "keine"],
-        next: {"a): x -> 422 oder 428":20, "b): 441 -> x":20,"c): 7xx oder 8xx -> 4xx,5xx oder 6xx":20, "keine":"END_SUCCESS"},
+        options: [
+        "a): x -> 422 oder 428", 
+        "b): 441 -> x",
+        "c): 7xx oder 8xx -> 4xx,5xx oder 6xx", 
+        "keine"
+    ],
+    next: () => {
+        const auswahl = document.querySelector("select")?.value;
+        if (auswahl === "a): x -> 422 oder 428") return 20;
+        if (auswahl === "b): 441 -> x") return 20;
+        if (auswahl === "c): 7xx oder 8xx -> 4xx,5xx oder 6xx") return 20;
+        if (auswahl === "keine") {
+            const ersteZiffer = (answers.titel_von || "").charAt(0);
+            if (["1", "2", "3"].includes(ersteZiffer)) {
+                return 19;
+            } 
+            else {
+                return "END_SUCCESS";
+            }
+        }
+    },
         resultText: "Nachbewilligung durch produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 2 HG möglich. Die Mehrausgabe ist zulässig."
     },
     12: {
@@ -160,14 +179,33 @@ const flow = {
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 14, "nein": 20 },
+        next: { "ja": 14, "nein": 21 },
     },
     14: {
         question: "Trifft eine der Ausnahmen 1-3 von §4 Abs. 2 HG zu?",
         type: "select",
-        options: ["Nr. 1: x -> 422 oder 428", "Nr. 2: 441 -> x","Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", "keine"],
-        next: {"Nr. 1: x -> 422 oder 428":18, "Nr. 2: 441 -> x":20,"Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx":20, "keine":"END_SUCCESS"},
-        resultText: "Nachbewilligung durch produktbereichsverantwortliche Person nach §4 Abs. 2 HG möglich. Die Mehrausgabe ist zulässig."
+        options: [
+        "Nr. 1: x -> 422 oder 428", 
+        "Nr. 2: 441 -> x",
+        "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", 
+        "keine"
+    ],
+    next: () => {
+        const auswahl = document.querySelector("select")?.value;
+        if (auswahl === "Nr. 1: x -> 422 oder 428") return 18;
+        if (auswahl === "Nr. 2: 441 -> x") return 20;
+        if (auswahl === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") return 20;
+        if (auswahl === "keine") {
+            const ersteZiffer = (answers.titel_von || "").charAt(0);
+            if (["1", "2", "3"].includes(ersteZiffer)) {
+                return 19;
+            } 
+            else {
+                return "END_SUCCESS";
+            }
+        }
+    },
+            resultText: "Nachbewilligung durch produktbereichsverantwortliche Person nach §4 Abs. 2 HG möglich. Die Mehrausgabe ist zulässig."
     },
     15: {
         getQuestion: () => {
@@ -183,16 +221,34 @@ const flow = {
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 17, "nein": 20 },
+        next: { "ja": 17, "nein": 21 },
     },
     17: {
-        question: "Trifft eine der Ausnahmen 1-3 von §4 Abs. 3 HG zu?",
-        type: "select",
-        options: ["Nr. 1: x -> 422 oder 428", "Nr. 2: 441 -> x","Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", "keine"],
-        next: {"Nr. 1: x -> 422 oder 428":18, "Nr. 2: 441 -> x":20,"Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx":20, "keine":"END_SUCCESS"},
-        resultText: "Nachbewilligung durch produktplanverantwortliche Person nach §4 Abs. 3 HG möglich. Die Mehrausgabe ist zulässig."
+    question: "Trifft eine der Ausnahmen 1-3 von §4 Abs. 3 HG zu?",
+    type: "select",
+    options: [
+        "Nr. 1: x -> 422 oder 428", 
+        "Nr. 2: 441 -> x",
+        "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", 
+        "keine"
+    ],
+    next: () => {
+        const auswahl = document.querySelector("select")?.value;
+        if (auswahl === "Nr. 1: x -> 422 oder 428") return 18;
+        if (auswahl === "Nr. 2: 441 -> x") return 20;
+        if (auswahl === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") return 20;
+        if (auswahl === "keine") {
+            const ersteZiffer = (answers.titel_von || "").charAt(0);
+            if (["1", "2", "3"].includes(ersteZiffer)) {
+                return 19;
+            } 
+            else {
+                return "END_SUCCESS";
+            }
+        }
     },
-    18: {
+    resultText: "Nachbewilligung durch produktplanverantwortliche Person nach §4 Abs. 3 HG möglich. Die Mehrausgabe ist zulässig."
+}, 18: {
         question: "Handelt es sich um Nachbewilligung zwischen den Gruppen 422 und 428?",
         type: "select",
         options: ["ja", "nein"],
@@ -207,13 +263,17 @@ const flow = {
         }
     },
     19: {
-        question: "Deckung durch Mehreinnahmen möglich?",
+        getQuestion: () => {
+            const von = answers.titel_von || "unbekannt";
+            const zu = answers.titel_zu || "unbekannt";
+            return `Stehen bei Titel ${von} Mehreinnahmen in Höhe der zusätzlichen Ausgaben bei Titel ${zu} zur verfügung?`;
+        },
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": "END_CHECK", "nein": "END_CHECK" }
+        next: { "ja": "END_CHECK", "nein": 20 }
     },
     20: {
-        question: "Nachbewilligung durch Senator für Finanzen",
+        question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
         next: { "ja": "END_CHECK", "nein": 21 }
