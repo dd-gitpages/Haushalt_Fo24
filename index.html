@@ -509,22 +509,22 @@ function getMusterText(stepNum) {
         5: (() => {
             const auswahl = answers[5];
             if (auswahl === "Nr. 1: 422 <-> 428") {
-                return `Da Titel ${von} in Gruppe ${von.substring(0,3)} und Titel ${zu} in Gruppe ${zu.substring(0,3)} ist, trifft Nr. 1 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 1 HG gegeben.`;
+                return `Da Titel ${von} in Gruppe ${von.substring(0,3)} und Titel ${zu} in Gruppe ${zu.substring(0,3)} ist, trifft Nr. 1 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 1 HG gegeben.`;
             }
             if (auswahl === "Nr. 2: 4xx -> 4xx. Ausnahme 441") {
-                return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, und keiner der beiden in Gruppe 441, trifft Nr. 2 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 2 HG gegeben.`;
+                return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, und keiner der beiden in Gruppe 441, trifft Nr. 2 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 2 HG gegeben.`;
             }
             if (auswahl === "Nr. 3: 5xx -> 5xx") {
-                return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, trifft Nr. 3 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 3 HG gegeben.`;
+                return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, trifft Nr. 3 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 3 HG gegeben.`;
             }
             if (auswahl === "Nr. 4: 6xx -> 6xx") {
-                return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, trifft Nr. 4 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 4 HG gegeben.`;
+                return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, trifft Nr. 4 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 4 HG gegeben.`;
             }
             if (auswahl === "Nr. 5: 985 <-> 986") {
-                return `Da Titel ${von} in Gruppe ${von.substring(0,3)} und Titel ${zu} in Gruppe ${zu.substring(0,3)} ist, trifft Nr. 5 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 5 HG gegeben.`;
+                return `Da Titel ${von} in Gruppe ${von.substring(0,3)} und Titel ${zu} in Gruppe ${zu.substring(0,3)} ist, trifft Nr. 5 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 5 HG gegeben.`;
             }
             if (auswahl === "keine") {
-                return `Da eine gegenseitige Deckungsfähigkeit der Gruppen ${von.substring(0,3)} und ${zu.substring(0,3)} durch keine der Nummern 1-5 gedeckt ist, ist eine gegenseitige DF nach §3 Abs. 1 HG nicht gegeben.`;
+                return `Da eine gegenseitige Deckungsfähigkeit der Gruppen ${von.substring(0,3)} und ${zu.substring(0,3)} durch keine der Nummern 1-5 gedeckt ist, ist auch keine Deckungsfähigkeit nach §3 Abs. 1 HG gegeben.`;
             }
         })(),
             
