@@ -57,22 +57,43 @@ let finalDetail = "";
 
 const flow = {
     1: {
+        title: "Stammdaten der Umbuchung",
         type: "form",
         render: () => `
-            <input id="titel_zu" type="text" placeholder="Zu Gunsten von (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
-            <input id="pgr_zu" type="text" placeholder="Produktgruppe (z. B. 50.01.01)" class="w-full border p-2 mb-2 rounded">
-            <input id="titel_von" type="text" placeholder="Zu Lasten von (z. B. 511 01-1)" class="w-full border p-2 mb-2 rounded">
-            <input id="pgr_von" type="text" placeholder="Produktgruppe (z. B. 50.01.01)" class="w-full border p-2 mb-2 rounded">
-            <input id="input_betrag" type="number" placeholder="Betrag €" class="w-full border p-2 mb-2 rounded">`,
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Zu Gunsten von (Titel)</label>
+                    <input id="titel_zu" type="text" placeholder="z. B. 511 01-1" class="w-full border p-2 rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Produktgruppe (Empfänger)</label>
+                    <input id="pgr_zu" type="text" placeholder="z. B. 50.01.01" class="w-full border p-2 rounded" required>
+                </div>
+                <hr>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Zu Lasten von (Titel)</label>
+                    <input id="titel_von" type="text" placeholder="z. B. 511 01-1" class="w-full border p-2 rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Produktgruppe (Sender)</label>
+                    <input id="pgr_von" type="text" placeholder="z. B. 50.01.01" class="w-full border p-2 rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Betrag in €</label>
+                    <input id="input_betrag" type="number" step="0.01" placeholder="0.00" class="w-full border p-2 rounded" required>
+                </div>
+            </div>`,
         next: () => 2
     },
     2: {
+        title: "Prüfung: Deckungsfähigkeit durch Haushaltsvermerke",
         question: "Haben beide Titel einen Haushaltsvermerk (HV)?",
         type: "select",
         options: ["ja", "nein"],
         next: { "ja": 3, "nein": 4 },
     },
     3: {
+        title: "Prüfung: Deckungsfähigkeit durch Haushaltsvermerke",
         question: "Regeln beide Haushaltsvermerke die gegenseitige Deckungsfähigkeit (DF)? Ggf. auch über einen Deckungskreis.",
         type: "select",
         options: ["ja", "nein"],
@@ -80,6 +101,7 @@ const flow = {
         resultText: "Deckungsfähigkeit durch HV gegeben. Die Mehrausgabe ist zulässig."
     },
     4: {
+        title: "Prüfung: Deckungsfähigkeit nach §3 Abs. 1 HG",
         getQuestion: () => {
             const von = answers.titel_von || "unbekannt";
             const zu = answers.titel_zu || "unbekannt";
@@ -90,12 +112,14 @@ const flow = {
         next: { "ja": 5, "nein": 7 },
     },
     5: {
+        title: "Prüfung: Deckungsfähigkeit nach §3 Abs. 1 HG",
         question: "Trifft eine der Nummern 1-5 von §3 Abs. 1 HG zu?",
         type: "select",
         options: ["Nr. 1: 422 <-> 428", "Nr. 2: 4xx -> 4xx. Ausnahme 441","Nr. 3: 5xx -> 5xx","Nr. 4: 6xx -> 6xx","Nr. 5: 985 <-> 986","keine"],
         next: { "Nr. 1: 422 <-> 428": 6, "Nr. 2: 4xx -> 4xx. Ausnahme 441": 6,"Nr. 3: 5xx -> 5xx": 6,"Nr. 4: 6xx -> 6xx": 6,"Nr. 5: 985 <-> 986": 6,"keine": 7}
     },
     6: {
+        title: "Prüfung: Deckungsfähigkeit ausgeschlossen durch §3 Abs. 2 HG",
         getQuestion: () => {
             const von = answers.titel_von || "unbekannt";
             const zu = answers.titel_zu || "unbekannt";
@@ -107,12 +131,14 @@ const flow = {
         resultText: "Deckungsfähigkeit nach §3 Abs. 1 HG gegeben. Die Mehrausgabe ist zulässig."
     },
     7: {
+        title: "Prüfung: Zuständigkeit für die Nachbewilligung",
         question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
         type: "select",
         options: ["§4 Abs. 1", "§4 Abs. 2","§4 Abs. 3"; "keinem. Direkt zu §10"],
         next: { "§4 Abs. 1": 8, "§4 Abs. 2": 12, "§4 Abs. 3": 15, "keinem. Direkt zu §10": 20 }
     },
     8: {
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 1 Nr. 1 HG",
         getQuestion: () => {
             const von = answers.titel_von || "unbekannt";
             const zu = answers.titel_zu || "unbekannt";
@@ -123,6 +149,7 @@ const flow = {
         next: { "ja": 9, "nein": 7 },
     },
     9: {
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 1 Nr. 1 HG",
         getQuestion: () => {
             const von = answers.titel_von || "unbekannt";
             const zu = answers.titel_zu || "unbekannt";
@@ -134,12 +161,14 @@ const flow = {
         resultText: "Nachbewilligung durch produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 1 HG möglich. Die Mehrausgabe ist zulässig." 
     },
     10: {
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 1 Nr. 2 HG",
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
         next: { "ja": 11, "nein": 20 },
     },
     11: {
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 1 Nr. 2 HG",
         question: "Trifft eine der Ausnahmen a-c von §4 Abs. 1 Nr. 2 HG zu?",
         type: "select",
         options: [
@@ -166,6 +195,7 @@ const flow = {
         resultText: "Nachbewilligung durch produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 2 HG möglich. Die Mehrausgabe ist zulässig."
     },
     12: {
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 2 HG",
         getQuestion: () => {
             const von = answers.titel_von || "unbekannt";
             const zu = answers.titel_zu || "unbekannt";
@@ -176,12 +206,14 @@ const flow = {
         next: { "ja": 13, "nein": 7 },
     },
     13: {
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 2 HG",
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
         next: { "ja": 14, "nein": 21 },
     },
     14: {
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 2 HG",
         question: "Trifft eine der Ausnahmen 1-3 von §4 Abs. 2 HG zu?",
         type: "select",
         options: [
@@ -216,6 +248,7 @@ const flow = {
             resultText: "Nachbewilligung durch produktbereichsverantwortliche Person nach §4 Abs. 2 HG möglich. Die Mehrausgabe ist zulässig."
     },
     15: {
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 3 HG",
         getQuestion: () => {
             const von = answers.titel_von || "unbekannt";
             const zu = answers.titel_zu || "unbekannt";
@@ -226,21 +259,23 @@ const flow = {
         next: { "ja": 16, "nein": 20 },
     },
     16: {
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 3 HG",
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
         next: { "ja": 17, "nein": 21 },
     },
     17: {
-    question: "Trifft eine der Ausnahmen 1-3 von §4 Abs. 3 HG zu?",
-    type: "select",
-    options: [
-        "Nr. 1: x -> 422 oder 428", 
-        "Nr. 2: 441 -> x",
-        "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", 
-        "keine"
-    ],
-    next: () => {
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 3 HG",
+        question: "Trifft eine der Ausnahmen 1-3 von §4 Abs. 3 HG zu?",
+        type: "select",
+        options: [
+            "Nr. 1: x -> 422 oder 428", 
+            "Nr. 2: 441 -> x",
+            "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", 
+            "keine"
+        ],
+        next: () => {
         const auswahl = document.querySelector("select")?.value;
         if (auswahl === "Nr. 1: x -> 422 oder 428") {
             const zu = answers.titel_zu || "unbekannt";
@@ -250,7 +285,7 @@ const flow = {
             else {
             return 20;
             }
-        }
+            }
         if (auswahl === "Nr. 2: 441 -> x") return 20;
         if (auswahl === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") return 20;
         if (auswahl === "keine") {
@@ -262,9 +297,11 @@ const flow = {
                 return "END_SUCCESS";
             }
         }
-    },
-    resultText: "Nachbewilligung durch produktplanverantwortliche Person nach §4 Abs. 3 HG möglich. Die Mehrausgabe ist zulässig."
-}, 18: {
+        },
+        resultText: "Nachbewilligung durch produktplanverantwortliche Person nach §4 Abs. 3 HG möglich. Die Mehrausgabe ist zulässig."
+    }, 
+    18: {
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 6 HG"
         question: "Handelt es sich um Nachbewilligung zwischen den Gruppen 422 und 428?",
         type: "select",
         options: ["ja", "nein"],
@@ -279,6 +316,7 @@ const flow = {
         }
     },
     19: {
+        "Prüfung: Nachbewilligung nach §4 Abs. 5 HG"
         getQuestion: () => {
             const von = answers.titel_von || "unbekannt";
             const zu = answers.titel_zu || "unbekannt";
@@ -289,26 +327,36 @@ const flow = {
         next: { "ja": "END_CHECK", "nein": 20 }
     },
     20: {
+        "Prüfung: Nachbewilligung nach §10 Abs. 4 Nr. 3 HG"
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
         next: { "ja": "END_CHECK", "nein": 21 }
     },
     21: {
-        question: "Nachbewilligung durch Haushalts und Finanzausschuss",
-        type: "select",
-        options: ["ja", "nein"],
-        next: { "ja": "END_CHECK", "nein": "END_CHECK" }
+        title: "Nachbewilligung nach §9 Abs. 2 Nr. 1 HG",
+        question: "Nachbewlligung durch den Haushalts- und Finanzausschusses",
+        type: "info",
+        description: "Der Haushalts- und Finanzausschuss ist nach §9 Abs. 2 Nr. 1 HG zu allen gedeckten Nachbewilligungen ermächtigt.",
+        next: () => "END_CHECK"
     }
 };
-
 function next() {
     if (currentStep === 1) {
-        answers.titel_zu = document.getElementById('titel_zu').value;
-        answers.titel_von = document.getElementById('titel_von').value;
+        const tZu = document.getElementById('titel_zu').value;
+        const tVon = document.getElementById('titel_von').value;
+        const betrag = document.getElementById('input_betrag').value;
+
+        if (!tZu || !tVon || !betrag) {
+            alert("Bitte fülle die Pflichtfelder (Titel und Betrag) aus.");
+            return;
+        }
+        
+        answers.titel_zu = tZu;
+        answers.titel_von = tVon;
         answers.pgr_zu = document.getElementById('pgr_zu').value;
         answers.pgr_von = document.getElementById('pgr_von').value;
-        answers.betrag = parseFloat(document.getElementById('input_betrag').value) || 0;
+        answers.betrag = parseFloat(betrag) || 0;
     }
 
     saveNote();
@@ -316,8 +364,11 @@ function next() {
     let inputVal = "";
 
     if (step.type === "select") {
-        inputVal = document.querySelector("select")?.value;
-        if (!inputVal) return alert("Bitte auswählen");
+        inputVal = document.getElementById("step_input").value;
+        if (!inputVal) {
+            alert("Bitte triff eine Auswahl.");
+            return;
+        }
         answers[currentStep] = inputVal;
     }
 
@@ -353,24 +404,41 @@ function render() {
     const step = flow[currentStep];
     const el = document.getElementById("wizard");
     let html = "";
-    const questionText = step.getQuestion ? step.getQuestion() : step.question;
-    
-    if (questionText) {
-        html += `<h2 class="font-bold mb-3">${questionText}</h2>`;
-    }
-    if (step.type === "form") html += step.render();
-    if (step.type === "select") {
-        html += `<select class="w-full border p-2 mb-3 rounded">
-                    <option value="">Bitte wählen</option>
-                    ${step.options.map(o => `<option value="${o}">${o}</option>`).join("")}
-                 </select>`;
+
+    if (step.title) {
+        html += `<h3 class="text-blue-600 text-xs uppercase tracking-wider font-semibold mb-1">${step.title}</h3>`;
     }
 
-    html += `<textarea id="note" placeholder="Dein Prüftext" class="w-full border p-2 mb-3 rounded"></textarea>`;
-    html += `<div class="flex gap-2">
-                ${currentStep > 1 ? `<button onclick="back()" class="bg-gray-300 px-4 py-2 rounded flex-1">Zurück</button>` : ''}
-                <button onclick="next()" class="bg-blue-600 text-white px-4 py-2 rounded flex-1">Weiter</button>
+    const questionText = step.getQuestion ? step.getQuestion() : step.question;
+    if (questionText) {
+        html += `<h2 class="font-bold text-lg mb-4 text-slate-800">${questionText}</h2>`;
+    }
+
+    if (step.type === "form") {
+        html += step.render();
+    } else if (step.type === "select") {
+        html += `<select id="step_input" class="w-full border p-2 mb-4 rounded bg-white shadow-sm">
+                    <option value="">Bitte wählen...</option>
+                    ${step.options.map(o => `<option value="${o}">${o}</option>`).join("")}
+                 </select>`;
+    } else if (step.type === "info") {
+        html += `<div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
+                    <p class="text-sm text-blue-700">${step.description}</p>
+                 </div>`;
+    }
+
+    html += `<div class="mt-6">
+                <label class="block text-xs text-gray-500 mb-1">Eigene Notizen / Begründung:</label>
+                <textarea id="note" class="w-full border p-2 mb-4 rounded text-sm" rows="2">${notes[currentStep] || ""}</textarea>
              </div>`;
+
+    html += `<div class="flex gap-3">
+                ${currentStep > 1 ? `<button onclick="back()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg flex-1 transition">Zurück</button>` : ''}
+                <button onclick="next()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex-1 transition font-bold shadow-md">
+                    ${step.type === "info" ? "Abschließen" : "Weiter"}
+                </button>
+             </div>`;
+
     el.innerHTML = html;
     updateProgress();
 }
