@@ -364,6 +364,8 @@ const flow = {
         title: "Nachbewilligung nach §9 Abs. 2 Nr. 1 HG",
         question: "Nachbewlligung durch den Haushalts- und Finanzausschusses",
         type: "info",
+         noteLabel: "Ergebnis",
+        notePlaceholder: "Formuliere dein Ergebnis...",
         description: "Der Haushalts- und Finanzausschuss ist nach §9 Abs. 2 Nr. 1 HG zu allen gedeckten Nachbewilligungen ermächtigt.",
         next: () => "END_SUCCESS"
     }
@@ -688,19 +690,85 @@ function getMusterText(stepNum) {
     
     return texte[stepNum] || "";
 }
+function getSollPfad() {
+    let pfad = [1]; // Start immer bei 1
+    const von = answers.titel_von || "";
+    const zu = answers.titel_zu || "";
+    const pgr_von = answers.pgr_von || "";
+    const pgr_zu = answers.pgr_zu || "";
+    const betrag = parseFloat(answers.betrag) || 0;
 
+    // 1. Deckungsfähigkeit (Annahme: keine HV, da nicht auslesbar)
+    pfad.push(2);
+    pfad.push(4); // Gehe direkt zu §3 Abs. 1 HG
+
+    if (pgr_von === pgr_zu) {
+        pfad.push(5);
+        // Prüfe Hauptgruppen für §3 Abs. 1 Nr. 1-5
+        const hgVon = von[0];
+        const hgZu = zu[0];
+        if ((von.startsWith("422") && zu.startsWith("428")) || (von.startsWith("428") && zu.startsWith("422"))) {
+             pfad.push(6); // §3 Abs. 1 Nr. 1
+             return pfad; // Ende: Zulässig
+        }
+        // ... hier könnten weitere Nr. 2-5 Logiken folgen
+    }
+
+    // 2. Nachbewilligung §4 HG
+    pfad.push(7);
+    if (pgr_von === pgr_zu) {
+        pfad.push(8);
+        const hgVon = von[0];
+        const hgZu = zu[0];
+        if ((hgVon === "5" || hgVon === "6") && (hgZu === "7" || hgZu === "8")) {
+            pfad.push(9);
+            return pfad; // Ende: Zulässig nach §4 Abs. 1 Nr. 1
+        }
+        pfad.push(10);
+    } else if (pgr_von.substring(0, 5) === pgr_zu.substring(0, 5)) {
+        pfad.push(12, 13, 14);
+    } else if (pgr_von.substring(0, 2) === pgr_zu.substring(0, 2)) {
+        pfad.push(15, 16, 17);
+    } else {
+        pfad.push(20);
+    }
+
+    // 3. Finale Instanz bei Betrag > 100k
+    if (betrag >= 100000) {
+        pfad.push(21);
+    }
+    return pfad;
+}
+    
 function showResult() {
     document.getElementById("wizard").innerHTML = "";
     document.getElementById("result").classList.remove("hidden");
-    document.getElementById("resTitle").innerText = finalStatus === "ZULÄSSIG" ? "✅ Zulässig" : "Nicht erlaubt";
-    document.getElementById("resDesc").innerText = finalDetail;
 
-    const notesText = Object.entries(notes).map(([k,v]) => `${v}`).join("\n");
-    let muster = history.map(s => getMusterText(s)).join("\n");
+    const istPfad = history; 
+    const sollPfad = getSollPfad(); 
+    const istMuster = istPfad.map(s => getMusterText(s)).filter(t => t !== "").join("\n");
+    const sollMuster = sollPfad.map(s => getMusterText(s)).filter(t => t !== "").join("\n");
+    const abweichung = JSON.stringify(istPfad) !== JSON.stringify(sollPfad);
 
-    document.getElementById("resSummary").innerText = 
-        `DATEN: ${answers.betrag}€ von ${answers.titel_von} an ${answers.titel_zu}\n\n` +
-        `DEINE LÖSUNG:\n${notesText}\n\nMUSTERLÖSUNG:\n${muster}`;
+    let output = "";
+    let notizenText = Object.entries(notes)
+        .map(([step, text]) => `Schritt ${step}: ${text}`)
+        .join("\n");
+
+    output += `### KURZ-CHECK\n`;
+    output += `Dein Weg:      ${istPfad.join(" → ")}\n`;
+    output += `Richtiger Weg: ${sollPfad.join(" → ")}\n\n`;
+
+    if (abweichung) {
+        output += `### DEINE LÖSUNG (ABWEICHEND)\n${notizenText}\n\n`;
+        output += `### MUSTERFORMILIERUNGEN FÜR DEINE LÖSUNGSSCHRITTE\n${istMuster}`;
+        output += `### MUSTERLÖSUNG\n${sollMuster}`;
+    } else {
+        output += `### DEINE LÖSUNG (ABWEICHEND)\n${notizenText}\n\n`;
+        output += `### MUSTERLÖSUNG (Korrekt gelöst!)\n${sollMuster}`;
+    }
+
+    document.getElementById("resSummary").innerText = output;
     document.getElementById("progress").style.width = "100%";
 }
 
@@ -709,6 +777,7 @@ function updateProgress() {
     const p = (currentStep / total) * 100;
     document.getElementById("progress").style.width = p + "%";
 }
+    
 function exportTxt() {
     const datum = new Date().toLocaleString("de-DE");
     let prüfungsSchritte = history
