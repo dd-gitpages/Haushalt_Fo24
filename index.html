@@ -134,8 +134,8 @@ const flow = {
         title: "Prüfung: Zuständigkeit für die Nachbewilligung",
         question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
         type: "select",
-        options: ["§4 Abs. 1", "§4 Abs. 2","§4 Abs. 3"; "keinem. Direkt zu §10"],
-        next: { "§4 Abs. 1": 8, "§4 Abs. 2": 12, "§4 Abs. 3": 15, "keinem. Direkt zu §10": 20 }
+        options: ["§4 Abs. 1", "§4 Abs. 2","§4 Abs. 3", "keinem. Direkt zu §10"],
+        next: { "§4 Abs. 1": 8, "§4 Abs. 2": 12, "§4 Abs. 3": 15, "keinem. Direkt zu §10": 20}
     },
     8: {
         title: "Prüfung: Nachbewilligung nach §4 Abs. 1 Nr. 1 HG",
@@ -301,7 +301,7 @@ const flow = {
         resultText: "Nachbewilligung durch produktplanverantwortliche Person nach §4 Abs. 3 HG möglich. Die Mehrausgabe ist zulässig."
     }, 
     18: {
-        title: "Prüfung: Nachbewilligung nach §4 Abs. 6 HG"
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 6 HG",
         question: "Handelt es sich um Nachbewilligung zwischen den Gruppen 422 und 428?",
         type: "select",
         options: ["ja", "nein"],
@@ -316,7 +316,7 @@ const flow = {
         }
     },
     19: {
-        "Prüfung: Nachbewilligung nach §4 Abs. 5 HG"
+        "Prüfung: Nachbewilligung nach §4 Abs. 5 HG",
         getQuestion: () => {
             const von = answers.titel_von || "unbekannt";
             const zu = answers.titel_zu || "unbekannt";
@@ -327,7 +327,7 @@ const flow = {
         next: { "ja": "END_CHECK", "nein": 20 }
     },
     20: {
-        "Prüfung: Nachbewilligung nach §10 Abs. 4 Nr. 3 HG"
+        "Prüfung: Nachbewilligung nach §10 Abs. 4 Nr. 3 HG",
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
@@ -340,7 +340,8 @@ const flow = {
         description: "Der Haushalts- und Finanzausschuss ist nach §9 Abs. 2 Nr. 1 HG zu allen gedeckten Nachbewilligungen ermächtigt.",
         next: () => "END_CHECK"
     }
-};
+
+    
 function next() {
     if (currentStep === 1) {
         const tZu = document.getElementById('titel_zu').value;
