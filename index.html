@@ -423,7 +423,6 @@ function next() {
         : step.resultText;
         return showResult();
     }
-    if (nextStep === "END_CHECK") return finalCheck();
 
     goTo(nextStep);
 }
@@ -475,9 +474,9 @@ function render() {
     html += `<div class="mt-6">
                 <label class="block text-xs font-semibold text-slate-500 mb-1">${noteLabel}</label>
                 <textarea id="note" 
-                          placeholder="${notePlaceholder}" 
-                          class="w-full border p-2 mb-4 rounded text-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-200 transition" 
-                          rows="2">${notes[currentStep] || ""}</textarea>
+                      placeholder="${notePlaceholder}" 
+                      class="w-full border p-2 mb-4 rounded text-sm bg-white focus:ring-2 focus:ring-blue-200 transition" 
+                      rows="2">${notes[currentStep] || ""}</textarea>
              </div>`;
 
     html += `<div class="flex gap-3">
@@ -688,30 +687,6 @@ function getMusterText(stepNum) {
     };
     
     return texte[stepNum] || "";
-}
-
-function finalCheck() {
-    const betrag = answers.betrag || 0;
-    const von = answers.titel_von || "";
-    const zu = answers.titel_zu || "";
-    const pgr_von = answers.pgr_von || "";
-    const pgr_zu = answers.pgr_zu || "";
-    const auswahl6
-
-    if (von.startsWith('441')) {
-        finalStatus = "VORLAGE";
-        finalDetail = "Titel 441 ist gesperrt.";
-    } else if (zu.startsWith('42') && !von.startsWith('42')) {
-        finalStatus = "VORLAGE";
-        finalDetail = "Personalausgaben dürfen nur durch Personalausgaben gedeckt werden.";
-    } else if (betrag >= 100000) {
-        finalStatus = "VORLAGE";
-        finalDetail = "Betrag über 100.000 € erfordert Vorlage.";
-    } else {
-        finalStatus = "ZULÄSSIG";
-        finalDetail = "Die Maßnahme ist haushaltsrechtlich zulässig.";
-    }
-    showResult();
 }
 
 function showResult() {
