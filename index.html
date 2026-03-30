@@ -769,17 +769,13 @@ function showResult() {
 
     const istPfad = history; 
     const sollPfad = getSollPfad(); 
-    
     const istMuster = istPfad.map(s => getMusterText(s)).filter(t => t !== "").join("\n\n");
     const sollMuster = sollPfad.map(s => getMusterText(s)).filter(t => t !== "").join("\n\n");
     const abweichung = JSON.stringify(istPfad) !== JSON.stringify(sollPfad);
-
     let output = "";
     let notizenText = Object.entries(notes)
         .map(([step, text]) => `[${stepLabels[step] || step}]: ${text}`)
         .join("\n");
-
-    // Hier passiert die Umwandlung von Zahlen in Stichworte
     const istPfadLabels = istPfad.map(s => stepLabels[s] || s).join(" → ");
     const sollPfadLabels = sollPfad.map(s => stepLabels[s] || s).join(" → ");
 
@@ -810,42 +806,62 @@ function updateProgress() {
     
 function exportTxt() {
     const datum = new Date().toLocaleString("de-DE");
-    let prüfungsSchritte = history
-        .map(s => getMusterText(s))
-        .filter(text => text !== "")
-        .join("\n\n");
+    
+    // Pfade generieren
+    const istPfad = history;
+    const sollPfad = getSollPfad();
+    
+    // Texte generieren (wie in showResult)
+    const istMuster = istPfad.map(s => getMusterText(s)).filter(t => t !== "").join("\n\n");
+    const sollMuster = sollPfad.map(s => getMusterText(s)).filter(t => t !== "").join("\n\n");
+    const abweichung = JSON.stringify(istPfad) !== JSON.stringify(sollPfad);
 
+    // Stichworte für den Kurz-Check
+    const istPfadLabels = istPfad.map(s => stepLabels[s] || s).join(" → ");
+    const sollPfadLabels = sollPfad.map(s => stepLabels[s] || s).join(" → ");
+
+    // Notizen mit Stichworten aufbereiten
     let notizenText = Object.entries(notes)
-        .map(([step, text]) => `Schritt ${step}: ${text}`)
+        .map(([step, text]) => `[${stepLabels[step] || step}]: ${text}`)
         .join("\n");
 
-    const text = `Zusammenfassung
-Datum: ${datum}
---------------------------------------------------
-FALLDATEN:
-Zu:  ${answers.titel_zu} (PGR: ${answers.pgr_zu})
-Von:   ${answers.titel_von} (PGR: ${answers.pgr_von})
-Betrag:      ${answers.betrag} €
---------------------------------------------------
-ERGEBNIS:    ${finalStatus}
-BEGRÜNDUNG:  ${finalDetail}
---------------------------------------------------
-DEINE LÖSUNG:
-${notizenText || "Keine Lösung eingeben."}
---------------------------------------------------
-MUSTERLÖSUNG:
-${prüfungsSchritte}
---------------------------------------------------
-Erstellt mit dem Lernassistent Fo24 Haushalts`;
+    // Den Text für die Datei zusammenbauen
+    let text = `Lernassistent Fo24 Haushalt - Ergebnisprotokoll\n`;
+    text += `Datum: ${datum}\n`;
+    text += `--------------------------------------------------\n`;
+    text += `FALLDATEN:\n`;
+    text += `Zu:     ${answers.titel_zu} (PGr: ${answers.pgr_zu})\n`;
+    text += `Von:    ${answers.titel_von} (PGr: ${answers.pgr_von})\n`;
+    text += `Betrag: ${answers.betrag} €\n`;
+    text += `--------------------------------------------------\n`;
+    text += `KURZ-CHECK:\n`;
+    text += `Dein Weg:      ${istPfadLabels}\n`;
+    text += `Soll-Weg:      ${sollPfadLabels}\n`;
+    text += `--------------------------------------------------\n\n`;
+    
+    text += `DEINE EINGEBENE LÖSUNG (NOTIZEN):\n`;
+    text += `${notizenText || "Keine Notizen erfasst."}\n\n`;
+    text += `--------------------------------------------------\n`;
 
-    // Download-Logik
+    if (abweichung) {
+        text += `MUSTERFORMULIERUNGEN (DEIN GEWÄHLTER WEG):\n${istMuster}\n\n`;
+        text += `--------------------------------------------------\n`;
+        text += `DER RECHTLICH KORREKTE WEG (MUSTERLÖSUNG):\n${sollMuster}\n`;
+    } else {
+        text += `MUSTERLÖSUNG (Korrekt gelöst!):\n${sollMuster}\n`;
+    }
+
+    text += `\n--------------------------------------------------\n`;
+    text += `Erstellt mit dem Lernassistent Fo24 Haushaltsrecht`;
+
+    // Download-Logik (unverändert)
     const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `Prüfprotokoll_${answers.titel_zu.replace(/\s/g, "_")}.txt`;
-    document.body.appendChild(a);
+    a.href = url;
+    a.download = `Ergebnis_Haushalt_${answers.titel_zu || "Export"}.txt`;
     a.click();
-    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 render();
 </script>
