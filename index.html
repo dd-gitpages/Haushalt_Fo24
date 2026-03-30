@@ -54,6 +54,29 @@ let answers = {};
 let notes = {};
 let finalStatus = "";
 let finalDetail = "";
+const stepLabels = {
+    1: "Obersatz",
+    2: "Prüfung HV",
+    3: "DF durch HV",
+    4: "DF nach §3 (Produktgruppe)",
+    5: "DF nach §3 (Nr. 1-5)",
+    6: "Ausschluss §3 Abs. 2",
+    7: "Nachbewilligung ($4 Absatz erkennen)",
+    8: "§4 Abs. 1 (Produktgruppe)",
+    9: "§4 Abs. 1 Nr. 1 (5,6 -> 78)",
+    10: "§4 Abs. 1 Nr. 2 (<100000 €)",
+    11: "§4 Abs. 1 Nr. 2 (Ausnahmen a-c)",
+    12: "§4 Abs. 2 (Produktbereich)",
+    13: "§4 Abs. 2 (<100000 €)",
+    14: "§4 Abs. 2 (Ausnahmen Nr. 1-3)",
+    15: "§4 Abs. 3 (Produktplan)",
+    16: "§4 Abs. 3 (<100000 €)",
+    17: "§4 Abs. 3 (Ausnahmen Nr. 1-3)",
+    18: "§4 Abs. 6 (422 <-> 428)",
+    19: "§4 Abs. 5 (Mehreinnahmen)",
+    20: "§10 Abs. 4 Nr. 3 (<100000 €)",
+    21: "§9 Abs. 2 Nr. 1 (HFA)"
+};    
 
 const flow = {
     1: {
@@ -746,25 +769,32 @@ function showResult() {
 
     const istPfad = history; 
     const sollPfad = getSollPfad(); 
-    const istMuster = istPfad.map(s => getMusterText(s)).filter(t => t !== "").join("\n");
-    const sollMuster = sollPfad.map(s => getMusterText(s)).filter(t => t !== "").join("\n");
+    
+    const istMuster = istPfad.map(s => getMusterText(s)).filter(t => t !== "").join("\n\n");
+    const sollMuster = sollPfad.map(s => getMusterText(s)).filter(t => t !== "").join("\n\n");
     const abweichung = JSON.stringify(istPfad) !== JSON.stringify(sollPfad);
 
     let output = "";
     let notizenText = Object.entries(notes)
-        .map(([step, text]) => `Schritt ${step}: ${text}`)
+        .map(([step, text]) => `[${stepLabels[step] || step}]: ${text}`)
         .join("\n");
 
+    // Hier passiert die Umwandlung von Zahlen in Stichworte
+    const istPfadLabels = istPfad.map(s => stepLabels[s] || s).join(" → ");
+    const sollPfadLabels = sollPfad.map(s => stepLabels[s] || s).join(" → ");
+
     output += `### KURZ-CHECK\n`;
-    output += `Dein Weg:      ${istPfad.join(" → ")}\n`;
-    output += `Richtiger Weg: ${sollPfad.join(" → ")}\n\n`;
+    output += `Dein Weg:      ${istPfadLabels}\n`;
+    output += `Soll-Weg:      ${sollPfadLabels}\n`;
+    output += `--------------------------------------------------\n\n`;
+
+    output += `### DEINE EINGEBENE LÖSUNG\n${notizenText || "Keine Notizen vorhanden."}\n\n`;
 
     if (abweichung) {
-        output += `### DEINE LÖSUNG (ABWEICHEND)\n${notizenText}\n\n`;
-        output += `### MUSTERFORMILIERUNGEN FÜR DEINE LÖSUNGSSCHRITTE\n${istMuster}`;
-        output += `### MUSTERLÖSUNG\n${sollMuster}`;
+        output += `### MUSTERFORMULIERUNGEN (DEIN GEWÄHLTER WEG)\n${istMuster}\n\n`;
+        output += `--------------------------------------------------\n`;
+        output += `### DER RECHTLICH KORREKTE WEG (MUSTERLÖSUNG)\n${sollMuster}`;
     } else {
-        output += `### DEINE LÖSUNG (ABWEICHEND)\n${notizenText}\n\n`;
         output += `### MUSTERLÖSUNG (Korrekt gelöst!)\n${sollMuster}`;
     }
 
