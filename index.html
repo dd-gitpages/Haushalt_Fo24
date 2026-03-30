@@ -386,213 +386,188 @@ function getMusterText(stepNum) {
     const zu = answers.titel_zu || "";
     const pgr_von = answers.pgr_von || "";
     const pgr_zu = answers.pgr_zu || "";
-    const HV = answers[2];
-    const DF = answers[3];
-    const pgr = answers[4];
-    const hgr_von = (answers.titel_von || "").charAt(0);
-    const hgr_zu = (answers.titel_zu || "").charAt(0);
-    const gr_von = (answers.titel_von || "").slice(0,2);
-    const gr_zu = (answers.titel_zu || "").slice(0,2);
-
+    
     const texte = {
-    1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${betrag} € bei Titel ${zu} zu Lasten von Titel ${von} geleistet werden dürfen.`,
-    
-    2: answers[2] === "ja"
-        ? `Zunächst ist eine Deckungsfähigkeit (DF) über Haushaltsvermerke (HV) zu prüfen. Dafür müssten bei beiden Titeln HV vorliegen und diese die DF mit dem jeweils anderen Titel regeln.`
-        : "Mindestens einer der beiden Titel hat keinen HV. Damit ist eine gegenseitige DF durch HV ausgeschlossen.",
-    
-    3: answers[3] === "ja" 
-        ? `Sowohl Titel ${zu} als auch Titel ${von} haben einen HV, welcher die gegenseitige Deckungsfähigkeit regelt. Damit können die zusätzlichen Ausgaben bei Titel ${zu} geleistet werden.` 
-        : `Zwar tragen sowohl Titel ${zu} als auch Titel ${von} einen HV, diese regeln jedoch keine gegenseitige Deckungsfähigkeit. Damit ist eine gegenseitige DF durch HV ausgeschlossen.`,
-    
-    4: answers[4] === "ja"
-        ? `Als nächstes ist festzustellen, ob eine Deckungsfähigkeit nach §3 Abs. 1 HG besteht. Dafür müssten beide Titel in der gleichen Produktgruppe sein. Sowohl Titel ${zu} als auch Titel ${von} sind in der Produktgruppe ${pgr_von}.`
-        : `Als nächstes ist festzustellen, ob eine Deckungsfähigkeit nach §3 Abs. 1 HG besteht. Dafür müssten beide Titel in der gleichen Produktgruppe sein. Titel ${zu} ist in PGR ${pgr_zu} und Titel ${von} in PGR ${pgr_von}. Eine DF nach §3 Abs. 1 HG ist damit nicht gegeben.`,
-    
-    5: (() => {
-        const auswahl = answers[5];
-        if (auswahl === "Nr. 1: 422 <-> 428") {
-            return `Da Titel ${von} in Gruppe ${von.substring(0,3)} und Titel ${zu} in Gruppe ${zu.substring(0,3)} ist, trifft Nr. 1 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 1 HG gegeben.`;
-        }
-        if (auswahl === "Nr. 2: 4xx -> 4xx. Ausnahme 441") {
-            return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, und keiner der beiden in Gruppe 441, trifft Nr. 2 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 2 HG gegeben.`;
-        }
-        if (auswahl === "Nr. 3: 5xx -> 5xx") {
-            return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, trifft Nr. 3 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 3 HG gegeben.`;
-        }
-        if (auswahl === "Nr. 4: 6xx -> 6xx") {
-            return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, trifft Nr. 4 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 4 HG gegeben.`;
-        }
-        if (auswahl === "Nr. 5: 985 <-> 986") {
-            return `Da Titel ${von} in Gruppe ${von.substring(0,3)} und Titel ${zu} in Gruppe ${zu.substring(0,3)} ist, trifft Nr. 5 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 5 HG gegeben.`;
-        }
-        if (auswahl === "keine") {
-            return `Da eine gegenseitige Deckungsfähigkeit der Titel ${von} und ${zu} durch keine der Nummern 1-5 gedeckt ist, ist eine gegenseitige DF nach §3 Abs. 1 HG nicht gegeben.`;
-        }
-    })(),
+        1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${betrag} € bei Titel ${zu} zu Lasten von Titel ${von} geleistet werden dürfen.`,
         
-    6: (() => {
-        const auswahl = answers[5];
-        const auswahl2 = answers[6];
-        if (auswahl === "Nr. 1: 422 <-> 428" && auswahl2 ==="nein") {
-            return `Da für Titel ${von} keine andere Regelung zur Deckungsfähigkeit durch einen HV geregelt ist, trifft §3 Abs. 2 HG nicht zu. Folglich ist eine gegenseitige DF nach §3 Abs. 1 Nr. 1 gegeben.`;
-        }
-        if (auswahl === "Nr. 2: 4xx -> 4xx. Ausnahme 441" && auswahl2 ==="nein") {
-            return `Da für Titel ${von} keine andere Regelung zur Deckungsfähigkeit durch einen HV geregelt ist, trifft §3 Abs. 2 HG nicht zu. Folglich ist eine gegenseitige DF nach §3 Abs. 1 Nr. 2 gegeben.`;
-        }
-        if (auswahl === "Nr. 3: 5xx -> 5xx" && auswahl2 ==="nein") {
-            return `Da für Titel ${von} keine andere Regelung zur Deckungsfähigkeit durch einen HV geregelt ist, trifft §3 Abs. 2 HG nicht zu. Folglich ist eine gegenseitige DF nach §3 Abs. 1 Nr. 3 gegeben.`;
-        }
-        if (auswahl === "Nr. 4: 6xx -> 6xx" && auswahl2 ==="nein") {
-            return `Da für Titel ${von} keine andere Regelung zur Deckungsfähigkeit durch einen HV geregelt ist, trifft §3 Abs. 2 HG nicht zu. Folglich ist eine gegenseitige DF nach §3 Abs. 1 Nr. 4 gegeben.`;
-        }
-        if (auswahl === "Nr. 5: 985 <-> 986" && auswahl2 ==="nein") {
-            return `Da für Titel ${von} keine andere Regelung zur Deckungsfähigkeit durch einen HV geregelt ist, trifft §3 Abs. 2 HG nicht zu. Folglich ist eine gegenseitige DF nach §3 Abs. 1 Nr. 5 gegeben.`;
-        }
-        if (auswahl2 === "ja") {
-            return `Da ein HV für Titel ${von} eine gegenseitige DF mit einem anderen Titel als ${zu} regelt, ist durch §3 Abs. 2 HG eine Deckungsfähigkeit ausgeschlossen`;
-        }
-        if (auswahl === "keine" || !auswahl2) {
-            return ""; 
-        }
-    })(),
+        2: answers[2] === "ja"
+            ? `Zunächst ist eine Deckungsfähigkeit (DF) über Haushaltsvermerke (HV) zu prüfen. Dafür müssten bei beiden Titeln HV vorliegen und diese die DF mit dem jeweils anderen Titel regeln.`
+            : "Mindestens einer der beiden Titel hat keinen HV. Damit ist eine gegenseitige DF durch HV ausgeschlossen.",
         
-    7: (() => {
-        const auswahl = answers[7];
-        if (auswahl === "§4 Abs. 1") {
-            return `Da Titel ${von} und Titel ${zu} beide in Produktgruppe ${pgr_zu} sind, ist nun eine Nachbewilligung nach §4 Abs. 1 Nr. 1 HG zu prüfen.`;
-        }
-        if (auswahl === "§4 Abs. 2") {
-            return `Da Titel ${von} und Titel ${zu} beide im Produktbereich ${pgr_zu.substring(0,5)} sind, ist nun eine Nachbewilligung nach §4 Abs. 2 HG zu prüfen.`;
-        }
-        if (auswahl === "§4 Abs. 3") {
-            return `Da Titel ${von} und Titel ${zu} beide im Produktplan ${pgr_zu.substring(0,2)} sind, ist nun eine Nachbewilligung nach §4 Abs. 3 HG zu prüfen.`;
-        }
-    })(),
+        3: answers[3] === "ja" 
+            ? `Sowohl Titel ${zu} als auch Titel ${von} haben einen HV, welcher die gegenseitige Deckungsfähigkeit regelt. Damit können die zusätzlichen Ausgaben bei Titel ${zu} geleistet werden.` 
+            : `Zwar tragen sowohl Titel ${zu} als auch Titel ${von} einen HV, diese regeln jedoch keine gegenseitige Deckungsfähigkeit. Damit ist eine gegenseitige DF durch HV ausgeschlossen.`,
         
-    8: answers[8] === "ja"
-        ? "Dies erlaubt produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen."
-        : `Dies erlaubt produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen. Titel ${zu} ist in PGr ${pgr_zu} und Titel ${von} in PGr ${pgr_von}. Eine Nachbewilligung kann daher nicht durch die produktgruppenverantwortliche Person möglich.`,
+        4: answers[4] === "ja"
+            ? `Als Nächstes ist festzustellen, ob eine Deckungsfähigkeit nach §3 Abs. 1 HG besteht. Dafür müssten beide Titel in der gleichen Produktgruppe sein. Sowohl Titel ${zu} als auch Titel ${von} sind in der Produktgruppe ${pgr_von}.`
+            : `Als Nächstes ist festzustellen, ob eine Deckungsfähigkeit nach §3 Abs. 1 HG besteht. Dafür müssten beide Titel in der gleichen Produktgruppe sein. Titel ${zu} ist in PGR ${pgr_zu} und Titel ${von} in PGR ${pgr_von}. Eine DF nach §3 Abs. 1 HG ist damit nicht gegeben.`,
         
-    9: answers[9] === "ja"
-        ? `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${von[0]} zu Gunsten von Hauptgruppe ${zu[0]} gefordert ist, ist eine Nachbewilligung durch die produktgruppenverantwortliche Person nach $4 Abs. 1 Nr. 1 HG möglich.`
-        : `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${von[0]} zu Gunsten von Hauptgruppe ${zu[0]} gefordert ist, ist eine Nachbewilligung nach $4 Abs. 1 Nr. 1 HG möglich. Daher steht als nächstes eine Nachbewilligung nach §4 Abs. 1 Nr. 2 HG zur Frage.`,
+        5: (() => {
+            const auswahl = answers[5];
+            if (auswahl === "Nr. 1: 422 <-> 428") {
+                return `Da Titel ${von} in Gruppe ${von.substring(0,3)} und Titel ${zu} in Gruppe ${zu.substring(0,3)} ist, trifft Nr. 1 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 1 HG gegeben.`;
+            }
+            if (auswahl === "Nr. 2: 4xx -> 4xx. Ausnahme 441") {
+                return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, und keiner der beiden in Gruppe 441, trifft Nr. 2 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 2 HG gegeben.`;
+            }
+            if (auswahl === "Nr. 3: 5xx -> 5xx") {
+                return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, trifft Nr. 3 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 3 HG gegeben.`;
+            }
+            if (auswahl === "Nr. 4: 6xx -> 6xx") {
+                return `Da Titel ${von} in Hauptgruppe ${von[0]} und Titel ${zu} ebenfalls in Hauptgruppe ${zu[0]} ist, trifft Nr. 4 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 4 HG gegeben.`;
+            }
+            if (auswahl === "Nr. 5: 985 <-> 986") {
+                return `Da Titel ${von} in Gruppe ${von.substring(0,3)} und Titel ${zu} in Gruppe ${zu.substring(0,3)} ist, trifft Nr. 5 zu. Damit ist eine gegenseitige DF nach §3 Abs. 1 Nr. 5 HG gegeben.`;
+            }
+            if (auswahl === "keine") {
+                return `Da eine gegenseitige Deckungsfähigkeit der Titel ${von} und ${zu} durch keine der Nummern 1-5 gedeckt ist, ist eine gegenseitige DF nach §3 Abs. 1 HG nicht gegeben.`;
+            }
+        })(),
+            
+        6: (() => {
+            const auswahl2 = answers[6];
+            if (auswahl2 === "nein") {
+                return `Da für Titel ${von} keine andere Regelung zur Deckungsfähigkeit durch einen HV geregelt ist, trifft §3 Abs. 2 HG nicht zu. Folglich bleibt es bei der Deckungsfähigkeit nach §3 Abs. 1 HG.`;
+            }
+            if (auswahl2 === "ja") {
+                return `Da ein HV für Titel ${von} eine gegenseitige DF mit einem anderen Titel als ${zu} regelt, ist durch §3 Abs. 2 HG eine Deckungsfähigkeit ausgeschlossen.`;
+            }
+        })(),
+            
+        7: (() => {
+            const auswahl = answers[7];
+            if (auswahl === "§4 Abs. 1") {
+                return `Da Titel ${von} und Titel ${zu} beide in Produktgruppe ${pgr_zu} sind, ist nun eine Nachbewilligung nach §4 Abs. 1 HG zu prüfen.`;
+            }
+            if (auswahl === "§4 Abs. 2") {
+                return `Da Titel ${von} und Titel ${zu} beide im Produktbereich ${pgr_zu.substring(0,5)} sind, ist nun eine Nachbewilligung nach §4 Abs. 2 HG zu prüfen.`;
+            }
+            if (auswahl === "§4 Abs. 3") {
+                return `Da Titel ${von} und Titel ${zu} beide im Produktplan ${pgr_zu.substring(0,2)} sind, ist nun eine Nachbewilligung nach §4 Abs. 3 HG zu prüfen.`;
+            }
+        })(),
+            
+        8: answers[8] === "ja"
+            ? "Dies erlaubt produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen."
+            : `Dies erlaubt produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen. Da Titel ${zu} in PGr ${pgr_zu} und Titel ${von} in PGr ${pgr_von} ist, kann eine Nachbewilligung nicht durch die produktgruppenverantwortliche Person erfolgen.`,
+            
+        9: answers[9] === "ja"
+            ? `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${von[0]} zu Gunsten von Hauptgruppe ${zu[0]} gefordert ist, ist eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 1 HG möglich.`
+            : `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${von[0]} zu Gunsten von Hauptgruppe ${zu[0]} gefordert ist, ist eine Nachbewilligung nach §4 Abs. 1 Nr. 1 HG nicht möglich. Daher steht als Nächstes eine Nachbewilligung nach §4 Abs. 1 Nr. 2 HG zur Frage.`,
 
-    10: answers[10] === "ja"
-        ? `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen a-c von §4 Abs. 1 Nr. 2 HG dies nicht verbieten. Die geforderte Summe von ${betrag} € liegt unter 100000 €.`
-        : `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen a-c von §4 Abs. 1 Nr. 2 HG dies nicht verbieten. Die geforderte Summe von ${betrag} € liegt über 100000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100000 € möglich sind ist letzlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
+        10: answers[10] === "ja"
+            ? `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen a-c von §4 Abs. 1 Nr. 2 HG dies nicht verbieten. Die geforderte Summe von ${betrag} € liegt unter 100.000 €.`
+            : `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100.000 € erlaubt. Die geforderte Summe von ${betrag} € liegt jedoch über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
 
-    11: (() => {
-        const auswahl = answers[11];
-        if (auswahl === "a): x -> 422 oder 428") {
-            return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${zu.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. a HG untersagt.`;
-        }
-        if (auswahl === "b): 441 -> x") {
-            return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${von.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. b HG untersagt.`;
-        }
-        if (auswahl === "c): 7xx oder 8xx -> 4xx,5xx oder 6xx") {
-            return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${zu[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${von[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. c HG untersagt.`;
-        }
-        if (auswahl === "keine") {
-            return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${von.substring(0,3)} fordert, trift keine der Ausnahmen a-c zu. Eine Nachbewliigung durch die produktgruppenverantwortliche Person nach $4 Abs. 1 Nr. 2 HG ist möglich.`; 
-        }
-    })(),
-    
-    12: answers[12] === "ja"
-        ? `Dort sind produktbereichsinterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 2 HG dies nicht verbieten.`
-        : `Dort sind produktbereichsinterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 2 HG dies nicht verbieten. Titel ${zu} ist in Produktbereich ${pgr_zu.substring(0,5)} und Titel ${von} in Produktbereich ${pgr_von.substring(0,5)}. Eine Nachbewilligung kann daher nicht durch die produktbereichsverantwortliche Person möglich.`,
-    
-    13: answers[13] === "ja"
-        ? `Die geforderte Summe von ${betrag} € liegt unter 100000 €.`
-        : `Die geforderte Summe von ${betrag} € liegt über 100000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100000 € möglich ist, ist letzlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG. zu prüfen`,
+        11: (() => {
+            const auswahl = answers[11];
+            if (auswahl === "a): x -> 422 oder 428") {
+                return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${zu.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. a HG untersagt.`;
+            }
+            if (auswahl === "b): 441 -> x") {
+                return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${von.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. b HG untersagt.`;
+            }
+            if (auswahl === "c): 7xx oder 8xx -> 4xx,5xx oder 6xx") {
+                return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${zu[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${von[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. c HG untersagt.`;
+            }
+            if (auswahl === "keine") {
+                return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${von.substring(0,3)} fordert, trifft keine der Ausnahmen a-c zu. Eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 2 HG ist möglich.`; 
+            }
+        })(),
+        
+        12: answers[12] === "ja"
+            ? `Dort sind produktbereichsinterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 2 HG dies nicht verbieten.`
+            : `Titel ${zu} ist in Produktbereich ${pgr_zu.substring(0,5)} und Titel ${von} in Produktbereich ${pgr_von.substring(0,5)}. Eine produktbereichsinterne Nachbewilligung kann daher nicht durch die produktbereichsverantwortliche Person erfolgen.`,
+        
+        13: answers[13] === "ja"
+            ? `Die geforderte Summe von ${betrag} € liegt unter 100.000 €.`
+            : `Die geforderte Summe von ${betrag} € liegt über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
 
-    14: (() => {
-        const auswahl = answers[14];
-        if (auswahl === "Nr. 1: x -> 422 oder 428") {
-            return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${zu.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 1 HG untersagt.`;
-        }
-        if (auswahl === "Nr. 2: 441 -> x") {
-            return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${von.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 2 HG untersagt.`;
-        }
-        if (auswahl === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") {
-            return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${zu[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${von[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 3 HG untersagt.`;
-        }
-        if (auswahl === "keine") {
-            return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${von.substring(0,3)} fordert, trift keine der Ausnahmen 1-3 zu. Eine Nachbewliigung durch die produktbereichsverantwortliche Person nach $4 Abs. 2 HG ist möglich.`; 
-        }
-    })(),
+        14: (() => {
+            const auswahl = answers[14];
+            if (auswahl === "Nr. 1: x -> 422 oder 428") {
+                return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${zu.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 1 HG untersagt.`;
+            }
+            if (auswahl === "Nr. 2: 441 -> x") {
+                return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${von.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 2 HG untersagt.`;
+            }
+            if (auswahl === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") {
+                return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${zu[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${von[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 3 HG untersagt.`;
+            }
+            if (auswahl === "keine") {
+                return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${von.substring(0,3)} fordert, trifft keine der Ausnahmen 1-3 zu. Eine Nachbewilligung durch die produktbereichsverantwortliche Person nach §4 Abs. 2 HG ist möglich.`; 
+            }
+        })(),
 
-    15: answers[12] === "ja"
-        ? `Dort sind produktplaninterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 3 HG dies nicht verbieten.`
-        : `Dort sind produktplaninterne Nachbewilligungen bis zu 100000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 3 HG dies nicht verbieten. Titel ${zu} ist in Produktplan ${pgr_zu.substring(0,5)} und Titel ${von} in Produktplan ${pgr_von.substring(0,5)}. Eine Nachbewilligung kann daher nicht durch die produktplanverantwortliche Person möglich.`,
-    
-    16: answers[13] === "ja"
-        ? `Die geforderte Summe von ${betrag} € liegt unter 100000 €.`
-        : `Die geforderte Summe von ${betrag} € liegt über 100000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100000 € möglich ist, ist letzlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG. zu prüfen`,
+        15: answers[15] === "ja"
+            ? `Dort sind produktplaninterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 3 HG dies nicht verbieten.`
+            : `Titel ${zu} ist in Produktplan ${pgr_zu.substring(0,2)} und Titel ${von} in Produktplan ${pgr_von.substring(0,2)}. Eine produktplaninterne Nachbewilligung kann daher nicht durch die produktplanverantwortliche Person erfolgen.`,
+        
+        16: answers[16] === "ja"
+            ? `Die geforderte Summe von ${betrag} € liegt unter 100.000 €.`
+            : `Die geforderte Summe von ${betrag} € liegt über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
 
-    17: (() => {
-        const auswahl = answers[17];
-        if (auswahl === "Nr. 1: x -> 422 oder 428") {
-            return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${zu.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 1 HG untersagt.`;
-        }
-        if (auswahl === "Nr. 2: 441 -> x") {
-            return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${von.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 2 HG untersagt.`;
-        }
-        if (auswahl === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") {
-            return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${zu[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${von[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 3 HG untersagt.`;
-        }
-        if (auswahl === "keine") {
-            return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${von.substring(0,3)} fordert, trift keine der Ausnahmen 1-3 zu. Eine Nachbewliigung durch die produktplanverantwortliche Person nach $4 Abs. 3 HG ist möglich.`; 
-        }
-    })(),
+        17: (() => {
+            const auswahl = answers[17];
+            if (auswahl === "Nr. 1: x -> 422 oder 428") {
+                return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${zu.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 1 HG untersagt.`;
+            }
+            if (auswahl === "Nr. 2: 441 -> x") {
+                return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${von.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 2 HG untersagt.`;
+            }
+            if (auswahl === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") {
+                return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${zu[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${von[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 3 HG untersagt.`;
+            }
+            if (auswahl === "keine") {
+                return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${von.substring(0,3)} fordert, trifft keine der Ausnahmen 1-3 zu. Eine Nachbewilligung durch die produktplanverantwortliche Person nach §4 Abs. 3 HG ist möglich.`; 
+            }
+        })(),
 
-    18: (() => {
-        const auswahl = answers[18];
-        if (pgr_von.substring(0,5) === pgr_zu.substring(0,5) ) {
-            if (auswahl === "ja") {
-            return `Da es sich um eine Nachbewilligung zwischen Gruppe ${von.substring(0,3)} und Gruppe ${zu.substring(0,3)} handelt, ist dies durch die produktbereichsverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 2 HG möglich.`;
+        18: (() => {
+            const auswahl = answers[18];
+            if (pgr_von.substring(0,5) === pgr_zu.substring(0,5)) {
+                if (auswahl === "ja") {
+                    return `Da es sich um eine Nachbewilligung zwischen Gruppe ${von.substring(0,3)} und Gruppe ${zu.substring(0,3)} handelt, ist dies durch die produktbereichsverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 2 HG möglich.`;
+                }
+            } else {
+                if (auswahl === "ja") {
+                    return `Da es sich um eine Nachbewilligung zwischen Gruppe ${von.substring(0,3)} und Gruppe ${zu.substring(0,3)} handelt, ist dies durch die produktplanverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 3 HG möglich.`;
+                }
             }
-        }
-        else {
-            if (auswahl === "ja") {
-            return `Da es sich um eine Nachbewilligung zwischen Gruppe ${von.substring(0,3)} und Gruppe ${zu.substring(0,3)} handelt, ist dies durch die produktplanverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 3 HG möglich.`;
+        })(),
+
+        19: (() => {
+            const auswahl = answers[19];
+            if (pgr_von.substring(0,7) === pgr_zu.substring(0,7)) {
+                if (auswahl === "ja") {
+                    return `Da bei Titel ${von} Mehreinnahmen erzielt wurden, welche die bei Titel ${zu} benötigte Summe von ${betrag} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 1 Nr. 2 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktgruppenverantwortliche Person möglich.`;
+                } else {
+                    return `Da es sich bei Titel ${von} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderten ${betrag} € zur Verfügung stehen, ist eine Nachbewilligung nicht durch die produktgruppenverantwortliche Person möglich.`;
+                }
             }
-        }
-    })(),
-    19: (() => {
-        const auswahl = answers[18];
-        if (pgr_von.substring(0,7) === pgr_zu.substring(0,7) ) {
-            if (auswahl === "ja") {
-            return `Da bei Titel ${von} Mehreinnahmen erzielt wurden, welche die bei Titel ${zu} benötigte Summe von ${betrag} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 1 Nr. 2 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktgruppenverantwortliche Person möglich.`;
+            if (pgr_von.substring(0,5) === pgr_zu.substring(0,5) && pgr_von.substring(0,7) !== pgr_zu.substring(0,7)) {
+                if (auswahl === "ja") {
+                    return `Da bei Titel ${von} Mehreinnahmen erzielt wurden, welche die bei Titel ${zu} benötigte Summe von ${betrag} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 2 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktbereichsverantwortliche Person möglich.`;
+                } else {
+                    return `Da es sich bei Titel ${von} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderten ${betrag} € zur Verfügung stehen, ist eine Nachbewilligung nicht durch die produktbereichsverantwortliche Person möglich.`;
+                }
             }
-            else {
-            return `Da es sich bei Titel ${von} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderteten ${betrag} € zur Verfügung stehen, ist eine Nachbewilligung nicht durch die produktgruppenverantwortliche Person möglich.`;
+            if (pgr_von.substring(0,2) === pgr_zu.substring(0,2) && pgr_von.substring(0,5) !== pgr_zu.substring(0,5)) {
+                if (auswahl === "ja") {
+                    return `Da bei Titel ${von} Mehreinnahmen erzielt wurden, welche die bei Titel ${zu} benötigte Summe von ${betrag} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 3 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktplanverantwortliche Person möglich.`;
+                } else {
+                    return `Da es sich bei Titel ${von} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderten ${betrag} € zur Verfügung stehen, ist eine Nachbewilligung nicht durch die produktplanverantwortliche Person möglich.`;
+                }
             }
-        }
-        if (pgr_von.substring(0,5) === pgr_zu.substring(0,5) && pgr_von.substring(0,7) !== pgr_zu.substring(0,7) )  {
-            if (auswahl === "ja") {
-            return `Da bei Titel ${von} Mehreinnahmen erzielt wurden, welche die bei Titel ${zu} benötigte Summe von ${betrag} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 2 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktbereichsverantwortliche Person möglich.`;
-            }
-            else {
-            return `Da es sich bei Titel ${von} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderteten ${betrag} € zur Verfügung stehen, ist eine Nachbewilligung nicht durch die produktbereichsverantwortliche Person möglich.`;
-            }
-        }
-        if (pgr_von.substring(0,2) === pgr_zu.substring(0,2) && pgr_von.substring(0,5) !== pgr_zu.substring(0,5) )  {
-            if (auswahl === "ja") {
-            return `Da bei Titel ${von} Mehreinnahmen erzielt wurden, welche die bei Titel ${zu} benötigte Summe von ${betrag} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 3 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktplanverantwortliche Person möglich.`;
-            }
-            else {
-            return `Da es sich bei Titel ${von} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderteten ${betrag} € zur Verfügung stehen, ist eine Nachbewilligung nicht durch die produktplanverantwortliche Person möglich.`;
-            }
-        }
-    })(),
+        })(),
+
         20: answers[20] === "ja"
-        ? `Nun ist festzustellen ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100000 €. Die geforderte Summe von ${betrag} € liegt unter dieser Grenze. Somit kann der Senator für Finanzen in diesem Fall nachbewilligen`
-        : `Nun ist festzustellen ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100000 €. Die geforderte Summe von ${betrag} € liegt über dieser Grenze. Daher ist letzlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG. zu prüfen`,
- 
-        20: `Der Haushalts- und Finanzausschuss ist gemäß §9 Abs. 2 Nr. 1 HG ermächtigt, alle gedeckten Nachbewilligungen vorzunehmen. Somit ist  eine Nachbewilligung durch den Haushalts- und Finanzausschuss auch in diesem Fall möglich`,
+            ? `Nun ist festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${betrag} € liegt unter dieser Grenze. Somit kann der Senator für Finanzen in diesem Fall nachbewilligen.`
+            : `Nun ist festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${betrag} € liegt über dieser Grenze. Daher ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
+
+        21: `Der Haushalts- und Finanzausschuss ist gemäß §9 Abs. 2 Nr. 1 HG ermächtigt, alle gedeckten Nachbewilligungen vorzunehmen. Somit ist eine Nachbewilligung durch den Haushalts- und Finanzausschuss auch in diesem Fall möglich.`
     };
-    };
+    
     return texte[stepNum] || "";
 }
 
