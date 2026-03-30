@@ -555,12 +555,43 @@ function getMusterText(stepNum) {
         }
         else {
             if (auswahl === "ja") {
-            return `Da es sich um eine Nachbewilligung zwischen Gruppe ${von.substring(0,3)} und Gruppe ${zu.substring(0,3)} handelt, ist dies durch die produktbereichsverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 2 HG möglich.`;
+            return `Da es sich um eine Nachbewilligung zwischen Gruppe ${von.substring(0,3)} und Gruppe ${zu.substring(0,3)} handelt, ist dies durch die produktplanverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 3 HG möglich.`;
             }
         }
     })(),
-
-        
+    19: (() => {
+        const auswahl = answers[18];
+        if (pgr_von.substring(0,7) === pgr_zu.substring(0,7) ) {
+            if (auswahl === "ja") {
+            return `Da bei Titel ${von} Mehreinnahmen erzielt wurden, welche die bei Titel ${zu} benötigte Summe von ${betrag} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 1 Nr. 2 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktgruppenverantwortliche Person möglich.`;
+            }
+            else {
+            return `Da es sich bei Titel ${von} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderteten ${betrag} € zur Verfügung stehen, ist eine Nachbewilligung nicht durch die produktgruppenverantwortliche Person möglich.`;
+            }
+        }
+        if (pgr_von.substring(0,5) === pgr_zu.substring(0,5) && pgr_von.substring(0,7) !== pgr_zu.substring(0,7) )  {
+            if (auswahl === "ja") {
+            return `Da bei Titel ${von} Mehreinnahmen erzielt wurden, welche die bei Titel ${zu} benötigte Summe von ${betrag} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 2 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktbereichsverantwortliche Person möglich.`;
+            }
+            else {
+            return `Da es sich bei Titel ${von} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderteten ${betrag} € zur Verfügung stehen, ist eine Nachbewilligung nicht durch die produktbereichsverantwortliche Person möglich.`;
+            }
+        }
+        if (pgr_von.substring(0,2) === pgr_zu.substring(0,2) && pgr_von.substring(0,5) !== pgr_zu.substring(0,5) )  {
+            if (auswahl === "ja") {
+            return `Da bei Titel ${von} Mehreinnahmen erzielt wurden, welche die bei Titel ${zu} benötigte Summe von ${betrag} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 3 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktplanverantwortliche Person möglich.`;
+            }
+            else {
+            return `Da es sich bei Titel ${von} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderteten ${betrag} € zur Verfügung stehen, ist eine Nachbewilligung nicht durch die produktplanverantwortliche Person möglich.`;
+            }
+        }
+    })(),
+        20: answers[20] === "ja"
+        ? `Nun ist festzustellen ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100000 €. Die geforderte Summe von ${betrag} € liegt unter dieser Grenze. Somit kann der Senator für Finanzen in diesem Fall nachbewilligen`
+        : `Nun ist festzustellen ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100000 €. Die geforderte Summe von ${betrag} € liegt über dieser Grenze. Daher ist letzlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG. zu prüfen`,
+ 
+        20: `Der Haushalts- und Finanzausschuss ist gemäß §9 Abs. 2 Nr. 1 HG ermächtigt, alle gedeckten Nachbewilligungen vorzunehmen. Somit ist  eine Nachbewilligung durch den Haushalts- und Finanzausschuss auch in diesem Fall möglich`,
+    };
     };
     return texte[stepNum] || "";
 }
