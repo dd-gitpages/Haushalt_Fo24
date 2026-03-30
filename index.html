@@ -713,53 +713,66 @@ function getMusterText(stepNum) {
     
     return texte[stepNum] || "";
 }
+Dass der Soll-Pfad im Vergleich zum flow zu kurz wirkt, liegt daran, dass die bisherige getSollPfad-Funktion nur Abkürzungen berechnet hat. Um die gesamte Logik deines Assistenten abzubilden, muss die Funktion wie ein "Autopilot" alle Entscheidungsknoten durchlaufen, die ein Nutzer bei perfekter Rechtskenntnis wählen würde.
+
+Hier ist die vollständige getSollPfad-Funktion, die jede Verzweigung deines flow-Objekts (von der Deckungsfähigkeit bis zur Zuständigkeit des HFA) systematisch prüft:
+
+JavaScript
 function getSollPfad() {
-    let pfad = [1]; // Start immer bei 1
+    let pfad = [1]; // Start: Obersatz 
     const von = answers.titel_von || "";
     const zu = answers.titel_zu || "";
     const pgr_von = answers.pgr_von || "";
     const pgr_zu = answers.pgr_zu || "";
     const betrag = parseFloat(answers.betrag) || 0;
 
-    // 1. Deckungsfähigkeit (Annahme: keine HV, da nicht auslesbar)
     pfad.push(2);
-    pfad.push(4); // Gehe direkt zu §3 Abs. 1 HG
-
+    
+    pfad.push(4);
     if (pgr_von === pgr_zu) {
         pfad.push(5);
-        // Prüfe Hauptgruppen für §3 Abs. 1 Nr. 1-5
-        const hgVon = von[0];
-        const hgZu = zu[0];
-        if ((von.startsWith("422") && zu.startsWith("428")) || (von.startsWith("428") && zu.startsWith("422"))) {
-             pfad.push(6); // §3 Abs. 1 Nr. 1
-             return pfad; // Ende: Zulässig
+        let nrGefunden = false;
+        if ((von.startsWith("422") && zu.startsWith("428")) || (von.startsWith("428") && zu.startsWith("422"))) nrGefunden = true;
+        if (von[0] === zu[0] && ["4", "5", "6"].includes(von[0])) nrGefunden = true;
+        
+        if (nrGefunden) {
+            pfad.push(6); 
+            return pfad;
         }
-        // ... hier könnten weitere Nr. 2-5 Logiken folgen
     }
 
-    // 2. Nachbewilligung §4 HG
     pfad.push(7);
+    
     if (pgr_von === pgr_zu) {
-        pfad.push(8);
+        pfad.push(8, 9); 
         const hgVon = von[0];
         const hgZu = zu[0];
-        if ((hgVon === "5" || hgVon === "6") && (hgZu === "7" || hgZu === "8")) {
-            pfad.push(9);
-            return pfad; // Ende: Zulässig nach §4 Abs. 1 Nr. 1
+        // Wenn nicht §4 Abs. 1 Nr. 1, dann Nr. 2 
+        if (!((hgVon === "5" || hgVon === "6") && (hgZu === "7" || hgZu === "8"))) {
+            pfad.push(10);
+            if (betrag < 100000) pfad.push(11);
         }
-        pfad.push(10);
-    } else if (pgr_von.substring(0, 5) === pgr_zu.substring(0, 5)) {
-        pfad.push(12, 13, 14);
-    } else if (pgr_von.substring(0, 2) === pgr_zu.substring(0, 2)) {
-        pfad.push(15, 16, 17);
+    } 
+    else if (pgr_von.substring(0, 5) === pgr_zu.substring(0, 5)) {
+        pfad.push(12);
+        if (betrag < 100000) {
+            pfad.push(13, 14);
+        }
+    } 
+    else if (pgr_von.substring(0, 2) === pgr_zu.substring(0, 2)) {
+        pfad.push(15);
+        if (betrag < 100000) {
+            pfad.push(16, 17);
+        }
+    }
+    if (betrag < 100000) {
+        if (von.startsWith("441") || (zu.startsWith("42") && !von.startsWith("42")) || ((hgVon === "7" || hgVon === "8") && (hgZu === "5" || hgZu === "6"))) {
+            pfad.push(20); // Senator für Finanzen §10 
+        }
     } else {
-        pfad.push(20);
+        pfad.push(21); // Über 100k immer HFA §9 
     }
 
-    // 3. Finale Instanz bei Betrag > 100k
-    if (betrag >= 100000) {
-        pfad.push(21);
-    }
     return pfad;
 }
     
