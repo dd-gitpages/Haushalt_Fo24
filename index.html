@@ -713,11 +713,7 @@ function getMusterText(stepNum) {
     
     return texte[stepNum] || "";
 }
-Dass der Soll-Pfad im Vergleich zum flow zu kurz wirkt, liegt daran, dass die bisherige getSollPfad-Funktion nur Abkürzungen berechnet hat. Um die gesamte Logik deines Assistenten abzubilden, muss die Funktion wie ein "Autopilot" alle Entscheidungsknoten durchlaufen, die ein Nutzer bei perfekter Rechtskenntnis wählen würde.
 
-Hier ist die vollständige getSollPfad-Funktion, die jede Verzweigung deines flow-Objekts (von der Deckungsfähigkeit bis zur Zuständigkeit des HFA) systematisch prüft:
-
-JavaScript
 function getSollPfad() {
     let pfad = [1]; // Start: Obersatz 
     const von = answers.titel_von || "";
