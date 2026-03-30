@@ -323,10 +323,10 @@ const flow = {
         getResultText: () => {
         const verantwortlich = answers[7];
         if (verantwortlich  === "§4 Abs. 2") {
-            return `Nachbewilligung durch produktbereichsverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 2 HG möglich. Die Mehrausgabe ist zulässig.`;
+            return `Nachbewilligung durch produktbereichsverantwortliche Person nach §4 Abs. 6 HG in Verbindung mit §4 Abs. 2 HG möglich. Die Mehrausgabe ist zulässig.`;
         } 
         else {
-            return `Nachbewilligung durch produktplanverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 3 HG möglich. Die Mehrausgabe ist zulässig.`;
+            return `Nachbewilligung durch produktplanverantwortliche Person nach §4 Abs. 6 HG in Verbindung mit §4 Abs. 3 HG möglich. Die Mehrausgabe ist zulässig.`;
         }
         }
     },
@@ -339,21 +339,33 @@ const flow = {
         },
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": "END_CHECK", "nein": 20 }
+        next: { "ja": "END_SUCCESS", "nein": 20 },
+        getResultText: () => {
+        const verantwortlich = answers[7];
+        if (verantwortlich  === "§4 Abs. 1") {
+            return `Nachbewilligung durch produktgruppenverantwortliche Person nach §4 Abs. 5 HG in Verbindung mit §4 Abs. 1 Nr. 2 HG möglich. Die Mehrausgabe ist zulässig.`;
+        } 
+        if (verantwortlich  === "§4 Abs. 2") {
+            return `Nachbewilligung durch produktbereichsverantwortliche Person nach §4 Abs. 5 HG in Verbindung mit §4 Abs. 2 HG möglich. Die Mehrausgabe ist zulässig.`;
+        } 
+        else {
+            return `Nachbewilligung durch produktplanverantwortliche Person nach §4 Abs. 5 HG in Verbindung mit §4 Abs. 3 HG möglich. Die Mehrausgabe ist zulässig.`;
+        }
+        }
     },
     20: {
         title: "Prüfung: Nachbewilligung nach §10 Abs. 4 Nr. 3 HG",
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": "END_CHECK", "nein": 21 }
+        next: { "ja": "END_SUCCESS", "nein": 21 }
     },
     21: {
         title: "Nachbewilligung nach §9 Abs. 2 Nr. 1 HG",
         question: "Nachbewlligung durch den Haushalts- und Finanzausschusses",
         type: "info",
         description: "Der Haushalts- und Finanzausschuss ist nach §9 Abs. 2 Nr. 1 HG zu allen gedeckten Nachbewilligungen ermächtigt.",
-        next: () => "END_CHECK"
+        next: () => "END_SUCCESS"
     }
 }
 
@@ -529,11 +541,11 @@ function getMusterText(stepNum) {
         })(),
             
         6: (() => {
-            const auswahl2 = answers[6];
-            if (auswahl2 === "nein") {
+            const auswahl = answers[6];
+            if (auswahl === "nein") {
                 return `Da für Titel ${von} keine andere Regelung zur Deckungsfähigkeit durch einen HV geregelt ist, trifft §3 Abs. 2 HG nicht zu. Folglich bleibt es bei der Deckungsfähigkeit nach §3 Abs. 1 HG.`;
             }
-            if (auswahl2 === "ja") {
+            if (auswahl === "ja") {
                 return `Da ein HV für Titel ${von} eine gegenseitige DF mit einem anderen Titel als ${zu} regelt, ist durch §3 Abs. 2 HG eine Deckungsfähigkeit ausgeschlossen.`;
             }
         })(),
@@ -684,6 +696,7 @@ function finalCheck() {
     const zu = answers.titel_zu || "";
     const pgr_von = answers.pgr_von || "";
     const pgr_zu = answers.pgr_zu || "";
+    const auswahl6
 
     if (von.startsWith('441')) {
         finalStatus = "VORLAGE";
