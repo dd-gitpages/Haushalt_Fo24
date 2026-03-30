@@ -139,7 +139,7 @@ const flow = {
         }, 
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 6, "nein": "END_SUCCESS" },
+        next: { "ja": 7, "nein": "END_SUCCESS" },
         resultText: "Deckungsfähigkeit nach §3 Abs. 1 HG gegeben. Die Mehrausgabe ist zulässig."
     },
     7: {
@@ -160,7 +160,7 @@ const flow = {
         },         
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 9, "nein": 7 },
+        next: { "ja": 9, "nein": 7 }
     },
     9: {
         title: "Prüfung: Nachbewilligung nach §4 Abs. 1 Nr. 1 HG",
@@ -179,7 +179,7 @@ const flow = {
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 11, "nein": 20 },
+        next: { "ja": 11, "nein": 20 }
     },
     11: {
         title: "Prüfung: Nachbewilligung nach §4 Abs. 1 Nr. 2 HG",
@@ -217,14 +217,14 @@ const flow = {
         },         
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 13, "nein": 7 },
+        next: { "ja": 13, "nein": 7 }
     },
     13: {
         title: "Prüfung: Nachbewilligung nach §4 Abs. 2 HG",
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 14, "nein": 21 },
+        next: { "ja": 14, "nein": 21 }
     },
     14: {
         title: "Prüfung: Nachbewilligung nach §4 Abs. 2 HG",
@@ -270,14 +270,14 @@ const flow = {
         },         
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 16, "nein": 20 },
+        next: { "ja": 16, "nein": 20 }
     },
     16: {
         title: "Prüfung: Nachbewilligung nach §4 Abs. 3 HG",
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
-        next: { "ja": 17, "nein": 21 },
+        next: { "ja": 17, "nein": 21 }
     },
     17: {
         title: "Prüfung: Nachbewilligung nach §4 Abs. 3 HG",
@@ -324,7 +324,8 @@ const flow = {
         const verantwortlich = answers[7];
         if (verantwortlich  === "§4 Abs. 2") {
             return `Nachbewilligung durch produktbereichsverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 2 HG möglich. Die Mehrausgabe ist zulässig.`;
-        } else {
+        } 
+        else {
             return `Nachbewilligung durch produktplanverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 3 HG möglich. Die Mehrausgabe ist zulässig.`;
         }
         }
@@ -355,7 +356,7 @@ const flow = {
         next: () => "END_CHECK"
     }
 }
-    
+
 function next() {
     function next() {
     if (currentStep === 1) {
