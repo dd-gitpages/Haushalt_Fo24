@@ -721,6 +721,8 @@ function getSollPfad() {
     const pgr_von = answers.pgr_von || "";
     const pgr_zu = answers.pgr_zu || "";
     const betrag = parseFloat(answers.betrag) || 0;
+    const hgVon = von[0];
+    const hgZu = zu[0];
 
     pfad.push(2);
     
@@ -741,9 +743,6 @@ function getSollPfad() {
     
     if (pgr_von === pgr_zu) {
         pfad.push(8, 9); 
-        const hgVon = von[0];
-        const hgZu = zu[0];
-        // Wenn nicht §4 Abs. 1 Nr. 1, dann Nr. 2 
         if (!((hgVon === "5" || hgVon === "6") && (hgZu === "7" || hgZu === "8"))) {
             pfad.push(10);
             if (betrag < 100000) pfad.push(11);
