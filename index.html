@@ -59,6 +59,8 @@ const flow = {
     1: {
         title: "Falldaten und Obersatz",
         type: "form",
+        noteLabel: "Obersatz",
+        notePlaceholder: "Formuliere deinen Obersatz...",
         render: () => `
             <div class="space-y-4">
                 <div>
@@ -134,6 +136,8 @@ const flow = {
         title: "Prüfung: Zuständigkeit für die Nachbewilligung",
         question: "Mit welchem Absatz von §4 HG möchtest du fortfahren?",
         type: "select",
+        noteLabel: "Überleitung zur Nachbewilligung",
+        notePlaceholder: "Formuliere deinen Text...",
         options: ["§4 Abs. 1", "§4 Abs. 2","§4 Abs. 3", "keinem. Direkt zu §10"],
         next: { "§4 Abs. 1": 8, "§4 Abs. 2": 12, "§4 Abs. 3": 15, "keinem. Direkt zu §10": 20}
     },
@@ -428,9 +432,15 @@ function render() {
                  </div>`;
     }
 
+    const noteLabel = step.noteLabel || "Prüfschritte, Begründung und Ergebnis",
+    const notePlaceholder = step.notePlaceholder || "Hier deinen Text eintragen...";
+
     html += `<div class="mt-6">
-                <label class="block text-xs text-gray-500 mb-1">Eigene Notizen / Begründung:</label>
-                <textarea id="note" class="w-full border p-2 mb-4 rounded text-sm" rows="2">${notes[currentStep] || ""}</textarea>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">${noteLabel}</label>
+                <textarea id="note" 
+                          placeholder="${notePlaceholder}" 
+                          class="w-full border p-2 mb-4 rounded text-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-200 transition" 
+                          rows="2">${notes[currentStep] || ""}</textarea>
              </div>`;
 
     html += `<div class="flex gap-3">
