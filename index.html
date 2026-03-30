@@ -316,7 +316,7 @@ const flow = {
         }
     },
     19: {
-        "Prüfung: Nachbewilligung nach §4 Abs. 5 HG",
+        title: "Prüfung: Nachbewilligung nach §4 Abs. 5 HG",
         getQuestion: () => {
             const von = answers.titel_von || "unbekannt";
             const zu = answers.titel_zu || "unbekannt";
@@ -327,7 +327,7 @@ const flow = {
         next: { "ja": "END_CHECK", "nein": 20 }
     },
     20: {
-        "Prüfung: Nachbewilligung nach §10 Abs. 4 Nr. 3 HG",
+        title: "Prüfung: Nachbewilligung nach §10 Abs. 4 Nr. 3 HG",
         question: "Liegt die Summe unter 100000 €?",
         type: "select",
         options: ["ja", "nein"],
@@ -340,7 +340,7 @@ const flow = {
         description: "Der Haushalts- und Finanzausschuss ist nach §9 Abs. 2 Nr. 1 HG zu allen gedeckten Nachbewilligungen ermächtigt.",
         next: () => "END_CHECK"
     }
-
+}
     
 function next() {
     if (currentStep === 1) {
