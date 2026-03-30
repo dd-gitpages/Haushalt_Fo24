@@ -358,7 +358,6 @@ const flow = {
 }
 
 function next() {
-    function next() {
     if (currentStep === 1) {
         const tZu = document.getElementById('titel_zu').value;
         const pZu = document.getElementById('pgr_zu').value;
@@ -458,7 +457,7 @@ function render() {
                  </div>`;
     }
 
-    const noteLabel = step.noteLabel || "Prüfschritte, Begründung und Ergebnis",
+    const noteLabel = step.noteLabel || "Prüfschritte, Begründung und Ergebnis";
     const notePlaceholder = step.notePlaceholder || "Hier deinen Text eintragen...";
 
     html += `<div class="mt-6">
