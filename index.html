@@ -140,7 +140,7 @@ function getFlow() {
 }
 
 function getMusterText(id) {
-    const v = answers.titel_von, z = answers.titel_zu, const b = answers.betrag, const p_v = answers.pgr_von, const p_z = answers.pgr_zu;
+    const v = answers.titel_von, z = answers.titel_zu, b = answers.betrag, p_v = answers.pgr_von, p_z = answers.pgr_zu;
     const istM = ["1","2","3"].includes(v[0]);
     const istP = (v.startsWith("422") && z.startsWith("428")) || (v.startsWith("428") && z.startsWith("422"));
     const texte = {
@@ -161,7 +161,7 @@ function getMusterText(id) {
             if (a === "Nr. 3: 5xx -> 5xx") return `Da Titel ${v} in Hauptgruppe ${v[0]} und Titel ${z} ebenfalls in Hauptgruppe ${z[0]} ist, trifft Nr. 3 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 3 HG gegeben.`;
             if (a === "Nr. 4: 6xx -> 6xx") return `Da Titel ${v} in Hauptgruppe ${v[0]} und Titel ${z} ebenfalls in Hauptgruppe ${z[0]} ist, trifft Nr. 4 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 4 HG gegeben.`;
             if (a === "Nr. 5: 985 <-> 986") return `Da Titel ${v} in Gruppe ${v.substring(0,3)} und Titel ${z} in Gruppe ${z.substring(0,3)} ist, trifft Nr. 5 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 5 HG gegeben.`;
-            if (auswahl === "keine") return `Da eine gegenseitige Deckungsfähigkeit der Gruppen ${v.substring(0,3)} und ${z.substring(0,3)} durch keine der Nummern 1-5 gedeckt ist, ist auch keine Deckungsfähigkeit nach §3 Abs. 1 HG gegeben.`;
+            if (a === "keine") return `Da eine gegenseitige Deckungsfähigkeit der Gruppen ${v.substring(0,3)} und ${z.substring(0,3)} durch keine der Nummern 1-5 gedeckt ist, ist auch keine Deckungsfähigkeit nach §3 Abs. 1 HG gegeben.`;
         })(),
         6: answers[6] === "nein"
             ? `Da für Titel ${v} keine andere Regelung zur Deckungsfähigkeit durch einen HV geregelt ist, trifft §3 Abs. 2 HG nicht zu. Folglich bleibt es bei der Deckungsfähigkeit nach §3 Abs. 1 HG.`
@@ -289,7 +289,7 @@ function getObjektiveLoesung(id) {
         11: (() => {
             if (z.startsWith("422") || z.startsWith("428")) return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. a HG untersagt.`;
             if (v.startsWith("441")) return `Da der Sachverhalt ein Umwidmung von Mitteln der Gruppe ${v.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. b HG untersagt.`;
-            if (istK): 7xx oder 8xx -> 4xx,5xx oder 6xx") return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. c HG untersagt.`;
+            if (istK) return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. c HG untersagt.`;
             else return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${v.substring(0,3)} fordert, trifft keine der Ausnahmen a-c zu. Eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 2 HG ist möglich.`;
         })(),
         12: (() => {
