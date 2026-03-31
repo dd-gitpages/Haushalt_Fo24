@@ -297,26 +297,26 @@ function getObjektiveLoesung(id) {
         })(),
         8: (() => {
             if (p_v === p_z) {
-                return "Dort sind produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 erlaubt, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen."
+                return "Dort sind produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 erlaubt, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen.";
             }
             else {
-                return `Dort sind produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 erlaubt, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen. Da Titel ${z} in PGr ${p_z} und Titel ${v} in PGr ${p_v} ist, kann eine Nachbewilligung nicht durch die produktgruppenverantwortliche Person erfolgen.`,
+                return `Dort sind produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 erlaubt, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen. Da Titel ${z} in PGr ${p_z} und Titel ${v} in PGr ${p_v} ist, kann eine Nachbewilligung nicht durch die produktgruppenverantwortliche Person erfolgen.`;
             }
         })(),
         9: (() => {
             if (istI) {
-                return `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${v[0]} zu Gunsten von Hauptgruppe ${z[0]} gefordert ist, ist eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 1 HG möglich.`
+                return `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${v[0]} zu Gunsten von Hauptgruppe ${z[0]} gefordert ist, ist eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 1 HG möglich.`;
             }
             else {
-                return `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${v[0]} zu Gunsten von Hauptgruppe ${z[0]} gefordert ist, ist eine Nachbewilligung nach §4 Abs. 1 Nr. 1 HG nicht möglich. Daher steht als Nächstes eine Nachbewilligung nach §4 Abs. 1 Nr. 2 HG zur Frage.`,
+                return `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${v[0]} zu Gunsten von Hauptgruppe ${z[0]} gefordert ist, ist eine Nachbewilligung nach §4 Abs. 1 Nr. 1 HG nicht möglich. Daher steht als Nächstes eine Nachbewilligung nach §4 Abs. 1 Nr. 2 HG zur Frage.`;
             }
         })(),
         10: (() => {
             if(b < 100000) {
-                return `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen a-c von §4 Abs. 1 Nr. 2 HG dies nicht verbieten. Die geforderte Summe von ${b} € liegt unter 100.000 €.`
+                return `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen a-c von §4 Abs. 1 Nr. 2 HG dies nicht verbieten. Die geforderte Summe von ${b} € liegt unter 100.000 €.`;
             }
             else {
-                return `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100.000 € erlaubt. Die geforderte Summe von ${b} € liegt jedoch über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
+                return `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100.000 € erlaubt. Die geforderte Summe von ${b} € liegt jedoch über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`;
             }
         })(),
         11: (() => {
@@ -335,18 +335,18 @@ function getObjektiveLoesung(id) {
         })(),
         12: (() => {
             if (p_v.substring(0,5) === p_z.substring(0,5)) {
-                return "Dort sind produktbereichsinterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 2 HG dies nicht verbieten."
+                return "Dort sind produktbereichsinterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 2 HG dies nicht verbieten.";
             }
             else {
-                return `Titel ${z} ist in Produktbereich ${p_z.substring(0,5)} und Titel ${v} in Produktbereich ${p_v.substring(0,5)}. Eine produktbereichsinterne Nachbewilligung kann daher nicht durch die produktbereichsverantwortliche Person erfolgen.`,
+                return `Titel ${z} ist in Produktbereich ${p_z.substring(0,5)} und Titel ${v} in Produktbereich ${p_v.substring(0,5)}. Eine produktbereichsinterne Nachbewilligung kann daher nicht durch die produktbereichsverantwortliche Person erfolgen.`;
             }
         })(),
         13: (() => {
             if(b < 100000) {
-                return `Die geforderte Summe von ${b} € liegt unter 100.000 €.`
+                return `Die geforderte Summe von ${b} € liegt unter 100.000 €.`;
             }
             else {
-                return `Die geforderte Summe von ${b} € liegt über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
+                return `Die geforderte Summe von ${b} € liegt über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`;
             }
         })(),
         14: (() => {
@@ -366,18 +366,18 @@ function getObjektiveLoesung(id) {
         })(),
         15: (() => {
             if (p_v.substring(0,5) === p_z.substring(0,5)) {
-                return "Dort sind produktplaninterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 3 HG dies nicht verbieten."
+                return "Dort sind produktplaninterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 3 HG dies nicht verbieten.";
             }
             else {
-                return `Titel ${z} ist in Produktplan ${p_z.substring(0,2)} und Titel ${v} in Produktplan ${p_v.substring(0,2)}. Eine produktplaninterne Nachbewilligung kann daher nicht durch die produktplanverantwortliche Person erfolgen.`,
+                return `Titel ${z} ist in Produktplan ${p_z.substring(0,2)} und Titel ${v} in Produktplan ${p_v.substring(0,2)}. Eine produktplaninterne Nachbewilligung kann daher nicht durch die produktplanverantwortliche Person erfolgen.`;
             }
         })(),
         16: (() => {
             if(b < 100000) {
-                return `Die geforderte Summe von ${b} € liegt unter 100.000 €.`
+                return `Die geforderte Summe von ${b} € liegt unter 100.000 €.`;
             }
             else {
-                return `Die geforderte Summe von ${b} € liegt über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
+                return `Die geforderte Summe von ${b} € liegt über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`;
             }
         })(),
         17: (() => {
@@ -404,10 +404,10 @@ function getObjektiveLoesung(id) {
         })(),
         19: (() => {
             if (istM) {
-                return `Da bei Titel ${v} Mehreinnahmen erzielt wurden, welche die bei Titel ${z} benötigte Summe von ${b} € decken, sind nach §4 Abs. 5 HG die Vorgaben von`
+                return `Da bei Titel ${v} Mehreinnahmen erzielt wurden, welche die bei Titel ${z} benötigte Summe von ${b} € decken, sind nach §4 Abs. 5 HG die Vorgaben von`;
             }
             else {
-                return `Da es sich bei Titel ${v} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderten ${b} € zur Verfügung stehen, ist eine Nachbewilligung nicht möglich.`,
+                return `Da es sich bei Titel ${v} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderten ${b} € zur Verfügung stehen, ist eine Nachbewilligung nicht möglich.`;
             }
         })(),
         20: (() => {
@@ -417,10 +417,10 @@ function getObjektiveLoesung(id) {
         })(),
         21: (() => {
             if(b < 100000) {
-                return `Daher ist nun festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${b} € liegt unter dieser Grenze. Somit kann der Senator für Finanzen in diesem Fall nachbewilligen.`
+                return `Daher ist nun festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${b} € liegt unter dieser Grenze. Somit kann der Senator für Finanzen in diesem Fall nachbewilligen.`;
             }
             else {
-                return `Daher ist nun festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${b} € liegt über dieser Grenze. Daher ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
+                return `Daher ist nun festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${b} € liegt über dieser Grenze. Daher ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`;
             }
         })(),
         22: `Der Haushalts- und Finanzausschuss ist gemäß §9 Abs. 2 Nr. 1 HG ermächtigt, alle gedeckten Nachbewilligungen vorzunehmen. Somit ist eine Nachbewilligung durch den Haushalts- und Finanzausschuss auch in diesem Fall möglich.`
