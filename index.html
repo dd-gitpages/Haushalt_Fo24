@@ -405,8 +405,8 @@ function showResult() {
     document.getElementById("resTitle").innerText = abw ? "Abweichung erkannt" : "Korrekt gelöst!";
     document.getElementById("resDesc").innerText = abw ? "Deine Herleitung weicht vom rechtlich korrekten Weg ab." : "Rechtlich einwandfrei hergeleitet.";
     
+    document.getElementById("correctPathText").innerText = sollIds.map(id => getObjektiveLoesung(id)).join("\n\n");
     document.getElementById("userPathText").innerText = istIds.map(id => getMusterText(id)).join("\n\n");
-    document.getElementById("correctPathText").innerText = sollIds.map(id => getMusterText(id)).join("\n\n");
 }
 </script>
 </body>
