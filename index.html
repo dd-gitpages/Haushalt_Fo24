@@ -258,7 +258,7 @@ function getObjektiveLoesung(id) {
         })(),
         5: (() => {
             if (istP) return `Da Titel ${v} in Gruppe ${v.substring(0,3)} und Titel ${z} in Gruppe ${z.substring(0,3)} ist, trifft Nr. 1 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 1 HG gegeben.`;
-            if (v[0] === "4" && z[0] === "4" && (!v.startsWith("441") || !z.startsWith("441"))) return `Da Titel ${v} in Hauptgruppe ${v[0]} und Titel ${z} ebenfalls in Hauptgruppe ${z[0]} ist, und keiner der beiden in Gruppe 441, trifft Nr. 2 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 2 HG gegeben.`;
+            if (v[0] === "4" && z[0] === "4" && (!v.startsWith("441") && !z.startsWith("441"))) return `Da Titel ${v} in Hauptgruppe ${v[0]} und Titel ${z} ebenfalls in Hauptgruppe ${z[0]} ist, und keiner der beiden in Gruppe 441, trifft Nr. 2 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 2 HG gegeben.`;
             if (v[0] === "5" && z[0] === "5") return `Da Titel ${v} in Hauptgruppe ${v[0]} und Titel ${z} ebenfalls in Hauptgruppe ${z[0]} ist, trifft Nr. 3 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 3 HG gegeben.`;
             if (v[0] === "6" && z[0] === "6") return `Da Titel ${v} in Hauptgruppe ${v[0]} und Titel ${z} ebenfalls in Hauptgruppe ${z[0]} ist, trifft Nr. 4 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 4 HG gegeben.`;
             if(ist9) return `Da Titel ${v} in Gruppe ${v.substring(0,3)} und Titel ${z} in Gruppe ${z.substring(0,3)} ist, trifft Nr. 5 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 5 HG gegeben.`;
