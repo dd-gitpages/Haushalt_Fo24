@@ -130,7 +130,7 @@ function getFlow() {
             { t: "keine", next: "END", label: "§4 Abs. 3 Ausn." }
         ]},
         18: { q: "Personalmittel-Tausch zwischen 422 und 428?", options: [{ t: "ja", next: "END", label: "§4 Abs. 6 Rückausn." }, { t: "nein", next: 21, label: "§4 Abs. 6 Rückausn." }] },
-        19: { q: `Stehen bei Titel ${v} Mehreinnahmen in Höhe der zusätzlichen Ausgaben bei Titel ${z} zur Verfügung?`, options: [{ t: "ja", next: 20, label: "Mehreinnahmen" }, { t: "nein", next: 21, label: "Mehreinnahmen" }] },
+        19: { q: `Stehen bei Titel ${v} Mehreinnahmen in Höhe der zusätzlichen Ausgaben bei Titel ${z} zur Verfügung?`, options: [{ t: "ja", next: 20, label: "Mehreinnahmen" }, { t: "nein", next: "END", label: "Mehreinnahmen" }] },
         20: { q: "Mehreinnahmen erkannt. Welcher Absatz ist die Ermächtigung?", options: [
             { t: "§4 Abs. 1", next: 10, label: "§4 Abs. 5 Kombi" }, { t: "§4 Abs. 2", next: 12, label: "§4 Abs. 5 Kombi" }, { t: "§4 Abs. 3", next: 15, label: "§4 Abs. 5 Kombi" }
         ]},
@@ -234,6 +234,7 @@ function getMusterText(id) {
             ? `Daher ist nun festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${b} € liegt unter dieser Grenze. Somit kann der Senator für Finanzen in diesem Fall nachbewilligen.`
             : `Daher ist nun festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${b} € liegt über dieser Grenze. Daher ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
         22: "Der Haushalts- und Finanzausschuss ist gemäß §9 Abs. 2 Nr. 1 HG ermächtigt, alle gedeckten Nachbewilligungen vorzunehmen. Somit ist eine Nachbewilligung durch den Haushalts- und Finanzausschuss auch in diesem Fall möglich."
+    }
     return texte[id]
 }
     
@@ -339,6 +340,7 @@ function getObjektiveLoesung(id) {
             else return `Daher ist nun festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${b} € liegt über dieser Grenze. Daher ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
             })(),
         22: `Der Haushalts- und Finanzausschuss ist gemäß §9 Abs. 2 Nr. 1 HG ermächtigt, alle gedeckten Nachbewilligungen vorzunehmen. Somit ist eine Nachbewilligung durch den Haushalts- und Finanzausschuss auch in diesem Fall möglich.`
+    }
     return texte[id]
 }
 
