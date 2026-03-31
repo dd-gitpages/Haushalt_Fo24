@@ -188,7 +188,7 @@ function getMusterText(id) {
             if (a === "a): x -> 422 oder 428") return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. a HG untersagt.`;
             if (a === "b): 441 -> x") return `Da der Sachverhalt ein Umwidmung von Mitteln der Gruppe ${v.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. b HG untersagt.`;
             if (a === "c): 7xx oder 8xx -> 4xx,5xx oder 6xx") return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. c HG untersagt.`;
-            if (a === "keine") return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${v.substring(0,3)} fordert, trifft keine der Ausnahmen a-c zu. Eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 2 HG ist möglich.`;
+            if (a === "keine") return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${z.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${v.substring(0,3)} fordert, trifft keine der Ausnahmen a-c zu. Eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 2 HG ist möglich.`;
         })(),
         12: answers[12] === "ja"
             ? "Dort sind produktbereichsinterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 2 HG dies nicht verbieten."
@@ -208,7 +208,7 @@ function getMusterText(id) {
             : `Titel ${zu} ist in Produktplan ${p_z.substring(0,2)} und Titel ${v} in Produktplan ${p_v.substring(0,2)}. Eine produktplaninterne Nachbewilligung kann daher nicht durch die produktplanverantwortliche Person erfolgen.`,
         16: answers[16] === "ja"
             ? `Die geforderte Summe von ${b} € liegt unter 100.000 €.`
-            : `Die geforderte Summe von ${b} € liegt über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`
+            : `Die geforderte Summe von ${b} € liegt über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
         17: (() => {
             const a = answers[17];
             if (a === "Nr. 1: x -> 422 oder 428") return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 1 HG untersagt.`;
@@ -222,7 +222,7 @@ function getMusterText(id) {
             else if (a === "ja") return `Da es sich um eine Nachbewilligung zwischen Gruppe ${v.substring(0,3)} und Gruppe ${z.substring(0,3)} handelt, ist dies durch die produktplanverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 3 HG möglich.`;
         })(),
         19: answers[19] === "ja"
-            ? `Da bei Titel ${v} Mehreinnahmen erzielt wurden, welche die bei Titel ${zu} benötigte Summe von ${b} € decken, sind nach §4 Abs. 5 HG die Vorgaben von`
+            ? `Da bei Titel ${v} Mehreinnahmen erzielt wurden, welche die bei Titel ${z} benötigte Summe von ${b} € decken, sind nach §4 Abs. 5 HG die Vorgaben von`
             : `Da es sich bei Titel ${v} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderten ${b} € zur Verfügung stehen, ist eine Nachbewilligung nicht möglich.`,
         20: (() => {
             const a = answers[20];
@@ -238,7 +238,7 @@ function getMusterText(id) {
 }
     
 function getObjektiveLoesung(id) {
-    const v = answers.titel_von, z = answers.titel_zu, const b = answers.betrag, const p_v = answers.pgr_von, const p_z = answers.pgr_zu;
+    const v = answers.titel_von, z = answers.titel_zu, b = answers.betrag, p_v = answers.pgr_von, p_z = answers.pgr_zu;
     const istM = ["1","2","3"].includes(v[0]);
     const istP = (v.startsWith("422") && z.startsWith("428")) || (v.startsWith("428") && z.startsWith("422"));
     const ist9 = (v.startsWith("985") && z.startsWith("986")) || (v.startsWith("986") && z.startsWith("985"));
@@ -290,7 +290,7 @@ function getObjektiveLoesung(id) {
             if (z.startsWith("422") || z.startsWith("428")) return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. a HG untersagt.`;
             if (v.startsWith("441")) return `Da der Sachverhalt ein Umwidmung von Mitteln der Gruppe ${v.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. b HG untersagt.`;
             if (istK) return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. c HG untersagt.`;
-            else return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${zu.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${v.substring(0,3)} fordert, trifft keine der Ausnahmen a-c zu. Eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 2 HG ist möglich.`;
+            else return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${z.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${v.substring(0,3)} fordert, trifft keine der Ausnahmen a-c zu. Eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 2 HG ist möglich.`;
         })(),
         12: (() => {
             if (p_v.substring(0,5) === p_z.substring(0,5)) return "Dort sind produktbereichsinterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 2 HG dies nicht verbieten."
@@ -326,7 +326,7 @@ function getObjektiveLoesung(id) {
             else if (istP) return `Da es sich um eine Nachbewilligung zwischen Gruppe ${v.substring(0,3)} und Gruppe ${z.substring(0,3)} handelt, ist dies durch die produktplanverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 3 HG möglich.`;
         })(),
         19: (() => {
-            if (istM) return `Da bei Titel ${v} Mehreinnahmen erzielt wurden, welche die bei Titel ${zu} benötigte Summe von ${b} € decken, sind nach §4 Abs. 5 HG die Vorgaben von`
+            if (istM) return `Da bei Titel ${v} Mehreinnahmen erzielt wurden, welche die bei Titel ${z} benötigte Summe von ${b} € decken, sind nach §4 Abs. 5 HG die Vorgaben von`
             else return `Da es sich bei Titel ${v} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderten ${b} € zur Verfügung stehen, ist eine Nachbewilligung nicht möglich.`,
         })(),
         20: (() => {
