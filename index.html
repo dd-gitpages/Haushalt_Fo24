@@ -50,11 +50,11 @@
             <h2 id="resTitle" class="text-xl font-bold"></h2>
             <p id="resDesc" class="text-sm"></p>
         </div>
-
+        
         <div class="space-y-6">
             <div class="bg-blue-50 p-5 rounded-xl border border-blue-100 shadow-sm">
-                <h3 class="font-bold text-blue-800 mb-2 underline italic text-[10px]">MUSTERFORMULIERUNGEN (DEIN GEWÄHLTER WEG):</h3>
-                <div id="userPathText" class="text-sm whitespace-pre-wrap text-slate-700 leading-relaxed"></div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic text-center underline">DEINE EINGEBENE LÖSUNG (NOTIZEN):</label>
+                <div id="notizenDisplay" class="w-full p-3 border rounded-lg text-sm min-h-[60px] bg-slate-50 italic text-slate-600 whitespace-pre-wrap"></div>
             </div>
 
             <div class="bg-green-50 p-5 rounded-xl border border-green-100 shadow-sm">
@@ -64,8 +64,8 @@
         </div>
 
         <div class="mt-6">
-            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic text-center underline">DEINE EINGEBENE LÖSUNG (NOTIZEN):</label>
-            <div id="notizenDisplay" class="w-full p-3 border rounded-lg text-sm min-h-[60px] bg-slate-50 italic text-slate-600 whitespace-pre-wrap"></div>
+            <h3 class="font-bold text-blue-800 mb-2 underline italic text-[10px]">MUSTERFORMULIERUNGEN (DEIN GEWÄHLTER WEG):</h3>
+            <div id="userPathText" class="text-sm whitespace-pre-wrap text-slate-700 leading-relaxed"></div>
         </div>
 
         <button onclick="location.reload()" class="w-full mt-8 bg-slate-200 text-slate-700 py-3 rounded-xl hover:bg-slate-300 transition font-medium">Neu starten</button>
@@ -83,7 +83,18 @@ function startWizard() {
     answers.titel_von = document.getElementById("in_von").value;
     answers.pgr_von = document.getElementById("pgr_von").value;
     answers.betrag = document.getElementById("in_betrag").value;
-    if(!answers.titel_zu || !answers.betrag) { alert("Bitte Titel und Betrag ausfüllen."); return; }
+    if(!answers.titel_zu || !answers.titel_von || !answers.pgr_zu || !answers.pgr_von || !answers.betrag) { alert("Bitte Falldaten ausfüllen"); return; }
+    const titelRegex = /^\d{3}\s\d{2}-\d{1}$/; // Format: 123 45-6
+    const pgrRegex = /^\d{2}\.\d{2}\.\d{2}$/; // Format: 12.34.56
+
+    if(!titelRegex.test(answers.titel_zu)) {
+        alert("Formatfehler: Titel (Zu) muss das Format 'XXX XX-X' haben (z.B. 511 01-1).");
+        return;
+    }
+    if(!pgrRegex.test(answers.pgr_zu)) {
+        alert("Formatfehler: PGR (Zu) muss das Format 'XX.XX.XX' haben (z.B. 50.01.01).");
+        return;
+    }
     renderStep();
 }
 
@@ -488,15 +499,28 @@ function renderStep() {
     } else {
         html += `<button onclick="handleAnswer(${data.next}, 'Weiter', 'Obersatz')" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold">Weiter</button>`;
     }
-    html += `<div class="mt-8 border-t pt-4"><label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic underline">Lösungsskizze:</label><textarea id="notizen" placeholder="Notizen..." class="w-full p-3 border rounded-xl h-32 focus:border-blue-400 outline-none">${answers.notizen}</textarea></div>`;
+    html += `<div class="mt-8 border-t pt-4"><label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic underline">Deine Lösung:</label><textarea id="notizen" placeholder="Deine Prüfschritte, Begründungen und Ergebnisse..." class="w-full p-3 border rounded-xl h-32 focus:border-blue-400 outline-none">${answers.notizen}</textarea></div>`;
     cont.innerHTML = html;
 }
 
 function handleAnswer(next, text, label) {
-    answers.notizen = document.getElementById("notizen")?.value || answers.notizen;
+    const notizenFeld = document.getElementById("notizen");
+    if (notizenFeld) answers.notizen = notizenFeld.value.trim();
+    if (next === "END") {
+        if (!answers.notizen || answers.notizen === "") {
+            const confirmStep = confirm("Bist du sicher, dass du fortfahren möchtest ohne eine eigene Lösung einzutragen?");
+            if (!confirmStep) return;
+        }
+    }
     if(label) istPfad.push({step: currentStep, label: label});
     answers[currentStep] = text;
-    if(next === "END") showResult(); else { currentStep = isNaN(next) ? next : parseInt(next); renderStep(); }
+
+    if(next === "END") {
+        showResult();
+    } else {
+        currentStep = isNaN(next) ? next : parseInt(next);
+        renderStep();
+    }
 }
 
 function showResult() {
@@ -516,6 +540,7 @@ function showResult() {
     document.getElementById("correctPathText").innerText = sollIds.map(id => getObjektiveLoesung(id)).join("\n\n");
     document.getElementById("userPathText").innerText = istIds.map(id => getMusterText(id)).join("\n\n");
 }
+
 </script>
 </body>
 </html>
