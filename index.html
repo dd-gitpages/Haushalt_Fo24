@@ -474,36 +474,6 @@ descText += `\n\n⚠️ Erster Fehler bei Schritt "${fehlerPunkt.label}".`;
 document.getElementById("resDesc").innerText = descText;
 document.getElementById("correctPathText").innerText = sollIds.map(id => getObjektiveLoesung(id)).join("\n\n");
 }
-
-function exportAsTxt() {
-let exportText = "ERGEBNISSE\n==========\n\n";
-exportText += document.getElementById("resTitle").innerText + "\n";
-    exportText += document.getElementById("resDesc").innerText +"\n";
-    exportText += document.getElementById("descText").innerText +"\n\n";
-    exportText += "DEINE LÖSUNG:\n" + answers.notizen + "\n";
-    exportText += "MUSTERLÖSUNG:\n" + document.getElementById("correctPathText").innerText
-    return exportText
-    exportText += document.getElementById("resDesc").innerText + "\n";
-    
-    const descElem = document.getElementById("descText");
-    if (descElem) exportText += descElem.innerText + "\n\n";
-
-    exportText += "DEINE LÖSUNG:\n" + (answers.notizen || "Keine Notizen vorhanden") + "\n\n";
-    exportText += "MUSTERLÖSUNG:\n" + document.getElementById("correctPathText").innerText;
-
-const blob = new Blob([exportText], { type: "text/plain" });
-const url = URL.createObjectURL(blob);
-const a = document.createElement("a");
-    
-a.href = url;
-    a.download = "ergebnis.txt";
-    a.download = "Haushaltsrecht_Ergebnis.txt";
-    document.body.appendChild(a); // Sicherer für manche Browser
-a.click();
-    
-    document.body.removeChild(a);
-URL.revokeObjectURL(url);
-}
     
 function exportAsPdf() {
 const { jsPDF } = window.jspdf;
