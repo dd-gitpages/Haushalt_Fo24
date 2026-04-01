@@ -350,11 +350,14 @@ const ist9 = (v.startsWith("985") && z.startsWith("986")) || (v.startsWith("986"
 const istI = ["5","6"].includes(v[0]) && ["7","8"].includes(z[0])
 const istK = ["4","5","6"].includes(z[0]) && ["7","8"].includes(v[0])
 
-if (answers[2] === "ja") p.push(3);
+if (answers[2] === "ja") {
+    p.push(3);
+    if (answers[3] === "ja") return p;
+}
 p.push(4)
 if(p_v === p_z) {
 p.push(5);
-if((v[0]===z[0] && ["4","5","6"].includes(v[0])) || istP || ist9) { p.push(6); return p; }
+if((v[0]===z[0] && ["4","5","6"].includes(v[0]) && !v.startsWith("441") && !z.startsWith("441") ) || istP || ist9) { p.push(6); return p; }
 }
 p.push(7);
 if(istM) p.push(19, 20);
