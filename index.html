@@ -26,7 +26,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase">PGR (Zu):</label>
-                    <input type="text" id="pgr_zu" placeholder="z.B. 12.34.56" class="w-full p-2 border rounded">
+                    <input type="text" id="pgr_zu" placeholder="z.B. 50.01.01" class="w-full p-2 border rounded">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase">Titel (Von):</label>
@@ -34,7 +34,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase">PGR (Von):</label>
-                    <input type="text" id="pgr_von" placeholder="z.B. 12.34.56" class="w-full p-2 border rounded">
+                    <input type="text" id="pgr_von" placeholder="z.B. 50.01.01" class="w-full p-2 border rounded">
                 </div>
             </div>
             <div>
@@ -53,19 +53,14 @@
         
         <div class="space-y-6">
             <div class="bg-blue-50 p-5 rounded-xl border border-blue-100 shadow-sm">
-                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic text-center underline">DEINE EINGEBENE LÖSUNG (NOTIZEN):</label>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic text-center underline">DEINE EINGEBENE LÖSUNG:</label>
                 <div id="notizenDisplay" class="w-full p-3 border rounded-lg text-sm min-h-[60px] bg-slate-50 italic text-slate-600 whitespace-pre-wrap"></div>
             </div>
 
             <div class="bg-green-50 p-5 rounded-xl border border-green-100 shadow-sm">
-                <h3 class="font-bold text-green-800 mb-2 underline italic text-[10px]">DER RECHTLICH KORREKTE WEG (MUSTERLÖSUNG):</h3>
+                <h3 class="font-bold text-green-800 mb-2 underline italic text-[10px]">DER BERECHNETE WEG (MUSTERLÖSUNG):</h3>
                 <div id="correctPathText" class="text-sm whitespace-pre-wrap text-slate-700 leading-relaxed"></div>
             </div>
-        </div>
-
-        <div class="mt-6">
-            <h3 class="font-bold text-blue-800 mb-2 underline italic text-[10px]">MUSTERFORMULIERUNGEN (DEIN GEWÄHLTER WEG):</h3>
-            <div id="userPathText" class="text-sm whitespace-pre-wrap text-slate-700 leading-relaxed"></div>
         </div>
 
         <button onclick="location.reload()" class="w-full mt-8 bg-slate-200 text-slate-700 py-3 rounded-xl hover:bg-slate-300 transition font-medium">Neu starten</button>
@@ -514,7 +509,7 @@ function renderStep() {
     } else {
         html += `<button onclick="handleAnswer(${data.next}, 'Weiter', 'Obersatz')" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold">Weiter</button>`;
     }
-    html += `<div class="mt-8 border-t pt-4"><label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic underline">Deine Lösung:</label><textarea id="notizen" placeholder="Deine Prüfschritte, Begründungen und Ergebnisse..." class="w-full p-3 border rounded-xl h-32 focus:border-blue-400 outline-none">${answers.notizen || ""}</textarea></div>`;
+    html += `<div class="mt-8 border-t pt-4"><label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic underline">Deine Lösung:</label><textarea id="notizen" placeholder="Deine Prüfschritte, Begründungen und Ergebnisse..." class="w-full mt-4 p-4 border rounded-xl h-64 focus:border-blue-400 outline-none">${answers.notizen || ""}</textarea></div>`;
     cont.innerHTML = html;
 }
 
@@ -529,7 +524,7 @@ function handleAnswer(next, text, label) {
         }
     }
     else if (currentStep === 1) {
-        if (!answers.notizen || answers.notizen.length === 0){
+        if (aktuellerInhalt.length === 0){
             const confirmStep = confirm("Bist du sicher, dass du ohne eine eigenen Obersatz fortfahren möchtest?");
             if (!confirmStep) return;
         }
@@ -559,8 +554,8 @@ function showResult() {
     const box = document.getElementById("statusBox");
     
     box.className = `p-4 rounded-xl border-l-4 mb-6 ${abw ? 'bg-amber-50 border-amber-500 text-amber-900' : 'bg-green-50 border-green-500 text-green-900'}`;
-    document.getElementById("resTitle").innerText = abw ? "Abweichung erkannt" : "Korrekt gelöst!";
-    document.getElementById("resDesc").innerText = abw ? "Deine Herleitung weicht vom rechtlich korrekten Weg ab." : "Rechtlich einwandfrei hergeleitet.";
+    document.getElementById("resTitle").innerText = abw ? "Abweichung erkannt" : "Super! Diesen Fall hast du korrekt gelöst.";
+    document.getElementById("resDesc").innerText = abw ? "Deine Lösung weicht vom berechneten Weg ab." : "Dein Weg deckt sich mit dem berechneten Weg";
     
     document.getElementById("correctPathText").innerText = sollIds.map(id => getObjektiveLoesung(id)).join("\n\n");
     document.getElementById("userPathText").innerText = istIds.map(id => getMusterText(id)).join("\n\n");
