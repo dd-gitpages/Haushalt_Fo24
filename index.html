@@ -473,7 +473,6 @@ descText += `\n\n⚠️ Erster Fehler bei Schritt "${fehlerPunkt.label}".`;
 }
 document.getElementById("resDesc").innerText = descText;
 document.getElementById("correctPathText").innerText = sollIds.map(id => getObjektiveLoesung(id)).join("\n\n");
-document.getElementById("userPathText").innerText = istIds.map(id => getMusterText(id)).join("\n\n");
 }
 
 function exportAsTxt() {
