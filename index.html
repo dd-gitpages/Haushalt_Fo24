@@ -78,7 +78,8 @@ let answers = { titel_zu: "", pgr_zu: "", titel_von: "", pgr_von: "", betrag: ""
 let currentStep = 1;
 let istPfad = [];
 let letzterInhalt = "";
-
+let fehlerTextExport = ""; 
+    
 function startWizard() {
     answers.titel_zu = document.getElementById("in_zu").value;
     answers.pgr_zu = document.getElementById("pgr_zu").value;
@@ -456,7 +457,13 @@ function showResult() {
     box.className = `p-4 rounded-xl border-l-4 mb-6 ${abw ? 'bg-amber-50 border-amber-500 text-amber-900' : 'bg-green-50 border-green-500 text-green-900'}`;
     document.getElementById("resTitle").innerText = abw ? "Abweichung erkannt" : "Super! Diesen Fall hast du korrekt gelöst.";
     let descText = abw ? "Deine Lösung weicht vom berechneten Weg ab." : "Dein Weg deckt sich mit dem berechneten Weg";
-    if (abw && fehlerPunkt) descText += `\n\n⚠️ Erster Fehler bei Schritt "${fehlerPunkt.label}".`;
+    if (abw && fehlerPunkt) {
+    const meldung = `\n\n⚠️ Falsch abgebogen bei "${fehlerPunkt.label}".`;
+    descText += meldung;
+    fehlerTextExport = meldung;
+    } else {
+    fehlerTextExport = "";
+    }
     document.getElementById("resDesc").innerText = descText;
     document.getElementById("correctPathText").innerText = sollIds.map(id => getObjektiveLoesung(id)).join("\n\n");
 }
@@ -469,6 +476,10 @@ function exportAsTxt() {
     content += `Titel (Zu): ${answers.titel_zu} (PGR: ${answers.pgr_zu})\n`;
     content += `Titel (Von): ${answers.titel_von} (PGR: ${answers.pgr_von})\n`;
     content += `Betrag: ${answers.betrag} €\n\n`;
+    content += `------------------------------------\n`;
+    if (fehlerTextExport) {
+        content += fehlerTextExport + "\n";
+    }
     content += `------------------------------------\n`;
     content += `DEINE EINGEGEBENE LÖSUNG:\n`;
     content += `------------------------------------\n`;
@@ -502,6 +513,15 @@ function exportAsPdf() {
     doc.text(`Titel (Zu): ${answers.titel_zu} | PGR: ${answers.pgr_zu}`, margin, y); y += 6;
     doc.text(`Titel (Von): ${answers.titel_von} | PGR: ${answers.pgr_von}`, margin, y); y += 6;
     doc.text(`Betrag: ${answers.betrag} €`, margin, y); y += 10;
+
+    if (fehlerTextExport) {
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(200, 0, 0); // Text in Rot
+        // .trim() entfernt die Zeilenumbrüche für eine saubere Positionierung im PDF
+        doc.text(fehlerTextExport.trim(), margin, y); 
+        y += 10;
+        doc.setTextColor(0, 0, 0); // Zurück auf Schwarz für den Rest
+    }
 
     doc.setFont("helvetica", "bold");
     doc.setFillColor(240, 240, 240);
