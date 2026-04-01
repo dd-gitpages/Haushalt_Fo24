@@ -210,8 +210,8 @@ function getObjektiveLoesung(id) {
             }
         })(),
         6: answers[6] === "nein"
-            ? `Da für Titel ${v} keine andere Regelung zur Deckungsfähigkeit durch einen HV geregelt ist, trifft §3 Abs. 2 HG nicht zu. Folglich bleibt es bei der Deckungsfähigkeit nach §3 Abs. 1 HG.`
-            : `Da ein HV für Titel ${v} eine gegenseitige DF mit einem anderen Titel als ${z} regelt, ist durch §3 Abs. 2 HG eine Deckungsfähigkeit ausgeschlossen.`,
+            ? `Weil für Titel ${v} keine andere Regelung zur Deckungsfähigkeit durch einen HV geregelt ist, trifft §3 Abs. 2 HG nicht zu. Folglich bleibt es bei der Deckungsfähigkeit nach §3 Abs. 1 HG.`
+            : `Weil ein HV für Titel ${v} eine gegenseitige DF mit einem anderen Titel als ${z} regelt, ist durch §3 Abs. 2 HG eine Deckungsfähigkeit ausgeschlossen.`,
         7: (() => {
             if (p_v === p_z) return `Da Titel ${v} und Titel ${z} beide in Produktgruppe ${p_z} sind, ist nun eine Nachbewilligung nach §4 Abs. 1 Nr. 1 HG zu prüfen.`;
             if (p_v.substring(0,5) === p_z.substring(0,5)) return `Da Titel ${v} und Titel ${z} beide im Produktbereich ${p_z.substring(0,5)} sind, ist nun eine Nachbewilligung nach §4 Abs. 2 HG zu prüfen.`;
@@ -221,18 +221,18 @@ function getObjektiveLoesung(id) {
         })(),
         8: (() => {
             if (p_v === p_z) {
-                return "Dort sind produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 erlaubt, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen.";
+                return "Dadurch sind produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 erlaubt, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen.";
             }
             else {
-                return `Dort sind produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 erlaubt, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen. Da Titel ${z} in PGr ${p_z} und Titel ${v} in PGr ${p_v} ist, kann eine Nachbewilligung nicht durch die produktgruppenverantwortliche Person erfolgen.`;
+                return `Dadurch sind produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 erlaubt, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen. Da Titel ${z} in PGr ${p_z} und Titel ${v} in PGr ${p_v} ist, kann eine Nachbewilligung nicht durch die produktgruppenverantwortliche Person erfolgen.`;
             }
         })(),
         9: (() => {
             if (istI) {
-                return `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${v[0]} zu Gunsten von Hauptgruppe ${z[0]} gefordert ist, ist eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 1 HG möglich.`;
+                return `Weil in diesem Fall eine Nachbewilligung zu Lasten von Hauptgruppe ${v[0]} und zu Gunsten von Hauptgruppe ${z[0]} gefordert ist, ist eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 1 HG möglich.`;
             }
             else {
-                return `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${v[0]} zu Gunsten von Hauptgruppe ${z[0]} gefordert ist, ist eine Nachbewilligung nach §4 Abs. 1 Nr. 1 HG nicht möglich. Daher steht als Nächstes eine Nachbewilligung nach §4 Abs. 1 Nr. 2 HG zur Frage.`;
+                return `Weil in diesem Fall eine Nachbewilligung zu Lasten von Hauptgruppe ${v[0]} und zu Gunsten von Hauptgruppe ${z[0]} gefordert ist, ist eine Nachbewilligung nach §4 Abs. 1 Nr. 1 HG nicht möglich. Daher steht als Nächstes eine Nachbewilligung nach §4 Abs. 1 Nr. 2 HG zur Frage.`;
             }
         })(),
         10: (() => {
@@ -320,10 +320,10 @@ function getObjektiveLoesung(id) {
         })(),
         18: (() => {
             if (p_v.substring(0,5) === p_z.substring(0,5)) {
-                if (istP) return `Da es sich um eine Nachbewilligung zwischen Gruppe ${v.substring(0,3)} und Gruppe ${z.substring(0,3)} handelt, ist dies durch die produktbereichsverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 2 HG möglich.`;
+                if (istP) return `Weil es sich aber um eine Nachbewilligung zwischen Gruppe ${v.substring(0,3)} und Gruppe ${z.substring(0,3)} handelt, ist dies durch die produktbereichsverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 2 HG möglich.`;
             }
             else {
-                if (istP) return `Da es sich um eine Nachbewilligung zwischen Gruppe ${v.substring(0,3)} und Gruppe ${z.substring(0,3)} handelt, ist dies durch die produktplanverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 3 HG möglich.`;
+                if (istP) return `Weil es sich um eine Nachbewilligung zwischen Gruppe ${v.substring(0,3)} und Gruppe ${z.substring(0,3)} handelt, ist dies durch die produktplanverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 3 HG möglich.`;
             }
         })(),
         19: (() => {
@@ -347,7 +347,7 @@ function getObjektiveLoesung(id) {
                 return `Daher ist nun festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${b} € liegt über dieser Grenze. Daher ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`;
             }
         })(),
-        22: `Der Haushalts- und Finanzausschuss ist gemäß §9 Abs. 2 Nr. 1 HG ermächtigt, alle gedeckten Nachbewilligungen vorzunehmen. Somit ist eine Nachbewilligung durch den Haushalts- und Finanzausschuss auch in diesem Fall möglich.`
+        22: `Darin wird der Haushalts- und Finanzausschuss ermächtigt, alle gedeckten Nachbewilligungen vorzunehmen. Somit ist eine Nachbewilligung durch den Haushalts- und Finanzausschuss auch in diesem Fall möglich.`
     };
     return texte[id]
 }
