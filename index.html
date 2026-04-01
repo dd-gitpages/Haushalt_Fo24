@@ -95,6 +95,14 @@ function startWizard() {
         alert("Formatfehler: PGR (Zu) muss das Format 'XX.XX.XX' haben (z.B. 50.01.01).");
         return;
     }
+    if(!titelRegex.test(answers.titel_von)) {
+        alert("Formatfehler: Titel (Von) muss das Format 'XXX XX-X' haben (z.B. 511 01-1).");
+        return;
+    }
+    if(!pgrRegex.test(answers.pgr_von)) {
+        alert("Formatfehler: PGR (Von) muss das Format 'XX.XX.XX' haben (z.B. 50.01.01).");
+        return;
+    }
     renderStep();
 }
 
@@ -499,19 +507,18 @@ function renderStep() {
     } else {
         html += `<button onclick="handleAnswer(${data.next}, 'Weiter', 'Obersatz')" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold">Weiter</button>`;
     }
-    html += `<div class="mt-8 border-t pt-4"><label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic underline">Deine Lösung:</label><textarea id="notizen" placeholder="Deine Prüfschritte, Begründungen und Ergebnisse..." class="w-full p-3 border rounded-xl h-32 focus:border-blue-400 outline-none">${answers.notizen}</textarea></div>`;
+    html += `<div class="mt-8 border-t pt-4"><label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic underline">Deine Lösung:</label><textarea id="notizen" placeholder="Deine Prüfschritte, Begründungen und Ergebnisse..." class="w-full p-3 border rounded-xl h-32 focus:border-blue-400 outline-none">${answers.notizen || ""}</textarea></div>`;
     cont.innerHTML = html;
 }
 
 function handleAnswer(next, text, label) {
     const notizenFeld = document.getElementById("notizen");
     if (notizenFeld) answers.notizen = notizenFeld.value.trim();
-    if (next === "END") {
-        if (!answers.notizen || answers.notizen === "") {
+    if (!answers.notizen || answers.notizen.length === 0) {
             const confirmStep = confirm("Bist du sicher, dass du fortfahren möchtest ohne eine eigene Lösung einzutragen?");
             if (!confirmStep) return;
         }
-    }
+    
     if(label) istPfad.push({step: currentStep, label: label});
     answers[currentStep] = text;
 
