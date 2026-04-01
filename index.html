@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lernassistent Haushalt - Fo24</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
 
@@ -61,6 +62,11 @@
                 <h3 class="font-bold text-green-800 mb-2 underline italic text-[10px]">DER BERECHNETE WEG (MUSTERLÖSUNG):</h3>
                 <div id="correctPathText" class="text-sm whitespace-pre-wrap text-slate-700 leading-relaxed"></div>
             </div>
+        </div>
+    
+        <div class="mt-8 flex gap-4">
+            <button onclick="exportAsTxt()" class="bg-green-600 text-white px-4 py-2 rounded">Als TXT speichern</button>
+            <button onclick="exportAsPdf()" class="bg-red-600 text-white px-4 py-2 rounded">Als PDF speichern</button>
         </div>
 
         <button onclick="location.reload()" class="w-full mt-8 bg-slate-200 text-slate-700 py-3 rounded-xl hover:bg-slate-300 transition font-medium">Neu starten</button>
@@ -158,109 +164,6 @@ function getFlow() {
         21: { q: "Senator für Finanzen §10 Abs. 4 Nr. 3", options: [{ t: "ja", next: "END", label: "§10 SF" }, { t: "nein", next: 22, label: "§10 SF" }] },
         22: { q: "Haushalts- und Finanzausschuss §9 Abs. 2 Nr. 1", options: [{ t: "Abschluss", next: "END" }] }
     };
-}
-
-function getMusterText(id) {
-    const v = answers.titel_von, z = answers.titel_zu, b = answers.betrag, p_v = answers.pgr_von, p_z = answers.pgr_zu;
-    const istM = ["1","2","3"].includes(v[0]);
-    const istP = (v.startsWith("422") && z.startsWith("428")) || (v.startsWith("428") && z.startsWith("422"));
-    const texte = {
-        1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${b} € bei Titel ${z} zu Lasten von Titel ${v} geleistet werden dürfen.`,
-        2: answers[2] === "ja"
-            ? `Zunächst ist eine Deckungsfähigkeit über Haushaltsvermerke zu prüfen. Dafür müssten bei beiden Titeln Haushaltsvermerke vorliegen und diese die Deckungsfähigkeit mit dem jeweils anderen Titel regeln.`
-            : "Mindestens einer der beiden Titel hat keinen Haushaltsvermerk. Damit ist eine gegenseitige DF durch Haushaltsvermerke ausgeschlossen.",
-        3: answers[3] === "ja" 
-            ? `Sowohl Titel ${z} als auch Titel ${v} haben einen Haushaltsvermerk, welcher die gegenseitige Deckungsfähigkeit regelt. Daher dürfen die zusätzlichen Ausgaben von ${b} bei Titel ${z} geleistet werden.` 
-            : `Zwar tragen sowohl Titel ${z} als auch Titel ${v} einen Haushaltsvermerk, diese regeln jedoch keine gegenseitige Deckungsfähigkeit. Damit ist eine Deckungsfähigkeit durch Haushaltsvermerke ausgeschlossen.`,
-        4: answers[4] === "ja"
-            ? `Als Nächstes ist festzustellen, ob eine Deckungsfähigkeit nach §3 Abs. 1 HG besteht. Dafür müssten beide Titel in der gleichen Produktgruppe sein. Und eine der Nummern 1-5 von §3 Abs. 1 HG müsste zutreffen. Sowohl Titel ${z} als auch Titel ${v} sind in der Produktgruppe ${p_v}.`
-            : `Als Nächstes ist festzustellen, ob eine Deckungsfähigkeit nach §3 Abs. 1 HG besteht. Dafür müssten beide Titel in der gleichen Produktgruppe sein. Titel ${z} ist in PGR ${p_z} und Titel ${v} in PGR ${p_v}. Eine Deckungsfähigkeit nach §3 Abs. 1 HG ist damit nicht gegeben.`,
-        5: (() => {
-            const a = answers[5];
-            if (a === "Nr. 1: 422 <-> 428") return `Da Titel ${v} in Gruppe ${v.substring(0,3)} und Titel ${z} in Gruppe ${z.substring(0,3)} ist, trifft Nr. 1 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 1 HG gegeben.`;
-            if (a === "Nr. 2: 4xx -> 4xx. Ausnahme 441") return `Da Titel ${v} in Hauptgruppe ${v[0]} und Titel ${z} ebenfalls in Hauptgruppe ${z[0]} ist, und keiner der beiden in Gruppe 441, trifft Nr. 2 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 2 HG gegeben.`;
-            if (a === "Nr. 3: 5xx -> 5xx") return `Da Titel ${v} in Hauptgruppe ${v[0]} und Titel ${z} ebenfalls in Hauptgruppe ${z[0]} ist, trifft Nr. 3 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 3 HG gegeben.`;
-            if (a === "Nr. 4: 6xx -> 6xx") return `Da Titel ${v} in Hauptgruppe ${v[0]} und Titel ${z} ebenfalls in Hauptgruppe ${z[0]} ist, trifft Nr. 4 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 4 HG gegeben.`;
-            if (a === "Nr. 5: 985 <-> 986") return `Da Titel ${v} in Gruppe ${v.substring(0,3)} und Titel ${z} in Gruppe ${z.substring(0,3)} ist, trifft Nr. 5 zu. Damit ist eine gegenseitige Deckungsfähigkeit nach §3 Abs. 1 Nr. 5 HG gegeben.`;
-            if (a === "keine") return `Da eine gegenseitige Deckungsfähigkeit der Gruppen ${v.substring(0,3)} und ${z.substring(0,3)} durch keine der Nummern 1-5 gedeckt ist, ist auch keine Deckungsfähigkeit nach §3 Abs. 1 HG gegeben.`;
-        })(),
-        6: answers[6] === "nein"
-            ? `Da für Titel ${v} keine andere Regelung zur Deckungsfähigkeit durch einen HV geregelt ist, trifft §3 Abs. 2 HG nicht zu. Folglich bleibt es bei der Deckungsfähigkeit nach §3 Abs. 1 HG.`
-            : `Da ein HV für Titel ${v} eine gegenseitige DF mit einem anderen Titel als ${z} regelt, ist durch §3 Abs. 2 HG eine Deckungsfähigkeit ausgeschlossen.`,
-        7: (() => {
-            const a = answers[7];
-            if (a === "§4 Abs. 1") return `Da Titel ${v} und Titel ${z} beide in Produktgruppe ${p_z} sind, ist nun eine Nachbewilligung nach §4 Abs. 1 Nr. 1 HG zu prüfen.`;
-            if (a === "§4 Abs. 2") return `Da Titel ${v} und Titel ${z} beide im Produktbereich ${p_z.substring(0,5)} sind, ist nun eine Nachbewilligung nach §4 Abs. 2 HG zu prüfen.`;
-            if (a === "§4 Abs. 3") return `Da Titel ${v} und Titel ${z} beide im Produktplan ${p_z.substring(0,2)} sind, ist nun eine Nachbewilligung nach §4 Abs. 3 HG zu prüfen.`;
-            if (a === "§4 Abs. 5 (Mehreinnahmen HG 1-3)") return `Da die Mehrausgaben bei Titel ${z} durch den Einnahmetitel ${v} gedeckt werden soll ist §4 Abs. 5 HG zu prüfen.`;
-            if (a === "keinem. Direkt zu §10") return `Da Titel ${v} und Titel ${z} in unterschiedlichen Produktplänen (${p_z.substring(0,2)} und ${p_v.substring(0,2)}) sind, ist  eine Nachbewilligung nach §4 HG ausgeschlossen.`;
-        })(),
-        8: answers[8] === "ja"
-            ? "Dort sind produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 erlaubt, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen."
-            : `Dort sind produktgruppeninterne Nachbewilligungen zu Gunsten der Hauptgruppen 7 und 8 erlaubt, wenn die Mittel aus den Hauptgruppen 5 oder 6 kommen. Da Titel ${z} in PGr ${p_z} und Titel ${v} in PGr ${p_v} ist, kann eine Nachbewilligung nicht durch die produktgruppenverantwortliche Person erfolgen.`,
-        9: answers[9] === "ja"
-            ? `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${v[0]} zu Gunsten von Hauptgruppe ${z[0]} gefordert ist, ist eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 1 HG möglich.`
-            : `Da in diesem Fall eine Nachbewilligung von Hauptgruppe ${v[0]} zu Gunsten von Hauptgruppe ${z[0]} gefordert ist, ist eine Nachbewilligung nach §4 Abs. 1 Nr. 1 HG nicht möglich. Daher steht als Nächstes eine Nachbewilligung nach §4 Abs. 1 Nr. 2 HG zur Frage.`,
-        10: answers[10] === "ja"
-            ? `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen a-c von §4 Abs. 1 Nr. 2 HG dies nicht verbieten. Die geforderte Summe von ${b} € liegt unter 100.000 €.`
-            : `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100.000 € erlaubt. Die geforderte Summe von ${b} € liegt jedoch über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
-        11: (() => {
-            const a = answers[11];
-            if (a === "a): x -> 422 oder 428") return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. a HG untersagt.`;
-            if (a === "b): 441 -> x") return `Da der Sachverhalt ein Umwidmung von Mitteln der Gruppe ${v.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. b HG untersagt.`;
-            if (a === "c): 7xx oder 8xx -> 4xx,5xx oder 6xx") return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. c HG untersagt.`;
-            if (a === "keine") return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${z.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${v.substring(0,3)} fordert, trifft keine der Ausnahmen a-c zu. Eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 2 HG ist möglich.`;
-        })(),
-        12: answers[12] === "ja"
-            ? "Dort sind produktbereichsinterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 2 HG dies nicht verbieten."
-            : `Titel ${z} ist in Produktbereich ${p_z.substring(0,5)} und Titel ${v} in Produktbereich ${p_v.substring(0,5)}. Eine produktbereichsinterne Nachbewilligung kann daher nicht durch die produktbereichsverantwortliche Person erfolgen.`,
-        13: answers[13] === "ja"
-            ? `Die geforderte Summe von ${b} € liegt unter 100.000 €.`
-            : `Die geforderte Summe von ${b} € liegt über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
-        14: (() => {
-            const a = answers[14];
-            if (a === "Nr. 1: x -> 422 oder 428") return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 1 HG untersagt.`;
-            if (a === "Nr. 2: 441 -> x") return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${v.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 2 HG untersagt.`;
-            if (a === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 3 HG untersagt.`;
-            if (a === "keine") return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${z.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${v.substring(0,3)} fordert, trifft keine der Ausnahmen 1-3 zu. Eine Nachbewilligung durch die produktbereichsverantwortliche Person nach §4 Abs. 2 HG ist möglich.`; 
-        })(),
-        15: answers[15] === "ja"
-            ? "Dort sind produktplaninterne Nachbewilligungen bis zu 100.000 € erlaubt, sofern die Ausnahmen 1-3 von §4 Abs. 3 HG dies nicht verbieten."
-            : `Titel ${z} ist in Produktplan ${p_z.substring(0,2)} und Titel ${v} in Produktplan ${p_v.substring(0,2)}. Eine produktplaninterne Nachbewilligung kann daher nicht durch die produktplanverantwortliche Person erfolgen.`,
-        16: answers[16] === "ja"
-            ? `Die geforderte Summe von ${b} € liegt unter 100.000 €.`
-            : `Die geforderte Summe von ${b} € liegt über 100.000 €. Da auch eine Nachbewilligung durch den Senator für Finanzen nach §10 Abs. 4 Nr. 3 HG nur bis 100.000 € möglich ist, ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
-        17: (() => {
-            const a = answers[17];
-            if (a === "Nr. 1: x -> 422 oder 428") return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 1 HG untersagt.`;
-            if (a === "Nr. 2: 441 -> x") return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${v.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 2 HG untersagt.`;
-            if (a === "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx") return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 3 HG untersagt.`;
-            if (a=== "keine") return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${z.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${v.substring(0,3)} fordert, trifft keine der Ausnahmen 1-3 zu. Eine Nachbewilligung durch die produktplanverantwortliche Person nach §4 Abs. 3 HG ist möglich.`; 
-        })(),
-        18: (() => {
-            const a = answers[18];
-            if (p_v.substring(0,5) === p_z.substring(0,5)) {
-                if (a === "ja") return `Da es sich um eine Nachbewilligung zwischen Gruppe ${v.substring(0,3)} und Gruppe ${z.substring(0,3)} handelt, ist dies durch die produktbereichsverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 2 HG möglich.`;
-            }
-            else {
-                if (a === "ja") return `Da es sich um eine Nachbewilligung zwischen Gruppe ${v.substring(0,3)} und Gruppe ${z.substring(0,3)} handelt, ist dies durch die produktplanverantwortliche Person nach §4 Abs. 6 in Verbindung mit §4 Abs. 3 HG möglich.`;
-            }
-        })(),
-        19: answers[19] === "ja"
-            ? `Da bei Titel ${v} Mehreinnahmen erzielt wurden, welche die bei Titel ${z} benötigte Summe von ${b} € decken, sind nach §4 Abs. 5 HG die Vorgaben von`
-            : `Da es sich bei Titel ${v} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderten ${b} € zur Verfügung stehen, ist eine Nachbewilligung nicht möglich.`,
-        20: (() => {
-            const a = answers[20];
-                if (a === "§4 Abs. 1") return `§4 Abs. 1 Nr. 2 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktgruppenverantwortliche Person möglich.`;
-                if (a === "§4 Abs. 2") return `§4 Abs. 2 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktbereichsverantwortliche Person möglich.`;
-                if (a === "§4 Abs. 3") return `§4 Abs. 3 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktplanverantwortliche Person möglich.`;
-        })(),
-        21: answers[21] === "ja"
-            ? `Daher ist nun festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${b} € liegt unter dieser Grenze. Somit kann der Senator für Finanzen in diesem Fall nachbewilligen.`
-            : `Daher ist nun festzustellen, ob eine Nachbewilligung durch den Senator für Finanzen erlaubt ist. §10 Abs. 4 Nr. 3 HG erlaubt dem Senator alle gedeckten Nachbewilligungen bis zu einer Summe von 100.000 €. Die geforderte Summe von ${b} € liegt über dieser Grenze. Daher ist letztlich eine Nachbewilligung durch den Haushalts- und Finanzausschuss gemäß §9 Abs. 2 Nr. 1 HG zu prüfen.`,
-        22: "Der Haushalts- und Finanzausschuss ist gemäß §9 Abs. 2 Nr. 1 HG ermächtigt, alle gedeckten Nachbewilligungen vorzunehmen. Somit ist eine Nachbewilligung durch den Haushalts- und Finanzausschuss auch in diesem Fall möglich."
-    };
-    return texte[id]
 }
     
 function getObjektiveLoesung(id) {
@@ -550,15 +453,72 @@ function showResult() {
     
     const sollIds = getSollPfad();
     const istIds = istPfad.map(p => p.step);
+    let fehlerPunkt = null;
+    for (let i = 0; i < istPfad.length; i++) {
+        if (istPfad[i].step !== sollIds[i]) {
+            fehlerPunkt = istPfad[i]; // Speichert den Schritt und das Label
+            break;
+        }
+    }
     const abw = JSON.stringify(sollIds) !== JSON.stringify(istIds);
     const box = document.getElementById("statusBox");
     
     box.className = `p-4 rounded-xl border-l-4 mb-6 ${abw ? 'bg-amber-50 border-amber-500 text-amber-900' : 'bg-green-50 border-green-500 text-green-900'}`;
     document.getElementById("resTitle").innerText = abw ? "Abweichung erkannt" : "Super! Diesen Fall hast du korrekt gelöst.";
-    document.getElementById("resDesc").innerText = abw ? "Deine Lösung weicht vom berechneten Weg ab." : "Dein Weg deckt sich mit dem berechneten Weg";
-    
+    let descText = abw ? "Deine Lösung weicht vom berechneten Weg ab." : "Dein Weg deckt sich mit dem berechneten Weg";
+    if (abw && fehlerPunkt) {
+        descText += `\n\n⚠️ Erster Fehler bei Schritt "${fehlerPunkt.label}".`;
+    }
+    document.getElementById("resDesc").innerText = descText;
     document.getElementById("correctPathText").innerText = sollIds.map(id => getObjektiveLoesung(id)).join("\n\n");
     document.getElementById("userPathText").innerText = istIds.map(id => getMusterText(id)).join("\n\n");
+}
+
+function exportAsTxt() {
+    let exportText = "ERGEBNISSE\n==========\n\n";
+    for (const step in answers) {
+        if (step === "notizen") {
+            exportText += `Notizen/Obersatz: ${answers[step]}\n\n`;
+        } else {
+            exportText += `Schritt ${step}: ${answers[step]}\n`;
+        }
+    }
+    const blob = new Blob([exportText], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ergebnis.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+function exportAsPdf() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Deine Ergebnisse", 10, 20);
+    
+    doc.setFontSize(12);
+    let y = 40; 
+
+    for (const step in answers) {
+        let line = "";
+        if (step === "notizen") {
+            line = `Notizen: ${answers[step]}`;
+        } else {
+            line = `Schritt ${step}: ${answers[step]}`;
+        }
+        
+        doc.text(line, 10, y);
+        y += 10; 
+        
+        if (y > 280) {
+            doc.addPage();
+            y = 20;
+        }
+    }
+
+    doc.save("ergebnis.pdf");
 }
 
 </script>
