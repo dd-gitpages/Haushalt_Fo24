@@ -114,7 +114,14 @@ function getFlow() {
         2: { q: "Haben beide Titel einen Haushaltsvermerk?", options: [{ t: "ja", next: 3, label: "Prüfung HV" }, { t: "nein", next: 4, label: "Prüfung HV" }] },
         3: { q: "Regeln beide Haushaltsvermerke die gegenseitige Deckungsfähigkeit?", options: [{ t: "ja", next: "END", label: "Zulässigkeit nach HV" }, { t: "nein", next: 4, label: "Zulässigkeit nach HV" }] },
         4: { q: "Sind beide Titel in der gleichen Produktgruppe?", options: [{ t: "ja", next: 5, label: "DF nach §3 (PGr)" }, { t: "nein", next: 7, label: "DF nach §3 (PGr)" }] },
-        5: { q: "Trifft eine der Nummern 1-5 aus §3 Abs. 1 HG zu?", options: [{ t: "Nr. 1-5 trifft zu", next: 6, label: "DF nach §3 (Nr. 1-5)" }, { t: "keine", next: 7, label: "DF nach §3 (Nr. 1-5)" }] },
+        5: { q: "Trifft eine der Nummern 1-5 aus §3 Abs. 1 HG zu?", options: [
+            { t: "Nr. 1: 422 <-> 428", next: 6, label: "DF nach §3 (Nr. 1-5)" },
+            { t: "Nr. 2: 4xx -> 4xx. Ausnahme 441", next: 6, label: "DF nach §3 (Nr. 1-5)" }, 
+            { t: "Nr. 3: 5xx -> 5xx", next: 6, label: "DF nach §3 (Nr. 1-5)" }, 
+            { t: "Nr. 4: 6xx -> 6xx", next: 6, label: "DF nach §3 (Nr. 1-5)" }, 
+            { t: "Nr. 5: 985 <-> 986", next: 6, label: "DF nach §3 (Nr. 1-5)" }, 
+            { t: "keine", next: 7, label: "DF nach §3 (Nr. 1-5)" }
+        ] },
         6: { q: `Hat ${v} einen HV, der eine andere Deckungsfähigkeit regelt?`, options: [{ t: "ja", next: 7, label: "§3 Abs. 2" }, { t: "nein", next: "END", label: "§3 Abs. 2" }] },
         7: { q: "Welcher Absatz von §4 HG ist primär zu prüfen?", options: [
             { t: "§4 Abs. 1 (Produktgruppe)", next: 8, label: "Nachbewilligung Abs. 1" },
