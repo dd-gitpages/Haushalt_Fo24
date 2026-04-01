@@ -66,10 +66,10 @@
     
         <div class="mt-8 flex gap-4">
             <button onclick="exportAsTxt()" class="bg-green-600 text-white px-4 py-2 rounded">Als TXT speichern</button>
-            <button onclick="exportAsPdf()" class="bg-red-600 text-white px-4 py-2 rounded">Als PDF speichern</button>
+            <button onclick="exportAsPdf()" class="bg-green-600 text-white px-4 py-2 rounded">Als PDF speichern</button>
         </div>
 
-        <button onclick="location.reload()" class="w-full mt-8 bg-slate-200 text-slate-700 py-3 rounded-xl hover:bg-slate-300 transition font-medium">Neu starten</button>
+        <button onclick="location.reload()" class="w-full mt-8 bg-red-600 text-white py-3 rounded-xl hover:bg-slate-300 transition font-medium">Neu starten</button>
     </div>
 </div>
 
@@ -112,56 +112,56 @@ function getFlow() {
     const z = answers.titel_zu || "";
     return {
         1: { q: "Schritt 1: Obersatz formulieren", next: 2 },
-        2: { q: "Haben beide Titel einen Haushaltsvermerk?", options: [{ t: "ja", next: 3, label: "Prüfung HV" }, { t: "nein", next: 4, label: "Prüfung HV" }] },
-        3: { q: "Regeln beide Haushaltsvermerke die gegenseitige Deckungsfähigkeit?", options: [{ t: "ja", next: "END", label: "Zulässigkeit nach HV" }, { t: "nein", next: 4, label: "Zulässigkeit nach HV" }] },
-        4: { q: "Sind beide Titel in der gleichen Produktgruppe?", options: [{ t: "ja", next: 5, label: "DF nach §3 (PGr)" }, { t: "nein", next: 7, label: "DF nach §3 (PGr)" }] },
+        2: { q: "Haben beide Titel einen Haushaltsvermerk?", options: [{ t: "ja", next: 3, label: "Zwei HV" }, { t: "nein", next: 4, label: "Nicht zwei HV" }] },
+        3: { q: "Regeln beide Haushaltsvermerke die gegenseitige Deckungsfähigkeit?", options: [{ t: "ja", next: "END", label: "DF nach HV" }, { t: "nein", next: 4, label: "Nicht DF nach HV" }] },
+        4: { q: "Sind beide Titel in der gleichen Produktgruppe?", options: [{ t: "ja", next: 5, label: "DF nach §3 (PGr)" }, { t: "nein", next: 7, label: "DF nach §3 Abs. 1 -> Auswahl" }] },
         5: { q: "Trifft eine der Nummern 1-5 aus §3 Abs. 1 HG zu?", options: [
-            { t: "Nr. 1: 422 <-> 428", next: 6, label: "DF nach §3 (Nr. 1-5)" },
-            { t: "Nr. 2: 4xx -> 4xx. Ausnahme 441", next: 6, label: "DF nach §3 (Nr. 1-5)" }, 
-            { t: "Nr. 3: 5xx -> 5xx", next: 6, label: "DF nach §3 (Nr. 1-5)" }, 
-            { t: "Nr. 4: 6xx -> 6xx", next: 6, label: "DF nach §3 (Nr. 1-5)" }, 
-            { t: "Nr. 5: 985 <-> 986", next: 6, label: "DF nach §3 (Nr. 1-5)" }, 
-            { t: "keine", next: 7, label: "DF nach §3 (Nr. 1-5)" }
+            { t: "Nr. 1: 422 <-> 428", next: 6, label: "DF nach §3 Abs. 1 Nr. 1"},
+            { t: "Nr. 2: 4xx -> 4xx. Ausnahme 441", next: 6, label: "DF nach §3 Abs. 1 Nr. 2"}, 
+            { t: "Nr. 3: 5xx -> 5xx", next: 6, label: "DF nach §3 Abs. 1 Nr. 3"}, 
+            { t: "Nr. 4: 6xx -> 6xx", next: 6, label: "DF nach §3 Abs. 1 Nr. 4"}, 
+            { t: "Nr. 5: 985 <-> 986", next: 6, label: "DF nach §3 Abs. 1 Nr. 5"}, 
+            { t: "keine", next: 7, label: "DF nach §3 Abs. 1 keine Auswahl" }
         ] },
-        6: { q: `Hat ${v} einen HV, der eine andere Deckungsfähigkeit regelt?`, options: [{ t: "ja", next: 7, label: "§3 Abs. 2" }, { t: "nein", next: "END", label: "§3 Abs. 2" }] },
+        6: { q: `Hat ${v} einen HV, der eine andere Deckungsfähigkeit regelt?`, options: [{ t: "ja", next: 7, label: "§3 Abs. 2 ->  Auswahl" }, { t: "nein", next: "END", label: "§3 Abs. 2 -> Abs. 1" }] },
         7: { q: "Welcher Absatz von §4 HG ist primär zu prüfen?", options: [
-            { t: "§4 Abs. 1 (Produktgruppe)", next: 8, label: "Nachbewilligung Abs. 1" },
-            { t: "§4 Abs. 2 (Produktbereich)", next: 12, label: "Nachbewilligung Abs. 2" },
-            { t: "§4 Abs. 3 (Produktplan)", next: 15, label: "Nachbewilligung Abs. 3" },
-            { t: "§4 Abs. 5 (Mehreinnahmen HG 1-3)", next: 19, label: "Nachbewilligung Abs. 5" },
-            { t: "keiner / §10", next: 21, label: "Nachbewilligung §10" }
+            { t: "§4 Abs. 1 (Produktgruppe)", next: 8, label: "Abs. 1 Auswahl" },
+            { t: "§4 Abs. 2 (Produktbereich)", next: 12, label: "Abs. 2 Auswahl" },
+            { t: "§4 Abs. 3 (Produktplan)", next: 15, label: "Abs. 3 Auswahl" },
+            { t: "§4 Abs. 5 (Mehreinnahmen HG 1-3)", next: 19, label: "§4 Abs. 5 Auswahl" },
+            { t: "keiner / §10", next: 21, label: "SF §10 Auswahl" }
         ]},
-        8: { q: "Sind beide Titel in der gleichen Produktgruppe?", options: [{ t: "ja", next: 9, label: "§4 Abs. 1 Struktur" }, { t: "nein", next: 12, label: "§4 Abs. 1 Struktur" }] },
-        9: { q: `Ist ${v} in HG 5/6 und ${z} in HG 7/8?`, options: [{ t: "ja", next: "END", label: "§4 Abs. 1 Nr. 1" }, { t: "nein", next: 10, label: "§4 Abs. 1 Nr. 1" }] },
-        10: { q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 11, label: "§4 Abs. 1 Betrag" }, { t: "nein", next: 22, label: "§4 Abs. 1 Betrag" }] },
+        8: { q: "Sind beide Titel in der gleichen Produktgruppe?", options: [{ t: "ja", next: 9, label: "§4 Abs. 1" }, { t: "nein", next: 7, label: "§4 Abs. 1 -> Auswahl" }] },
+        9: { q: `Ist ${v} in HG 5/6 und ${z} in HG 7/8?`, options: [{ t: "ja", next: "END", label: "§4 Abs. 1 Nr. 1" }, { t: "nein", next: 10, label: "§4 Abs. 1 Nr. 1 -> Nr. 2" }] },
+        10: { q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 11, label: "<100k  §4 Abs. 1 Nr. 2" }, { t: "nein", next: 22, label: ">100k §4 Abs. 1 Nr. 2 -> HFA" }] },
         11: { q: "Ausnahmen Bst. a-c von §4 Abs. 1 Nr. 2?", options: [
-            { t: "a): x -> 422 oder 428", next: 21, label: "§4 Abs. 1 Ausn." },
-            { t: "b): 441 -> x", next: 21, label: "§4 Abs. 1 Ausn." },
-            { t: "c): 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 21, label: "§4 Abs. 1 Ausn." },
-            { t: "keine", next: "END", label: "§4 Abs. 1 Ausn." }
+            { t: "a): x -> 422 oder 428", next: 21, label: "§4 Abs. 1 Nr 2 a" },
+            { t: "b): 441 -> x", next: 21, label: "§4 Abs. 1 Nr 2 b" },
+            { t: "c): 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 21, label: "§4 Abs. 1 Nr 2 c" },
+            { t: "keine", next: "END", label: "§4 Abs. 1 keine Ausn." }
         ]},
-        12: { q: "Gleicher Produktbereich?", options: [{ t: "ja", next: 13, label: "§4 Abs. 2 Struktur" }, { t: "nein", next: 15, label: "§4 Abs. 2 Struktur" }] },
-        13: { q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 14, label: "§4 Abs. 2 Betrag" }, { t: "nein", next: 22, label: "§4 Abs. 2 Betrag" }] },
+        12: { q: "Gleicher Produktbereich?", options: [{ t: "ja", next: 13, label: "§4 Abs. 2" }, { t: "nein", next: 7, label: "§4 Abs. 2 -> Auswahl" }] },
+        13: { q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 14, label: "<100k §4 Abs. 2" }, { t: "nein", next: 22, label: ">100k §4 Abs. 2 -> HFA" }] },
         14: { q: "Ausnahmen Nr. 1-3 von §4 Abs. 2?", options: [
-            { t: "Nr. 1: x -> 422 oder 428", next: 18, label: "§4 Abs. 2 Ausn." },
-            { t: "Nr. 2: 441 -> x", next: 21, label: "§4 Abs. 2 Ausn." },
-            { t: "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 21, label: "§4 Abs. 2 Ausn." },
-            { t: "keine", next: "END", label: "§4 Abs. 2 Ausn." }
+            { t: "Nr. 1: x -> 422 oder 428", next: 18, label: "§4 Abs. 2 Nr. 1" },
+            { t: "Nr. 2: 441 -> x", next: 21, label: "§4 Abs. 2 Nr. 2" },
+            { t: "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 21, label: "§4 Abs. 2 Nr. 3" },
+            { t: "keine", next: "END", label: "§4 Abs. 2 keine Ausn." }
         ]},
-        15: { q: "Gleicher Produktplan?", options: [{ t: "ja", next: 16, label: "§4 Abs. 3 Struktur" }, { t: "nein", next: 21, label: "§4 Abs. 3 Struktur" }] },
-        16: { q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 17, label: "§4 Abs. 3 Betrag" }, { t: "nein", next: 22, label: "§4 Abs. 3 Betrag" }] },
+        15: { q: "Gleicher Produktplan?", options: [{ t: "ja", next: 16, label: "§4 Abs. 3" }, { t: "nein", next: 21, label: "§10 Auswahl" }] },
+        16: { q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 17, label: "<100k §4 Abs. 3" }, { t: "nein", next: 22, label: ">100k §4 Abs. 3 -> HFA" }] },
         17: { q: "Ausnahmen Nr. 1-3 von §4 Abs. 3?", options: [
-            { t: "Nr. 1: x -> 422 oder 428", next: 18, label: "§4 Abs. 3 Ausn." },
-            { t: "Nr. 2: 441 -> x", next: 21, label: "§4 Abs. 3 Ausn." },
-            { t: "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 21, label: "§4 Abs. 3 Ausn." },
-            { t: "keine", next: "END", label: "§4 Abs. 3 Ausn." }
+            { t: "Nr. 1: x -> 422 oder 428", next: 18, label: "§4 Abs. 3 Nr. 1" },
+            { t: "Nr. 2: 441 -> x", next: 21, label: "§4 Abs. 3 Nr. 2" },
+            { t: "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 21, label: "§4 Abs. 3 Nr. 3" },
+            { t: "keine", next: "END", label: "§4 Abs. 3 keine Ausn." }
         ]},
-        18: { q: "Personalmittel-Tausch zwischen 422 und 428?", options: [{ t: "ja", next: "END", label: "§4 Abs. 6 Rückausn." }, { t: "nein", next: 21, label: "§4 Abs. 6 Rückausn." }] },
-        19: { q: `Stehen bei Titel ${v} Mehreinnahmen in Höhe der zusätzlichen Ausgaben bei Titel ${z} zur Verfügung?`, options: [{ t: "ja", next: 20, label: "Mehreinnahmen" }, { t: "nein", next: "END", label: "Mehreinnahmen" }] },
-        20: { q: "Mehreinnahmen erkannt. Welcher Absatz ist die Ermächtigung?", options: [
-            { t: "§4 Abs. 1", next: 10, label: "§4 Abs. 5 Kombi" }, { t: "§4 Abs. 2", next: 12, label: "§4 Abs. 5 Kombi" }, { t: "§4 Abs. 3", next: 15, label: "§4 Abs. 5 Kombi" }
+        18: { q: "Personalmittel-Tausch zwischen 422 und 428?", options: [{ t: "ja", next: "END", label: "§4 Abs." }, { t: "nein", next: 21, label: "422/428 aber nicht §4 Abs. 6" }] },
+        19: { q: `Stehen bei Titel ${v} Mehreinnahmen in Höhe der zusätzlichen Ausgaben bei Titel ${z} zur Verfügung?`, options: [{ t: "ja", next: 20, label: "Mehreinnahmen ja" }, { t: "nein", next: "END", label: "Mehreinnahmen nein" }] },
+        20: { q: "Welcher Absatz von §4 soll in Verbindung mit Abs. 5 genutzt werden?", options: [
+            { t: "§4 Abs. 1", next: 10, label: "§4 Abs. 5/Abs. 1 Kombi" }, { t: "§4 Abs. 2", next: 12, label: "§4 Abs. 5/Abs. 2 Kombi" }, { t: "§4 Abs. 3", next: 15, label: "§4 Abs. 5/Abs. 3 Kombi" }
         ]},
-        21: { q: "Senator für Finanzen §10 Abs. 4 Nr. 3", options: [{ t: "ja", next: "END", label: "§10 SF" }, { t: "nein", next: 22, label: "§10 SF" }] },
+        21: { q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: "END", label: "<100k §10 SF" }, { t: "nein", next: 22, label: ">100k §10 SF -> HFA" }] },
         22: { q: "Haushalts- und Finanzausschuss §9 Abs. 2 Nr. 1", options: [{ t: "Abschluss", next: "END" }] }
     };
 }
@@ -478,9 +478,9 @@ function exportAsTxt() {
     let exportText = "ERGEBNISSE\n==========\n\n";
     for (const step in answers) {
         if (step === "notizen") {
-            exportText += `Notizen/Obersatz: ${answers[step]}\n\n`;
+            exportText += `${answers[step]}\n\n`;
         } else {
-            exportText += `Schritt ${step}: ${answers[step]}\n`;
+            exportText += `${answers[step]}\n`;
         }
     }
     const blob = new Blob([exportText], { type: "text/plain" });
