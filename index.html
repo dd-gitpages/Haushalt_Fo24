@@ -77,7 +77,7 @@
 let answers = { titel_zu: "", pgr_zu: "", titel_von: "", pgr_von: "", betrag: "", notizen: "" };
 let currentStep = 1;
 let istPfad = [];
-let letzterInhalt = ""; // Variable für die Validierung definiert
+let letzterInhalt = "";
 
 function startWizard() {
     answers.titel_zu = document.getElementById("in_zu").value;
@@ -166,7 +166,7 @@ const texte = {
 1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${b} € bei Titel ${z} zu Lasten von Titel ${v} geleistet werden dürfen.`,
 2: answers[2] === "ja"
 ? `Zunächst ist eine Deckungsfähigkeit über Haushaltsvermerke zu prüfen. Dafür müssten bei beiden Titeln Haushaltsvermerke vorliegen und diese die Deckungsfähigkeit mit dem jeweils anderen Titel regeln.`
-: "Mindestens einer der beiden Titel hat keinen Haushaltsvermerk. Damit ist eine gegenseitige DF durch Haushaltsvermerke ausgeschlossen.",
+: "Mindestens einer der beiden Titel hat keinen Haushaltsvermerk. Damit ist eine gegenseitige Deckungsfähigkeit durch Haushaltsvermerke ausgeschlossen.",
 3: answers[3] === "ja" 
 ? `Sowohl Titel ${z} als auch Titel ${v} haben einen Haushaltsvermerk, welcher die gegenseitige Deckungsfähigkeit regelt. Daher dürfen die zusätzlichen Ausgaben von ${b} bei Titel ${z} geleistet werden.` 
 : `Zwar tragen sowohl Titel ${z} als auch Titel ${v} einen Haushaltsvermerk, diese regeln jedoch keine gegenseitige Deckungsfähigkeit. Damit ist eine Deckungsfähigkeit durch Haushaltsvermerke ausgeschlossen.`,
