@@ -77,34 +77,23 @@
 let answers = { titel_zu: "", pgr_zu: "", titel_von: "", pgr_von: "", betrag: "", notizen: "" };
 let currentStep = 1;
 let istPfad = [];
+let letzterInhalt = ""; // Variable für die Validierung definiert
 
 function startWizard() {
-answers.titel_zu = document.getElementById("in_zu").value;
-answers.pgr_zu = document.getElementById("pgr_zu").value;
-answers.titel_von = document.getElementById("in_von").value;
-answers.pgr_von = document.getElementById("pgr_von").value;
-answers.betrag = document.getElementById("in_betrag").value;
-if(!answers.titel_zu || !answers.titel_von || !answers.pgr_zu || !answers.pgr_von || !answers.betrag) { alert("Bitte Falldaten ausfüllen"); return; }
-const titelRegex = /^\d{3}\s\d{2}-\d{1}$/; // Format: 123 45-6
-const pgrRegex = /^\d{2}\.\d{2}\.\d{2}$/; // Format: 12.34.56
+    answers.titel_zu = document.getElementById("in_zu").value;
+    answers.pgr_zu = document.getElementById("pgr_zu").value;
+    answers.titel_von = document.getElementById("in_von").value;
+    answers.pgr_von = document.getElementById("pgr_von").value;
+    answers.betrag = document.getElementById("in_betrag").value;
+    if(!answers.titel_zu || !answers.titel_von || !answers.pgr_zu || !answers.pgr_von || !answers.betrag) { alert("Bitte Falldaten ausfüllen"); return; }
+    const titelRegex = /^\d{3}\s\d{2}-\d{1}$/; 
+    const pgrRegex = /^\d{2}\.\d{2}\.\d{2}$/; 
 
-if(!titelRegex.test(answers.titel_zu)) {
-alert("Formatfehler: Titel (Zu) muss das Format 'XXX XX-X' haben (z.B. 511 01-1).");
-return;
-}
-if(!pgrRegex.test(answers.pgr_zu)) {
-alert("Formatfehler: PGR (Zu) muss das Format 'XX.XX.XX' haben (z.B. 50.01.01).");
-return;
-}
-if(!titelRegex.test(answers.titel_von)) {
-alert("Formatfehler: Titel (Von) muss das Format 'XXX XX-X' haben (z.B. 511 01-1).");
-return;
-}
-if(!pgrRegex.test(answers.pgr_von)) {
-alert("Formatfehler: PGR (Von) muss das Format 'XX.XX.XX' haben (z.B. 50.01.01).");
-return;
-}
-renderStep();
+    if(!titelRegex.test(answers.titel_zu)) { alert("Formatfehler: Titel (Zu) muss das Format 'XXX XX-X' haben."); return; }
+    if(!pgrRegex.test(answers.pgr_zu)) { alert("Formatfehler: PGR (Zu) muss das Format 'XX.XX.XX' haben."); return; }
+    if(!titelRegex.test(answers.titel_von)) { alert("Formatfehler: Titel (Von) muss das Format 'XXX XX-X' haben."); return; }
+    if(!pgrRegex.test(answers.pgr_von)) { alert("Formatfehler: PGR (Von) muss das Format 'XX.XX.XX' haben."); return; }
+    renderStep();
 }
 
 function getFlow() {
@@ -403,21 +392,22 @@ return [...new Set(p)].sort((a,b)=>a-b);
 }
 
 function renderStep() {
-const flow = getFlow();
-const data = flow[currentStep];
-const cont = document.getElementById("wizard");
-document.getElementById("progress").style.width = (currentStep / 22 * 100) + "%";
+    const flow = getFlow();
+    const data = flow[currentStep];
+    const cont = document.getElementById("wizard");
+    document.getElementById("progress").style.width = (currentStep / 22 * 100) + "%";
 
-let html = `<h2 class="text-xl font-bold mb-4">${data.q}</h2>`;
-if(data.options) {
-data.options.forEach(o => html += `<button onclick="handleAnswer('${o.next}', '${o.t}', '${o.label}')" class="w-full text-left p-4 mb-2 border rounded-xl hover:bg-blue-50 transition">${o.t}</button>`);
-} else {
-html += `<button onclick="handleAnswer(${data.next}, 'Weiter', 'Obersatz')" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold">Weiter</button>`;
+    let html = `<div class="mb-2 text-blue-600 font-bold text-xs uppercase tracking-wider">Schritt ${currentStep}</div>`;
+    html += `<h2 class="text-xl font-bold mb-4">${data.q}</h2>`;
+    
+    if(data.options) {
+        data.options.forEach(o => html += `<button onclick="handleAnswer('${o.next}', '${o.t}', '${o.label}')" class="w-full text-left p-4 mb-2 border rounded-xl hover:bg-blue-50 transition">${o.t}</button>`);
+    } else {
+        html += `<button onclick="handleAnswer('${data.next}', 'Weiter', 'Obersatz')" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold">Weiter</button>`;
+    }
+    html += `<div class="mt-8 border-t pt-4"><label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic underline">Deine Lösung:</label><textarea id="notizen" placeholder="Deine Prüfschritte, Begründungen und Ergebnisse..." class="w-full mt-4 p-4 border rounded-xl h-64 focus:border-blue-400 outline-none">${answers.notizen || ""}</textarea></div>`;
+    cont.innerHTML = html;
 }
-html += `<div class="mt-8 border-t pt-4"><label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 italic underline">Deine Lösung:</label><textarea id="notizen" placeholder="Deine Prüfschritte, Begründungen und Ergebnisse..." class="w-full mt-4 p-4 border rounded-xl h-64 focus:border-blue-400 outline-none">${answers.notizen || ""}</textarea></div>`;
-cont.innerHTML = html;
-}
-
 function handleAnswer(next, text, label) {
 const notizenFeld = document.getElementById("notizen");
 let aktuellerInhalt = "";
@@ -449,60 +439,98 @@ renderStep();
 }
 
 function showResult() {
-document.getElementById("wizard").classList.add("hidden");
-document.getElementById("result").classList.remove("hidden");
-document.getElementById("notizenDisplay").innerText = answers.notizen || "Keine Notizen erfasst.";
+    document.getElementById("wizard").classList.add("hidden");
+    document.getElementById("result").classList.remove("hidden");
+    document.getElementById("notizenDisplay").innerText = answers.notizen || "Keine Notizen erfasst.";
 
-const sollIds = getSollPfad();
-const istIds = istPfad.map(p => p.step);
-let fehlerPunkt = null;
-for (let i = 0; i < istPfad.length; i++) {
-if (istPfad[i].step !== sollIds[i]) {
-fehlerPunkt = istPfad[i-1];
-break;
-}
-}
-const abw = JSON.stringify(sollIds) !== JSON.stringify(istIds);
-const box = document.getElementById("statusBox");
+    const sollIds = getSollPfad();
+    const istIds = istPfad.map(p => p.step);
+    let fehlerPunkt = null;
+    for (let i = 0; i < istPfad.length; i++) {
+        if (istPfad[i].step !== sollIds[i]) { fehlerPunkt = istPfad[i-1]; break; }
+    }
+    const abw = JSON.stringify(sollIds) !== JSON.stringify(istIds);
+    const box = document.getElementById("statusBox");
 
-box.className = `p-4 rounded-xl border-l-4 mb-6 ${abw ? 'bg-amber-50 border-amber-500 text-amber-900' : 'bg-green-50 border-green-500 text-green-900'}`;
-document.getElementById("resTitle").innerText = abw ? "Abweichung erkannt" : "Super! Diesen Fall hast du korrekt gelöst.";
-let descText = abw ? "Deine Lösung weicht vom berechneten Weg ab." : "Dein Weg deckt sich mit dem berechneten Weg";
-if (abw && fehlerPunkt) {
-descText += `\n\n⚠️ Erster Fehler bei Schritt "${fehlerPunkt.label}".`;
+    box.className = `p-4 rounded-xl border-l-4 mb-6 ${abw ? 'bg-amber-50 border-amber-500 text-amber-900' : 'bg-green-50 border-green-500 text-green-900'}`;
+    document.getElementById("resTitle").innerText = abw ? "Abweichung erkannt" : "Super! Diesen Fall hast du korrekt gelöst.";
+    let descText = abw ? "Deine Lösung weicht vom berechneten Weg ab." : "Dein Weg deckt sich mit dem berechneten Weg";
+    if (abw && fehlerPunkt) descText += `\n\n⚠️ Erster Fehler bei Schritt "${fehlerPunkt.label}".`;
+    document.getElementById("resDesc").innerText = descText;
+    document.getElementById("correctPathText").innerText = sollIds.map(id => getObjektiveLoesung(id)).join("\n\n");
 }
-document.getElementById("resDesc").innerText = descText;
-document.getElementById("correctPathText").innerText = sollIds.map(id => getObjektiveLoesung(id)).join("\n\n");
+
+function exportAsTxt() {
+    const sollIds = getSollPfad();
+    let content = `LERNPROTOKOLL HAUSHALT - Fo24\n`;
+    content += `====================================\n\n`;
+    content += `FALLDATEN:\n`;
+    content += `Titel (Zu): ${answers.titel_zu} (PGR: ${answers.pgr_zu})\n`;
+    content += `Titel (Von): ${answers.titel_von} (PGR: ${answers.pgr_von})\n`;
+    content += `Betrag: ${answers.betrag} €\n\n`;
+    content += `------------------------------------\n`;
+    content += `DEINE EINGEGEBENE LÖSUNG:\n`;
+    content += `------------------------------------\n`;
+    content += `${answers.notizen || "Keine Notizen"}\n\n`;
+    content += `------------------------------------\n`;
+    content += `MUSTERLÖSUNG (BERECHNETER WEG):\n`;
+    content += `------------------------------------\n`;
+    content += sollIds.map(id => getObjektiveLoesung(id)).join("\n\n");
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `Lernprotokoll_${answers.titel_zu.replace(/\s/g, "_")}.txt`;
+    link.click();
 }
-    
+
 function exportAsPdf() {
-const { jsPDF } = window.jspdf;
-const doc = new jsPDF();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const margin = 15;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    let y = 20;
 
-doc.setFontSize(18);
-doc.text("Deine Ergebnisse", 10, 20);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("Lernprotokoll Haushalt - Fo24", margin, y);
+    y += 10;
 
-doc.setFontSize(12);
-let y = 40; 
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Titel (Zu): ${answers.titel_zu} | PGR: ${answers.pgr_zu}`, margin, y); y += 6;
+    doc.text(`Titel (Von): ${answers.titel_von} | PGR: ${answers.pgr_von}`, margin, y); y += 6;
+    doc.text(`Betrag: ${answers.betrag} €`, margin, y); y += 10;
 
-for (const step in answers) {
-let line = "";
-if (step === "notizen") {
-line = `Notizen: ${answers[step]}`;
-} else {
-line = `Schritt ${step}: ${answers[step]}`;
-}
+    doc.setFont("helvetica", "bold");
+    doc.setFillColor(240, 240, 240);
+    doc.rect(margin, y, pageWidth - (2 * margin), 7, 'F');
+    doc.text("DEINE EINGEGEBENE LÖSUNG", margin + 2, y + 5);
+    y += 12;
 
-doc.text(line, 10, y);
-y += 10; 
+    doc.setFont("helvetica", "italic");
+    const userNotes = doc.splitTextToSize(answers.notizen || "Keine Notizen erfasst.", pageWidth - (2 * margin));
+    doc.text(userNotes, margin, y);
+    y += (userNotes.length * 5) + 10;
 
-if (y > 280) {
-doc.addPage();
-y = 20;
-}
-}
+    if (y > 250) { doc.addPage(); y = 20; }
+    doc.setFont("helvetica", "bold");
+    doc.setFillColor(230, 245, 230);
+    doc.rect(margin, y, pageWidth - (2 * margin), 7, 'F');
+    doc.text("MUSTERLÖSUNG (BERECHNETER WEG)", margin + 2, y + 5);
+    y += 12;
 
-doc.save("ergebnis.pdf");
+    doc.setFont("helvetica", "normal");
+    const sollIds = getSollPfad();
+    sollIds.forEach(id => {
+        const text = getObjektiveLoesung(id);
+        const splitText = doc.splitTextToSize(text, pageWidth - (2 * margin));
+        if (y + (splitText.length * 5) > 280) { doc.addPage(); y = 20; }
+        doc.text(splitText, margin, y);
+        y += (splitText.length * 5) + 5;
+    });
+
+    doc.save(`Lernprotokoll_${answers.titel_zu.replace(/\s/g, "_")}.pdf`);
 }
 
 </script>
