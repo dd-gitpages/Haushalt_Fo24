@@ -456,7 +456,7 @@ function showResult() {
     let fehlerPunkt = null;
     for (let i = 0; i < istPfad.length; i++) {
         if (istPfad[i].step !== sollIds[i]) {
-            fehlerPunkt = istPfad[i]; // Speichert den Schritt und das Label
+            fehlerPunkt = istPfad[i-1];
             break;
         }
     }
@@ -476,13 +476,11 @@ function showResult() {
 
 function exportAsTxt() {
     let exportText = "ERGEBNISSE\n==========\n\n";
-    for (const step in answers) {
-        if (step === "notizen") {
-            exportText += `${answers[step]}\n\n`;
-        } else {
-            exportText += `${answers[step]}\n`;
-        }
-    }
+    exportText += document.getElementById("resTitle").innerText + "\n";
+    exportText += document.getElementById("resDesc").innerText +"\n";
+    exportText += document.getElementById("descText").innerText +"\n\n";
+    exportText += "DEINE LÖSUNG:\n" + answers.notizen + "\n";
+    exportText += "MUSTERLÖSUNG:\n" + document.getElementById("correctPathText").innerText    
     const blob = new Blob([exportText], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
