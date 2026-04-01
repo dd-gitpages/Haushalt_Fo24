@@ -513,11 +513,20 @@ function renderStep() {
 
 function handleAnswer(next, text, label) {
     const notizenFeld = document.getElementById("notizen");
-    if (notizenFeld) answers.notizen = notizenFeld.value.trim();
-    if (!answers.notizen || answers.notizen.length === 0) {
-            const confirmStep = confirm("Bist du sicher, dass du fortfahren möchtest ohne eine eigene Lösung einzutragen?");
+    let aktuellerInhalt = "";
+    if (notizenFeld) aktuellerInhalt = notizenFeld.value.trim();
+    if (currentstep >1) || next === "END") {
+        if (aktuellerInhalt === "" || aktuellerInhalt === letzterInhalt) {
+            const confirmStep = confirm("Bist du sicher, dass du ohne eine eigene Lösung fortfahren möchtest?");
             if (!confirmStep) return;
         }
+    else if (currentstep === 1)) {
+        if (!answers.notizen || answers.notizen.length === 0){
+            const confirmStep = confirm("Bist du sicher, dass du ohne eine eigenen Obersatz fortfahren möchtest?");
+            if (!confirmStep) return;
+    }
+    answers.notizen = aktuellerInhalt;
+    letzterInhalt = aktuellerInhalt;
     
     if(label) istPfad.push({step: currentStep, label: label});
     answers[currentStep] = text;
