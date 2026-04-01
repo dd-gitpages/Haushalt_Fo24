@@ -429,26 +429,48 @@ function getObjektiveLoesung(id) {
 }
 
 function getSollPfad() {
-    const v = answers.titel_von, z = answers.titel_zu, pV = answers.pgr_von, pZ = answers.pgr_zu, b = parseFloat(answers.betrag);
-    let p = [1, 2, 4];
+    const v = answers.titel_von, z = answers.titel_zu, p_v = answers.pgr_von, p_z = answers.pgr_zu, b = parseFloat(answers.betrag);
+    let p = [1, 2];
     const istM = ["1","2","3"].includes(v[0]);
     const istP = (v.startsWith("422") && z.startsWith("428")) || (v.startsWith("428") && z.startsWith("422"));
+    const ist9 = (v.startsWith("985") && z.startsWith("986")) || (v.startsWith("986") && z.startsWith("985"));
+    const istI = ["5","6"].includes(v[0]) && ["7","8"].includes(z[0])
+    const istK = ["4","5","6"].includes(z[0]) && ["7","8"].includes(v[0])
 
-    if(!istM && pV === pZ) {
+    if (answers[2] === "ja") p.push(3);
+    p.push(4)
+    if(p_v === p_z) {
         p.push(5);
-        if((v[0]===z[0] && ["4","5","6"].includes(v[0])) || istP) { p.push(6); return p; }
+        if((v[0]===z[0] && ["4","5","6"].includes(v[0])) || istP || ist9) { p.push(6); return p; }
     }
     p.push(7);
     if(istM) p.push(19, 20);
-
-    if(pV === pZ) {
-        p.push(8, 9, 10);
-        if(b < 100000) p.push(11); else p.push(22);
-    } else if(pV.substring(0,5) === pZ.substring(0,5)) {
-        p.push(12, 13, 14);
-        if(z.startsWith("422") || z.startsWith("428")) { if(istP) p.push(18); else p.push(21); }
-        else if(b >= 100000) p.push(22); else p.push(21);
-    } else {
+    if(p_v === p_z) {
+        p.push(8, 9);
+        if(!istI) p.push(10);
+        if(b <= 100000) { 
+            p.push(11);
+            if(istK) p.push(21); else if (z.startsWith("422") || z.startsWith("428")) p.push(21); else if (v.startsWith("441")) p.push(21);
+        }
+        else p.push(22);
+    }
+    else if(p_v.substring(0,5) === p_z.substring(0,5)) {
+        p.push(12, 13);
+        if(b <= 100000) {
+            p.push(14); 
+            if(z.startsWith("422") || z.startsWith("428")) { if(istP) p.push(18); else p.push(21); } else if (v.startsWith("441")) p.push(21); else if(istK) p.push(21);
+        }
+        else p.push(22);
+    }  
+    else if(p_v.substring(0,2) === p_z.substring(0,2)) {
+        p.push(15, 16, );
+        if(b <= 100000) {
+            p.push(17); 
+            if(z.startsWith("422") || z.startsWith("428")) { if(istP) p.push(18); else p.push(21); } else if (v.startsWith("441")) p.push(21); else if(istK) p.push(21);
+        }
+        else p.push(22);
+    }
+    else {
         p.push(21); if(b >= 100000) p.push(22);
     }
     return [...new Set(p)].sort((a,b)=>a-b);
