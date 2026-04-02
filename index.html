@@ -411,7 +411,9 @@ function renderStep() {
     cont.innerHTML = html;
     } else { html += `<div class="mt-8 border-t pt-4"><label class="block text-[16px] font-bold text-1 uppercase mb-2 italic underline">Deine Lösung:</label><textarea id="notizen" placeholder="Deine Prüfschritte, Begründungen und Ergebnisse..." class="w-full mt-4 p-4 border rounded-xl h-64 focus:border-blue-400 outline-none">${answers.notizen || ""}</textarea></div>`;
     cont.innerHTML = html;
+    }
 }
+    
 function handleAnswer(next, text, label) {
 const notizenFeld = document.getElementById("notizen");
 let aktuellerInhalt = "";
