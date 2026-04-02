@@ -399,7 +399,7 @@ function renderStep() {
     const cont = document.getElementById("wizard");
     document.getElementById("progress").style.width = (currentStep / 22 * 100) + "%";
     const headerText = data.h
-    let html = `<div class="mb-2 text-blue-600 font-bold text-s uppercase tracking-wider">${headerText}</div>`;
+    let html = `<div class="mb-2 text-blue-600 font-bold text-xs uppercase tracking-wider">${headerText}</div>`;
     html += `<h2 class="text-l font-bold mb-4">${data.q}</h2>`;
     
     if(data.options) {
@@ -407,9 +407,9 @@ function renderStep() {
     } else {
         html += `<button onclick="handleAnswer('${data.next}', 'Weiter', 'Obersatz')" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold">Weiter</button>`;
     }
-    if (currentStep === 1) { html += `<div class="mt-8 border-t pt-4"><label class="block text-[16px] font-bold text-1 uppercase mb-2 italic underline">Dein Obersatz:</label><textarea id="notizen" placeholder="Trage hier deinen Obersatz ein..." class="w-full mt-4 p-4 border rounded-xl h-64 focus:border-blue-400 outline-none">${answers.notizen || ""}</textarea></div>`;
+    if (currentStep === 1) { html += `<div class="mt-8 border-t pt-4"><label class="block text-[14px] font-bold text-l uppercase mb-2 italic underline">Dein Obersatz:</label><textarea id="notizen" placeholder="Trage hier deinen Obersatz ein..." class="w-full mt-4 p-4 border rounded-xl h-64 focus:border-blue-400 outline-none">${answers.notizen || ""}</textarea></div>`;
     cont.innerHTML = html;
-    } else { html += `<div class="mt-8 border-t pt-4"><label class="block text-[16px] font-bold text-1 uppercase mb-2 italic underline">Deine Lösung:</label><textarea id="notizen" placeholder="Deine Prüfschritte, Begründungen und Ergebnisse..." class="w-full mt-4 p-4 border rounded-xl h-64 focus:border-blue-400 outline-none">${answers.notizen || ""}</textarea></div>`;
+    } else { html += `<div class="mt-8 border-t pt-4"><label class="block text-[14px] font-bold text-l uppercase mb-2 italic underline">Deine Lösung:</label><textarea id="notizen" placeholder="Deine Prüfschritte, Begründungen und Ergebnisse..." class="w-full mt-4 p-4 border rounded-xl h-64 focus:border-blue-400 outline-none">${answers.notizen || ""}</textarea></div>`;
     cont.innerHTML = html;
     }
 }
