@@ -400,7 +400,7 @@ function renderStep() {
     document.getElementById("progress").style.width = (currentStep / 22 * 100) + "%";
     const headerText = data.h
     let html = `<div class="mb-2 text-blue-600 font-bold text-xs uppercase tracking-wider">${headerText}</div>`;
-    html += `<h2 class="text-l font-bold mb-4">${data.q}</h2>`;
+    html += `<h2 class="text-xl font-bold mb-4">${data.q}</h2>`;
     
     if(data.options) {
         data.options.forEach(o => html += `<button onclick="handleAnswer('${o.next}', '${o.t}', '${o.label}')" class="w-full text-left p-4 mb-2 border rounded-xl hover:bg-blue-50 transition">${o.t}</button>`);
