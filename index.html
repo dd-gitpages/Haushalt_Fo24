@@ -235,13 +235,13 @@ return `Dort sind produktgruppeninterne Nachbewilligungen bis zu 100.000 € erl
 })(),
 11: (() => {
 if (z.startsWith("422") || z.startsWith("428")) {
-return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. a HG untersagt.`;
+return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, trifft die Ausnahme §4 Abs. 1 Nr. 2 lit. a HG zu und untersagt die Nachbewilligung.`;
 }
 else if (v.startsWith("441")) {
-return `Da der Sachverhalt ein Umwidmung von Mitteln der Gruppe ${v.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. b HG untersagt.`;
+return `Da der Sachverhalt ein Umwidmung von Mitteln der Gruppe ${v.substring(0,3)} fordert, trifft die Ausnahme §4 Abs. 1 Nr. 2 lit. b HG zu und untersagt die Nachbewilligung.`;
 }
 else if (istK) {
-return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 1 Nr. 2 lit. c HG untersagt.`;
+return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, trifft die Ausnahme §4 Abs. 1 Nr. 2 lit. c HG zu und untersagt die Nachbewilligung.`;
 }
 else {
 return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${z.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${v.substring(0,3)} fordert, trifft keine der Ausnahmen a-c zu. Eine Nachbewilligung durch die produktgruppenverantwortliche Person nach §4 Abs. 1 Nr. 2 HG ist möglich.`;
@@ -266,13 +266,13 @@ return `Die geforderte Summe von ${b} € liegt über 100.000 €. Da auch eine 
 14: (() => {
 const a = answers[14];
 if (z.startsWith("422") || z.startsWith("428")) {
-return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 1 HG untersagt.`;
+return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, trifft die Ausnahme §4 Abs. 2 Nr. 1 HG zu und untersagt die Nachbewilligung.`;
 }
 else if (v.startsWith("441")) {
-return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${v.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 2 HG untersagt.`;
+return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${v.substring(0,3)} fordert, trifft die Ausnahme §4 Abs. 2 Nr. 2 HG zu und untersagt die Nachbewilligung.`;
 }
 else if (istK) {
-return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 2 Nr. 3 HG untersagt.`;
+return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, trifft die Ausnahme §4 Abs. 2 Nr. 2 HG zu und untersagt die Nachbewilligung.`;
 }
 else {
 return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${z.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${v.substring(0,3)} fordert, trifft keine der Ausnahmen 1-3 zu. Eine Nachbewilligung durch die produktbereichsverantwortliche Person nach §4 Abs. 2 HG ist möglich.`;
@@ -296,13 +296,13 @@ return `Die geforderte Summe von ${b} € liegt über 100.000 €. Da auch eine 
 })(),
 17: (() => {
 if (z.startsWith("422") || z.startsWith("428")) {
-return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 1 HG untersagt.`;
+return `Da der Sachverhalt zusätzliche Mittel bei Gruppe ${z.substring(0,3)} fordert, trifft die Ausnahme §4 Abs. 3 Nr. 1 HG zu und untersagt die Nachbewilligung.`;
 }
 if (v.startsWith("441")) {
-return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${v.substring(0,3)} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 2 HG untersagt.`;
+return `Da der Sachverhalt eine andere Verwendung für Mittel von Gruppe ${v.substring(0,3)} fordert, trifft die Ausnahme §4 Abs. 3 Nr. 2 HG zu und untersagt die Nachbewilligung.`;
 }
 if (istK) {
-return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, ist eine Nachbewilligung durch §4 Abs. 3 Nr. 3 HG untersagt.`;
+return `Da der Sachverhalt zusätzliche Mittel in Hauptgruppe ${z[0]} bei gleichzeitiger Einsparung in Hauptgruppe ${v[0]} fordert, trifft die Ausnahme §4 Abs. 3 Nr. 3 HG zu und untersagt die Nachbewilligung.`;
 }
 else {
 return `Da der Sachverhalt zusätzliche Mittel in Gruppe ${z.substring(0,3)} bei gleichzeitiger Einsparung in Gruppe ${v.substring(0,3)} fordert, trifft keine der Ausnahmen 1-3 zu. Eine Nachbewilligung durch die produktplanverantwortliche Person nach §4 Abs. 3 HG ist möglich.`;
