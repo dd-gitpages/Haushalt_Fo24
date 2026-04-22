@@ -163,7 +163,7 @@ const istP = (v.startsWith("422") && z.startsWith("428")) || (v.startsWith("428"
 const ist9 = (v.startsWith("985") && z.startsWith("986")) || (v.startsWith("986") && z.startsWith("985"));
 const istI = ["5","6"].includes(v[0]) && ["7","8"].includes(z[0])
 const istK = ["4","5","6"].includes(z[0]) && ["7","8"].includes(v[0])
-const i = 0
+let i = 0
 const texte = {
 1: `Fraglich ist, ob zusätzliche Ausgaben in Höhe von ${b} € bei Titel ${z} zu Lasten von Titel ${v} geleistet werden dürfen.`,
 2: answers[2] === "ja"
@@ -207,7 +207,7 @@ return `Eine gegenseitige Deckungsfähigkeit der Gruppen ${v.substring(0,3)} und
 if (p_v === p_z) return `Da Titel ${v} und Titel ${z} beide in Produktgruppe ${p_z} sind, ist nun eine Nachbewilligung nach §4 Abs. 1 Nr. 1 HG zu prüfen.`;
 if (p_v.substring(0,5) === p_z.substring(0,5) && i<1) return `Da Titel ${v} und Titel ${z} beide im Produktbereich ${p_z.substring(0,5)} sind, ist nun eine Nachbewilligung nach §4 Abs. 2 HG zu prüfen.`;
 if (p_v.substring(0,2) === p_z.substring(0,2) && i<1) return `Da Titel ${v} und Titel ${z} beide im Produktplan ${p_z.substring(0,2)} sind, ist nun eine Nachbewilligung nach §4 Abs. 3 HG zu prüfen.`;
-if (istM) i=i+1 return `Da die Mehrausgaben bei Titel ${z} durch den Einnahmetitel ${v} gedeckt werden soll ist §4 Abs. 5 HG zu prüfen.`;
+if (istM) i++ return `Da die Mehrausgaben bei Titel ${z} durch den Einnahmetitel ${v} gedeckt werden soll ist §4 Abs. 5 HG zu prüfen.`;
 if (p_v.substring(0,2) !== p_z.substring(0,2)) return `Da Titel ${v} und Titel ${z} in unterschiedlichen Produktplänen (${p_z.substring(0,2)} und ${p_v.substring(0,2)}) sind, ist eine Nachbewilligung nach §4 HG ausgeschlossen.`;
 })(),
 8: (() => {
