@@ -119,40 +119,47 @@ return {
 { t: "§4 Abs. 2 (Produktbereich)", next: 12, label: "Abs. 2 Auswahl" },
 { t: "§4 Abs. 3 (Produktplan)", next: 15, label: "Abs. 3 Auswahl" },
 { t: "§4 Abs. 5 (Mehreinnahmen HG 1-3)", next: 19, label: "§4 Abs. 5 Auswahl" },
-{ t: "keiner / §10", next: 21, label: "SF §10 Auswahl" }
+{ t: "keiner / §10", next: 23, label: "SF §10 Auswahl" }
 ]},
 8: { h: "Nachbewilligung: Prüfung nach §4 Abs. 1 Nr. 1 HG", q: "Sind beide Titel in der gleichen Produktgruppe?", options: [{ t: "ja", next: 9, label: "§4 Abs. 1" }, { t: "nein", next: 7, label: "§4 Abs. 1 -> Auswahl" }] },
 9: { h: "Nachbewilligung: Prüfung nach §4 Abs. 1 Nr. 1 HG", q: `Ist ${v} in HG 5/6 und ${z} in HG 7/8?`, options: [{ t: "ja", next: "END", label: "§4 Abs. 1 Nr. 1" }, { t: "nein", next: 10, label: "§4 Abs. 1 Nr. 1 -> Nr. 2" }] },
-10: { h: "Nachbewilligung: Prüfung nach §4 Abs. 1 Nr. 2 HG", q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 11, label: "<100k  §4 Abs. 1 Nr. 2" }, { t: "nein", next: 22, label: ">100k §4 Abs. 1 Nr. 2 -> HFA" }] },
+10: { h: "Nachbewilligung: Prüfung nach §4 Abs. 1 Nr. 2 HG", q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 11, label: "<100k  §4 Abs. 1 Nr. 2" }, { t: "nein", next: 24, label: ">100k §4 Abs. 1 Nr. 2 -> HFA" }] },
 11: { h: "Nachbewilligung: Prüfung nach §4 Abs. 1 Nr. 2 HG", q: "Ausnahmen Bst. a-c von §4 Abs. 1 Nr. 2?", options: [
-{ t: "a): x -> 422 oder 428", next: 21, label: "§4 Abs. 1 Nr 2 a" },
-{ t: "b): 441 -> x", next: 21, label: "§4 Abs. 1 Nr 2 b" },
-{ t: "c): 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 21, label: "§4 Abs. 1 Nr 2 c" },
+{ t: "a): x -> 422 oder 428", next: 23, label: "§4 Abs. 1 Nr 2 a" },
+{ t: "b): 441 -> x", next: 23, label: "§4 Abs. 1 Nr 2 b" },
+{ t: "c): 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 23, label: "§4 Abs. 1 Nr 2 c" },
 { t: "keine", next: "END", label: "§4 Abs. 1 keine Ausn." }
 ]},
 12: { h: "Nachbewilligung: Prüfung nach §4 Abs. 2 HG", q: "Gleicher Produktbereich?", options: [{ t: "ja", next: 13, label: "§4 Abs. 2" }, { t: "nein", next: 7, label: "§4 Abs. 2 -> Auswahl" }] },
-13: { h: "Nachbewilligung: Prüfung nach §4 Abs. 2 HG", q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 14, label: "<100k §4 Abs. 2" }, { t: "nein", next: 22, label: ">100k §4 Abs. 2 -> HFA" }] },
+13: { h: "Nachbewilligung: Prüfung nach §4 Abs. 2 HG", q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 14, label: "<100k §4 Abs. 2" }, { t: "nein", next: 24, label: ">100k §4 Abs. 2 -> HFA" }] },
 14: { h: "Nachbewilligung: Prüfung nach §4 Abs. 2 HG", q: "Ausnahmen Nr. 1-3 von §4 Abs. 2?", options: [
 { t: "Nr. 1: x -> 422 oder 428", next: 18, label: "§4 Abs. 2 Nr. 1" },
-{ t: "Nr. 2: 441 -> x", next: 21, label: "§4 Abs. 2 Nr. 2" },
-{ t: "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 21, label: "§4 Abs. 2 Nr. 3" },
+{ t: "Nr. 2: 441 -> x", next: 23, label: "§4 Abs. 2 Nr. 2" },
+{ t: "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 23, label: "§4 Abs. 2 Nr. 3" },
 { t: "keine", next: "END", label: "§4 Abs. 2 keine Ausn." }
 ]},
-15: { h: "Nachbewilligung: Prüfung nach §4 Abs. 3 HG", q: "Gleicher Produktplan?", options: [{ t: "ja", next: 16, label: "§4 Abs. 3" }, { t: "nein", next: 21, label: "§10 Auswahl" }] },
-16: { h: "Nachbewilligung: Prüfung nach §4 Abs. 3 HG", q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 17, label: "<100k §4 Abs. 3" }, { t: "nein", next: 22, label: ">100k §4 Abs. 3 -> HFA" }] },
+15: { h: "Nachbewilligung: Prüfung nach §4 Abs. 3 HG", q: "Gleicher Produktplan?", options: [{ t: "ja", next: 16, label: "§4 Abs. 3" }, { t: "nein", next: 23, label: "§10 Auswahl" }] },
+16: { h: "Nachbewilligung: Prüfung nach §4 Abs. 3 HG", q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 17, label: "<100k §4 Abs. 3" }, { t: "nein", next: 24, label: ">100k §4 Abs. 3 -> HFA" }] },
 17: { h: "Nachbewilligung: Prüfung nach §4 Abs. 3 HG", q: "Ausnahmen Nr. 1-3 von §4 Abs. 3?", options: [
 { t: "Nr. 1: x -> 422 oder 428", next: 18, label: "§4 Abs. 3 Nr. 1" },
-{ t: "Nr. 2: 441 -> x", next: 21, label: "§4 Abs. 3 Nr. 2" },
-{ t: "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 21, label: "§4 Abs. 3 Nr. 3" },
+{ t: "Nr. 2: 441 -> x", next: 23, label: "§4 Abs. 3 Nr. 2" },
+{ t: "Nr. 3: 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 23, label: "§4 Abs. 3 Nr. 3" },
 { t: "keine", next: "END", label: "§4 Abs. 3 keine Ausn." }
 ]},
 18: { h: "Nachbewilligung: Prüfung nach §4 Abs. 6 HG", q: "Personalmittel-Tausch zwischen 422 und 428?", options: [{ t: "ja", next: "END", label: "§4 Abs." }, { t: "nein", next: 21, label: "422/428 aber nicht §4 Abs. 6" }] },
 19: { h: "Nachbewilligung: Prüfung nach §4 Abs. 5 HG", q: `Stehen bei Titel ${v} Mehreinnahmen in Höhe der zusätzlichen Ausgaben bei Titel ${z} zur Verfügung?`, options: [{ t: "ja", next: 20, label: "Mehreinnahmen ja" }, { t: "nein", next: "END", label: "Mehreinnahmen nein" }] },
 20: { h: "Nachbewilligung: Prüfung nach §4 Abs. 5 HG", q: "Welcher Absatz von §4 soll in Verbindung mit Abs. 5 genutzt werden?", options: [
-{ t: "§4 Abs. 1", next: 10, label: "§4 Abs. 5/Abs. 1 Kombi" }, { t: "§4 Abs. 2", next: 12, label: "§4 Abs. 5/Abs. 2 Kombi" }, { t: "§4 Abs. 3", next: 15, label: "§4 Abs. 5/Abs. 3 Kombi" }
+{ t: "§4 Abs. 1", next: 21, label: "§4 Abs. 5/Abs. 1 Kombi" }, { t: "§4 Abs. 2", next: 21, label: "§4 Abs. 5/Abs. 2 Kombi" }, { t: "§4 Abs. 3", next: 21, label: "§4 Abs. 5/Abs. 3 Kombi" }
 ]},
-21: { h: "Nachbewilligung: Prüfung nach §10 Abs. 4 Nr. 3 HG", q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: "END", label: "<100k §10 SF" }, { t: "nein", next: 22, label: ">100k §10 SF -> HFA" }] },
-22: { h: "Nachbewilligung: Prüfung nach §9 Abs. 2 Nr. 1 HG", q: "Haushalts- und Finanzausschuss §9 Abs. 2 Nr. 1", options: [{ t: "Abschluss", next: "END" }] }
+21: { h: "Nachbewilligung: Prüfung nach §4 Abs. 1 Nr. 2 HG", q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: 22, label: "<100k  §4 Abs. 1 Nr. 2" }, { t: "nein", next: 24, label: ">100k §4 Abs. 5 -> HFA" }] },
+22: { h: "Nachbewilligung: Prüfung nach §4 Abs. 1 Nr. 2 HG", q: "Ausnahmen Bst. a-c von §4 Abs. 1 Nr. 2?", options: [
+{ t: "a) / 1.: x -> 422 oder 428", next: 23, label: "§4 Abs. 5 a)/1." },
+{ t: "b) / 2.: 441 -> x", next: 23, label: "§4 Abs. 5 b)/2." },
+{ t: "c) / 3.: 7xx oder 8xx -> 4xx,5xx oder 6xx", next: 23, label: "§4 Abs. 5 c)/3." },
+{ t: "keine", next: "END", label: "§4 Abs. 5 keine Ausn." }
+]},
+23: { h: "Nachbewilligung: Prüfung nach §10 Abs. 4 Nr. 3 HG", q: "Betrag unter 100.000 €?", options: [{ t: "ja", next: "END", label: "<100k §10 SF" }, { t: "nein", next: 22, label: ">100k §10 SF -> HFA" }] },
+24: { h: "Nachbewilligung: Prüfung nach §9 Abs. 2 Nr. 1 HG", q: "Haushalts- und Finanzausschuss §9 Abs. 2 Nr. 1", options: [{ t: "Abschluss", next: "END" }] }
 };
 }
 
@@ -317,17 +324,23 @@ if (istP) return `Weil es sich um eine Nachbewilligung zwischen Gruppe ${v.subst
 }
 })(),
 19: (() => {
-if (istM) {
-return `Da bei Titel ${v} Mehreinnahmen erzielt wurden, welche die bei Titel ${z} benötigte Summe von ${b} € decken, sind nach §4 Abs. 5 HG die Vorgaben von`;
+if (istM && p_v === p_z) {
+return `Da bei Titel ${v} Mehreinnahmen erzielt wurden, welche die bei Titel ${z} benötigte Summe von ${b} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 1 Nr. 2 HG anzuwenden.`;
+}
+else if (istM && p_v.substring(0,5) === p_z.substring(0,5)) {
+return `Da bei Titel ${v} Mehreinnahmen erzielt wurden, welche die bei Titel ${z} benötigte Summe von ${b} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 2 HG anzuwenden.`;
+}
+else if (istM && p_v.substring(0,2) === p_z.substring(0,2)) {
+return `Da bei Titel ${v} Mehreinnahmen erzielt wurden, welche die bei Titel ${z} benötigte Summe von ${b} € decken, sind nach §4 Abs. 5 HG die Vorgaben von §4 Abs. 3 HG anzuwenden.`;
 }
 else {
 return `Da es sich bei Titel ${v} um eine Einnahme handelt und dort keine Mehreinnahmen zur Deckung der geforderten ${b} € zur Verfügung stehen, ist eine Nachbewilligung nicht möglich.`;
 }
 })(),
 20: (() => {
-if (p_v === p_z) return `§4 Abs. 1 Nr. 2 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktgruppenverantwortliche Person möglich.`;
-if (p_v.substring(0,5) === p_z.substring(0,5)) return `§4 Abs. 2 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktbereichsverantwortliche Person möglich.`;
-if (p_v.substring(0,2) === p_z.substring(0,2)) return `§4 Abs. 3 HG anzuwenden. Somit ist eine Nachbewilligung durch die produktplanverantwortliche Person möglich.`;
+if (p_v === p_z) return `Demnach darf auch die Nutzung produktgruppeninterner Mehreinnahmen für die Deckung von Ausgaben nachbewilligt werden, sofern die Summe unter 100.000 € liegt und keine der Ausnahmen a-c zutrifft.`;
+if (p_v.substring(0,5) === p_z.substring(0,5)) return `Demnach darf auch die Nutzung produktbereichsinterner Mehreinnahmen für die Deckung von Ausgaben nachbewilligt werden, sofern die Summe unter 100.000 € liegt und keine der Ausnahmen 1-3 zutrifft.`;
+if (p_v.substring(0,2) === p_z.substring(0,2)) return `Demnach darf auch die Nutzung produktplaninterner Mehreinnahmen für die Deckung von Ausgaben nachbewilligt werden, sofern die Summe unter 100.000 € liegt und keine der Ausnahmen 1-3 zutrifft.`;
 })(),
 21: (() => {
 if(b < 100000) {
